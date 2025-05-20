@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -35,13 +34,15 @@ import {
   type Profile,
   type ColorOption,
 } from '@/data/products';
+import { windowTypes, openingDirections, type WindowType, type OpeningDirection } from '@/data/windowTypes';
 import { useCart } from '@/context/CartContext';
 import { toast } from '@/hooks/use-toast';
-import { Palette, Square, Droplet } from 'lucide-react';
+import { Palette, Square, Droplet, RotateCw } from 'lucide-react';
 
 const Configurator = () => {
   const [searchParams] = useSearchParams();
   const { addToCart } = useCart();
+  const previewRef = useRef<HTMLDivElement>(null);
   
   // Get initial values from URL if present
   const initialType = searchParams.get('type') === 'door' ? 'door' : 'window';
@@ -49,6 +50,8 @@ const Configurator = () => {
   
   // State for configuration
   const [productType, setProductType] = useState<'window' | 'door'>(initialType as 'window' | 'door');
+  const [selectedWindowType, setSelectedWindowType] = useState<string>('single-leaf');
+  const [selectedOpeningDirection, setSelectedOpeningDirection] = useState<string>('left');
   const [selectedProfile, setSelectedProfile] = useState<string>(initialProfileId);
   const [selectedGlazing, setSelectedGlazing] = useState<string>('glz-double');
   const [selectedBaseColor, setSelectedBaseColor] = useState<string>('col-white');
@@ -59,6 +62,8 @@ const Configurator = () => {
   const [height, setHeight] = useState<number>(1200); // Default 1200mm
   const [quantity, setQuantity] = useState<number>(1);
   const [calculatedPrice, setCalculatedPrice] = useState<number>(0);
+  const [rotation, setRotation] = useState<number>(0);
+  const [isRotating, setIsRotating] = useState<boolean>(false);
   
   // Get profiles based on product type
   const availableProfiles = productType === 'window' ? windowProfiles : doorProfiles;
@@ -70,6 +75,8 @@ const Configurator = () => {
   const outsideColorObject = outsideColorOptions.find(c => c.id === selectedOutsideColor) || outsideColorOptions[0];
   const insideColorObject = insideColorOptions.find(c => c.id === selectedInsideColor) || insideColorOptions[0];
   const rubberColorObject = rubberColorOptions.find(c => c.id === selectedRubberColor) || rubberColorOptions[0];
+  const windowTypeObject = windowTypes.find(w => w.id === selectedWindowType) || windowTypes[0];
+  const openingDirectionObject = openingDirections.find(o => o.id === selectedOpeningDirection) || openingDirections[0];
 
   // Combined color price modifier
   const totalColorModifier = baseColorObject.priceModifier + outsideColorObject.priceModifier + 
@@ -78,8 +85,14 @@ const Configurator = () => {
   // Update calculated price whenever options change
   useEffect(() => {
     if (profileObject) {
+      // Add 10% to price for each additional leaf for windows
+      let leafMultiplier = 1;
+      if (productType === 'window' && windowTypeObject) {
+        leafMultiplier = 1 + ((windowTypeObject.leafCount - 1) * 0.1);
+      }
+      
       const price = calculatePrice(
-        profileObject.basePrice,
+        profileObject.basePrice * leafMultiplier,
         glazingObject.priceModifier,
         totalColorModifier,
         width,
@@ -88,9 +101,9 @@ const Configurator = () => {
       setCalculatedPrice(price);
     }
   }, [
-    selectedProfile, selectedGlazing, 
+    selectedProfile, selectedGlazing, selectedWindowType,
     selectedBaseColor, selectedOutsideColor, selectedInsideColor, selectedRubberColor,
-    width, height, profileObject, glazingObject, totalColorModifier
+    width, height, profileObject, glazingObject, totalColorModifier, productType, windowTypeObject
   ]);
   
   // Set a default profile if none is selected
@@ -107,6 +120,8 @@ const Configurator = () => {
       type: productType,
       name: `${profileObject.name} ${productType === 'window' ? 'Window' : 'Door'}`,
       profile: profileObject.name,
+      windowType: productType === 'window' ? windowTypeObject.name : undefined,
+      openingDirection: productType === 'window' ? openingDirectionObject.name : undefined,
       glazing: glazingObject.name,
       colors: {
         base: baseColorObject.name,
@@ -142,6 +157,40 @@ const Configurator = () => {
         return 0.6; // 4 glazing is even less transparent
       default:
         return 0.9; // Double glazing (standard)
+    }
+  };
+
+  // Handle preview rotation
+  const handleRotate = () => {
+    setRotation((prev) => (prev + 90) % 360);
+  };
+
+  // Toggle rotation mode
+  const toggleRotationMode = () => {
+    setIsRotating(!isRotating);
+  };
+
+  // Handle mouse move for 3D-like rotation when in rotation mode
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isRotating || !previewRef.current) return;
+    
+    const rect = previewRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Calculate rotation based on mouse position
+    const rotX = ((y / rect.height) * 180) - 90;
+    const rotY = ((x / rect.width) * 180) - 90;
+    
+    if (previewRef.current) {
+      previewRef.current.style.transform = `rotateX(${-rotX}deg) rotateY(${rotY}deg)`;
+    }
+  };
+
+  // Reset rotation when leaving rotation mode
+  const handleMouseLeave = () => {
+    if (isRotating && previewRef.current) {
+      previewRef.current.style.transform = `rotate(${rotation}deg)`;
     }
   };
 
@@ -198,10 +247,109 @@ const Configurator = () => {
               </CardContent>
             </Card>
 
+            {/* Window Type Selection - Only show for windows */}
+            {productType === 'window' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>2. Select Window Type</CardTitle>
+                  <CardDescription>Choose the type of window configuration</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {windowTypes.map((type) => (
+                      <Label
+                        key={type.id}
+                        htmlFor={type.id}
+                        className={`flex flex-col h-full rounded-md border-2 p-4 cursor-pointer ${
+                          selectedWindowType === type.id ? 'border-primary' : 'border-border'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          id={type.id}
+                          name="windowType"
+                          value={type.id}
+                          checked={selectedWindowType === type.id}
+                          onChange={() => setSelectedWindowType(type.id)}
+                          className="sr-only"
+                        />
+                        <div className="flex items-center justify-center mb-3">
+                          {type.id === 'single-leaf' && (
+                            <div className="w-12 h-16 border-2 border-foreground"></div>
+                          )}
+                          {type.id === 'double-leaf' && (
+                            <div className="flex">
+                              <div className="w-8 h-16 border-2 border-foreground mr-1"></div>
+                              <div className="w-8 h-16 border-2 border-foreground"></div>
+                            </div>
+                          )}
+                          {type.id === 'triple-leaf' && (
+                            <div className="flex">
+                              <div className="w-6 h-16 border-2 border-foreground mr-1"></div>
+                              <div className="w-6 h-16 border-2 border-foreground mr-1"></div>
+                              <div className="w-6 h-16 border-2 border-foreground"></div>
+                            </div>
+                          )}
+                          {type.id === 'fixed' && (
+                            <div className="w-12 h-16 border-2 border-foreground relative">
+                              <div className="absolute inset-0 flex items-center justify-center text-xs">Fixed</div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="font-medium">{type.name}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{type.description}</div>
+                        {type.id !== 'single-leaf' && type.id !== 'fixed' && (
+                          <div className="text-xs mt-auto font-medium text-primary">
+                            +{((type.leafCount - 1) * 10)}% price
+                          </div>
+                        )}
+                      </Label>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Opening Direction - Only show for windows except fixed */}
+            {productType === 'window' && selectedWindowType !== 'fixed' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>3. Select Opening Direction</CardTitle>
+                  <CardDescription>Choose how your window will open</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {openingDirections.map((direction) => (
+                      <Label
+                        key={direction.id}
+                        htmlFor={direction.id}
+                        className={`flex flex-col h-full rounded-md border-2 p-4 cursor-pointer ${
+                          selectedOpeningDirection === direction.id ? 'border-primary' : 'border-border'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          id={direction.id}
+                          name="openingDirection"
+                          value={direction.id}
+                          checked={selectedOpeningDirection === direction.id}
+                          onChange={() => setSelectedOpeningDirection(direction.id)}
+                          className="sr-only"
+                        />
+                        <div className="text-2xl mb-2 text-center">{direction.icon}</div>
+                        <div className="font-medium">{direction.name}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{direction.description}</div>
+                      </Label>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Profile Selection */}
             <Card>
               <CardHeader>
-                <CardTitle>2. Select Profile</CardTitle>
+                <CardTitle>{productType === 'window' ? '4' : '2'}. Select Profile</CardTitle>
                 <CardDescription>Choose a profile based on your requirements</CardDescription>
               </CardHeader>
               <CardContent>
@@ -243,7 +391,7 @@ const Configurator = () => {
             {/* Glass Options */}
             <Card>
               <CardHeader>
-                <CardTitle>3. Choose Glazing</CardTitle>
+                <CardTitle>{productType === 'window' ? '5' : '3'}. Choose Glazing</CardTitle>
                 <CardDescription>Select the type of glass for your product</CardDescription>
               </CardHeader>
               <CardContent>
@@ -279,7 +427,7 @@ const Configurator = () => {
             {/* Color Selection */}
             <Card>
               <CardHeader>
-                <CardTitle>4. Select Colors</CardTitle>
+                <CardTitle>{productType === 'window' ? '6' : '4'}. Select Colors</CardTitle>
                 <CardDescription>Choose colors for different parts of your product</CardDescription>
               </CardHeader>
               <CardContent>
@@ -441,7 +589,7 @@ const Configurator = () => {
             {/* Dimensions */}
             <Card>
               <CardHeader>
-                <CardTitle>5. Set Dimensions</CardTitle>
+                <CardTitle>{productType === 'window' ? '7' : '5'}. Set Dimensions</CardTitle>
                 <CardDescription>Specify the size of your product (in millimeters)</CardDescription>
               </CardHeader>
               <CardContent>
@@ -516,7 +664,7 @@ const Configurator = () => {
             {/* Quantity */}
             <Card>
               <CardHeader>
-                <CardTitle>6. Quantity</CardTitle>
+                <CardTitle>{productType === 'window' ? '8' : '6'}. Quantity</CardTitle>
                 <CardDescription>How many of this configured product do you need?</CardDescription>
               </CardHeader>
               <CardContent>
@@ -552,17 +700,33 @@ const Configurator = () => {
                   <CardDescription>Visualization of your configuration</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex mb-2 justify-between items-center">
+                    <div className="text-sm text-muted-foreground">Click on preview for 3D rotation</div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleRotate} 
+                      className="flex items-center gap-1"
+                    >
+                      <RotateCw className="h-4 w-4" />
+                      <span>Rotate 90°</span>
+                    </Button>
+                  </div>
+                  
                   <div 
-                    className="bg-secondary rounded-lg p-4 flex items-center justify-center"
+                    className="bg-secondary rounded-lg p-4 flex items-center justify-center relative perspective"
                     style={{
                       aspectRatio: productType === 'window' ? '4/3' : '2/4',
                       minHeight: '450px',
+                      perspective: '800px',
                     }}
+                    onClick={toggleRotationMode}
                   >
                     {productType === 'window' ? (
                       // Window visualization
                       <div 
-                        className="relative shadow-lg"
+                        ref={previewRef}
+                        className="relative shadow-lg transition-transform duration-500"
                         style={{
                           width: `${Math.min(90, (width / height) * 75)}%`,
                           height: `${Math.min(90, (height / width) * 75)}%`,
@@ -570,8 +734,11 @@ const Configurator = () => {
                           maxHeight: '90%',
                           backgroundColor: baseColorObject.hex,
                           borderRadius: '2px',
-                          transition: 'all 0.3s ease',
+                          transform: `rotate(${rotation}deg)`,
+                          transformStyle: 'preserve-3d',
                         }}
+                        onMouseMove={handleMouseMove}
+                        onMouseLeave={handleMouseLeave}
                       >
                         {/* Outside frame color */}
                         <div 
@@ -579,52 +746,131 @@ const Configurator = () => {
                           style={{ backgroundColor: outsideColorObject.hex }}
                         ></div>
                         
-                        {/* Glass area */}
-                        <div 
-                          className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-20"
-                          style={{ 
-                            backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                            boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                            borderRadius: '1px',
-                          }}
-                        >
-                          {/* Visualize glazing layers */}
-                          {selectedGlazing === 'glz-double' && (
-                            <div className="absolute inset-0 border-r border-white opacity-30"></div>
-                          )}
-                          
-                          {selectedGlazing === 'glz-triple' && (
-                            <>
-                              <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
-                              <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
-                            </>
-                          )}
-                          
-                          {selectedGlazing === 'glz-quad' && (
-                            <>
-                              <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
-                              <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
-                              <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
-                            </>
-                          )}
-
-                          {profileObject && (
-                            <div className="text-xs text-center text-gray-600 font-medium opacity-70">
-                              {profileObject.name}
+                        {/* Render window based on type */}
+                        {selectedWindowType === 'single-leaf' && (
+                          <div 
+                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-20"
+                            style={{ 
+                              backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                              boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                              borderRadius: '1px',
+                            }}
+                          >
+                            {/* Opening direction indicator */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div 
+                                className="text-3xl opacity-70 text-primary font-light"
+                              >
+                                {openingDirectionObject.icon}
+                              </div>
                             </div>
-                          )}
-                        </div>
+                            
+                            {/* Visualize glazing layers */}
+                            {selectedGlazing === 'glz-double' && (
+                              <div className="absolute inset-0 border-r border-white opacity-30"></div>
+                            )}
+                            
+                            {selectedGlazing === 'glz-triple' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
+                              </>
+                            )}
+                            
+                            {selectedGlazing === 'glz-quad' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
+                              </>
+                            )}
 
-                        {/* Window frame divisions based on profile type */}
-                        {profileObject && (profileObject.id === 'bluEvolution-92' || profileObject.id === 'evolutionDrive-Plus') && (
+                            {profileObject && (
+                              <div className="text-xs text-center text-gray-600 font-medium opacity-70">
+                                {profileObject.name}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        
+                        {selectedWindowType === 'double-leaf' && (
                           <>
+                            <div 
+                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[50%] flex items-center justify-center overflow-hidden z-20"
+                              style={{ 
+                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                                borderRadius: '1px',
+                              }}
+                            >
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-3xl opacity-70 text-primary font-light">
+                                  {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? openingDirectionObject.icon : ''}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div 
+                              className="absolute top-[10%] bottom-[10%] left-[50%] right-[10%] flex items-center justify-center overflow-hidden z-20"
+                              style={{ 
+                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                                borderRadius: '1px',
+                              }}
+                            >
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-3xl opacity-70 text-primary font-light">
+                                  {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? openingDirectionObject.icon : ''}
+                                </div>
+                              </div>
+                            </div>
+                            
                             <div className="absolute left-[50%] top-[10%] bottom-[10%] w-[3px] z-30" 
                                  style={{ backgroundColor: outsideColorObject.hex, transform: 'translateX(-50%)' }} />
                           </>
                         )}
                         
-                        {profileObject && (profileObject.id === 'greenEvolution-free' || profileObject.id === 'evolutionDrive-HST') && (
+                        {selectedWindowType === 'triple-leaf' && (
                           <>
+                            <div 
+                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[67%] flex items-center justify-center overflow-hidden z-20"
+                              style={{ 
+                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                                borderRadius: '1px',
+                              }}
+                            >
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-3xl opacity-70 text-primary font-light">
+                                  {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? openingDirectionObject.icon : ''}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div 
+                              className="absolute top-[10%] bottom-[10%] left-[33%] right-[33%] flex items-center justify-center overflow-hidden z-20"
+                              style={{ 
+                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                                borderRadius: '1px',
+                              }}
+                            />
+                            
+                            <div 
+                              className="absolute top-[10%] bottom-[10%] left-[67%] right-[10%] flex items-center justify-center overflow-hidden z-20"
+                              style={{ 
+                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                                borderRadius: '1px',
+                              }}
+                            >
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-3xl opacity-70 text-primary font-light">
+                                  {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? openingDirectionObject.icon : ''}
+                                </div>
+                              </div>
+                            </div>
+                            
                             <div className="absolute left-[33%] top-[10%] bottom-[10%] w-[3px] z-30" 
                                  style={{ backgroundColor: outsideColorObject.hex, transform: 'translateX(-50%)' }} />
                             <div className="absolute left-[67%] top-[10%] bottom-[10%] w-[3px] z-30" 
@@ -632,6 +878,45 @@ const Configurator = () => {
                           </>
                         )}
                         
+                        {selectedWindowType === 'fixed' && (
+                          <div 
+                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-20"
+                            style={{ 
+                              backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                              boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                              borderRadius: '1px',
+                            }}
+                          >
+                            <div className="text-sm font-medium opacity-70">Fixed</div>
+                            
+                            {/* Visualize glazing layers */}
+                            {selectedGlazing === 'glz-double' && (
+                              <div className="absolute inset-0 border-r border-white opacity-30"></div>
+                            )}
+                            
+                            {selectedGlazing === 'glz-triple' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
+                              </>
+                            )}
+                            
+                            {selectedGlazing === 'glz-quad' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
+                              </>
+                            )}
+
+                            {profileObject && (
+                              <div className="text-xs text-center text-gray-600 font-medium opacity-70">
+                                {profileObject.name}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         {/* Rubber seals */}
                         <div 
                           className="absolute inset-[8%] rounded-sm pointer-events-none z-15"
@@ -644,7 +929,8 @@ const Configurator = () => {
                     ) : (
                       // Door visualization
                       <div 
-                        className="relative shadow-lg"
+                        ref={previewRef}
+                        className="relative shadow-lg transition-transform duration-500"
                         style={{
                           width: `${Math.min(70, (width / height) * 50)}%`,
                           height: `${Math.min(90, (height / width) * 80)}%`,
@@ -652,99 +938,108 @@ const Configurator = () => {
                           maxHeight: '90%',
                           backgroundColor: baseColorObject.hex,
                           borderRadius: '2px',
-                          transition: 'all 0.3s ease',
+                          transform: `rotate(${rotation}deg)`,
+                          transformStyle: 'preserve-3d',
                         }}
+                        onMouseMove={handleMouseMove}
+                        onMouseLeave={handleMouseLeave}
                       >
                         <div 
-                          className="absolute inset-0 flex items-center justify-center z-10"
-                          style={{ 
-                            backgroundColor: outsideColorObject.hex,
-                          }}
-                        >
-                          {/* Door handle */}
+                          className="absolute inset-0 z-10"
+                          style={{ backgroundColor: outsideColorObject.hex }}
+                        ></div>
+                        
+                        {/* Door handle */}
+                        <div 
+                          className="absolute right-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md z-40"
+                          style={{ transform: 'translateY(-50%)' }}
+                        />
+                        
+                        {/* Door glass panel */}
+                        {profileObject && (profileObject.id !== 'evolutionDrive-60') && (
                           <div 
-                            className="absolute right-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md z-40"
-                            style={{ transform: 'translateY(-50%)' }}
-                          />
-                          
-                          {/* Door glass panel */}
-                          {profileObject && (profileObject.id !== 'evolutionDrive-60') && (
-                            <div 
-                              className="absolute left-[20%] right-[20%] top-[20%] bottom-[50%] flex items-center justify-center z-20"
-                              style={{ 
-                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                                borderRadius: '1px',
-                              }}
-                            >
-                              {/* Visualize glazing layers */}
-                              {selectedGlazing === 'glz-double' && (
-                                <div className="absolute inset-0 border-r border-white opacity-30"></div>
-                              )}
-                              
-                              {selectedGlazing === 'glz-triple' && (
-                                <>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
-                                </>
-                              )}
-                              
-                              {selectedGlazing === 'glz-quad' && (
-                                <>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
-                                </>
-                              )}
-                            </div>
-                          )}
-                          
-                          {/* Premium door has additional lower panel */}
-                          {profileObject && profileObject.id === 'bluEvolution-92' && (
-                            <div 
-                              className="absolute left-[20%] right-[20%] top-[60%] bottom-[20%] flex items-center justify-center z-20"
-                              style={{ 
-                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                                borderRadius: '1px',
-                              }}
-                            >
-                              {/* Visualize glazing layers */}
-                              {selectedGlazing === 'glz-double' && (
-                                <div className="absolute inset-0 border-r border-white opacity-30"></div>
-                              )}
-                              
-                              {selectedGlazing === 'glz-triple' && (
-                                <>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
-                                </>
-                              )}
-                              
-                              {selectedGlazing === 'glz-quad' && (
-                                <>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
-                                  <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
-                                </>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Rubber seals */}
-                          <div 
-                            className="absolute inset-[5%] rounded-sm pointer-events-none z-15"
+                            className="absolute left-[20%] right-[20%] top-[20%] bottom-[50%] flex items-center justify-center z-20"
                             style={{ 
-                              border: `3px solid ${rubberColorObject.hex}`,
-                              opacity: 0.8
+                              backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                              boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                              borderRadius: '1px',
                             }}
-                          ></div>
+                          >
+                            {/* Visualize glazing layers */}
+                            {selectedGlazing === 'glz-double' && (
+                              <div className="absolute inset-0 border-r border-white opacity-30"></div>
+                            )}
+                            
+                            {selectedGlazing === 'glz-triple' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
+                              </>
+                            )}
+                            
+                            {selectedGlazing === 'glz-quad' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
+                              </>
+                            )}
+                          </div>
+                        )}
+                        
+                        {/* Premium door has additional lower panel */}
+                        {profileObject && profileObject.id === 'bluEvolution-92' && (
+                          <div 
+                            className="absolute left-[20%] right-[20%] top-[60%] bottom-[20%] flex items-center justify-center z-20"
+                            style={{ 
+                              backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                              boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                              borderRadius: '1px',
+                            }}
+                          >
+                            {/* Visualize glazing layers */}
+                            {selectedGlazing === 'glz-double' && (
+                              <div className="absolute inset-0 border-r border-white opacity-30"></div>
+                            )}
+                            
+                            {selectedGlazing === 'glz-triple' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
+                              </>
+                            )}
+                            
+                            {selectedGlazing === 'glz-quad' && (
+                              <>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                                <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
+                              </>
+                            )}
+                          </div>
+                        )}
 
-                          {profileObject && (
-                            <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-70 z-30">
-                              {profileObject.name}
-                            </div>
-                          )}
+                        {/* Rubber seals */}
+                        <div 
+                          className="absolute inset-[5%] rounded-sm pointer-events-none z-15"
+                          style={{ 
+                            border: `3px solid ${rubberColorObject.hex}`,
+                            opacity: 0.8
+                          }}
+                        ></div>
+
+                        {profileObject && (
+                          <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-70 z-30">
+                            {profileObject.name}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {isRotating && (
+                      <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center rounded-lg">
+                        <div className="bg-white px-4 py-2 rounded-md text-sm font-medium">
+                          Drag to rotate in 3D
                         </div>
                       </div>
                     )}
@@ -757,6 +1052,14 @@ const Configurator = () => {
                     <div className="mt-1">
                       {baseColorObject.name} / {glazingObject.name}
                     </div>
+                    {productType === 'window' && windowTypeObject && (
+                      <div className="mt-1">
+                        {windowTypeObject.name} 
+                        {selectedWindowType !== 'fixed' && openingDirectionObject && (
+                          <span> - {openingDirectionObject.name}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -771,6 +1074,20 @@ const Configurator = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-sm text-muted-foreground">Product Type:</div>
                     <div className="text-sm font-medium">{productType === 'window' ? 'Window' : 'Door'}</div>
+                    
+                    {productType === 'window' && (
+                      <>
+                        <div className="text-sm text-muted-foreground">Window Type:</div>
+                        <div className="text-sm font-medium">{windowTypeObject.name}</div>
+                        
+                        {selectedWindowType !== 'fixed' && (
+                          <>
+                            <div className="text-sm text-muted-foreground">Opening Direction:</div>
+                            <div className="text-sm font-medium">{openingDirectionObject.name}</div>
+                          </>
+                        )}
+                      </>
+                    )}
                     
                     <div className="text-sm text-muted-foreground">Profile:</div>
                     <div className="text-sm font-medium">{profileObject.name}</div>
