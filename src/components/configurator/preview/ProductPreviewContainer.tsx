@@ -1,0 +1,103 @@
+
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { PreviewControls } from './PreviewControls';
+import { WindowPreview } from './WindowPreview';
+import { DoorPreview } from './DoorPreview';
+import { ProductPreviewInfo } from './components/ProductPreviewInfo';
+import { ColorOption } from '@/data/products';
+import { WindowType, OpeningDirection } from '@/data/windowTypes';
+import { useGlazingHelpers } from './hooks/useGlazingHelpers';
+import { useProfileHelpers } from './hooks/useProfileHelpers';
+import { useRef } from 'react';
+
+interface ProductPreviewContainerProps {
+  productType: 'window' | 'door';
+  width: number;
+  height: number;
+  selectedWindowType: string;
+  selectedOpeningDirection: string;
+  baseColorObject: ColorOption;
+  outsideColorObject: ColorOption;
+  insideColorObject: ColorOption;
+  rubberColorObject: ColorOption;
+  glazingObject: { id: string; name: string };
+  profileObject: { id: string; name: string };
+  windowTypeObject: WindowType | undefined;
+  openingDirectionObject: OpeningDirection | undefined;
+  rotationX: number;
+  rotationY: number;
+  onRotateLeft: () => void;
+  onRotateRight: () => void;
+  onResetRotation: () => void;
+}
+
+export const ProductPreviewContainer = ({
+  productType,
+  width,
+  height,
+  selectedWindowType,
+  selectedOpeningDirection,
+  baseColorObject,
+  outsideColorObject,
+  insideColorObject,
+  rubberColorObject,
+  glazingObject,
+  profileObject,
+  windowTypeObject,
+  openingDirectionObject,
+  rotationX,
+  rotationY,
+  onRotateLeft,
+  onRotateRight,
+  onResetRotation
+}: ProductPreviewContainerProps) => {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const { getGlassOpacity } = useGlazingHelpers();
+  const { getFrameThickness } = useProfileHelpers();
+
+  return (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle>Product Preview</CardTitle>
+        <CardDescription>Visualization of your configuration</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <PreviewControls 
+          onRotateLeft={onRotateLeft}
+          onRotateRight={onRotateRight}
+          onResetRotation={onResetRotation}
+        />
+        
+        <PreviewArea 
+          productType={productType}
+          width={width}
+          height={height}
+          selectedWindowType={selectedWindowType}
+          selectedOpeningDirection={selectedOpeningDirection}
+          baseColorObject={baseColorObject}
+          outsideColorObject={outsideColorObject}
+          insideColorObject={insideColorObject}
+          rubberColorObject={rubberColorObject}
+          glazingObject={glazingObject}
+          profileObject={profileObject}
+          rotationX={rotationX}
+          rotationY={rotationY}
+          getGlassOpacity={getGlassOpacity}
+          getFrameThickness={getFrameThickness}
+          previewRef={previewRef}
+        />
+
+        <ProductPreviewInfo
+          width={width}
+          height={height}
+          baseColorObject={baseColorObject}
+          glazingObject={glazingObject}
+          productType={productType}
+          windowTypeObject={windowTypeObject}
+          selectedWindowType={selectedWindowType}
+          openingDirectionObject={openingDirectionObject}
+        />
+      </CardContent>
+    </Card>
+  );
+};
