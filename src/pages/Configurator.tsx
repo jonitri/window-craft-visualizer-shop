@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -103,6 +102,23 @@ const Configurator = () => {
       title: "Added to cart",
       description: `${item.name} has been added to your cart.`,
     });
+  };
+
+  // Calculate aspect ratio based on dimensions
+  const aspectRatio = height / width;
+  
+  // Helper function to get glass opacity based on glazing
+  const getGlassOpacity = () => {
+    switch (selectedGlazing) {
+      case 'glz-triple':
+        return 0.7; // Triple glazing is less transparent
+      case 'glz-acoustic':
+        return 0.8; // Acoustic glazing has special layers
+      case 'glz-security':
+        return 0.85; // Security glazing is thicker
+      default:
+        return 0.9; // Double glazing (standard)
+    }
   };
 
   return (
@@ -393,23 +409,151 @@ const Configurator = () => {
                     className="bg-secondary rounded-lg p-4 flex items-center justify-center"
                     style={{
                       aspectRatio: productType === 'window' ? '4/3' : '2/4',
+                      minHeight: '320px',
                     }}
                   >
-                    <div 
-                      className="relative border-4 rounded bg-white/80"
-                      style={{
-                        width: '80%',
-                        height: '80%',
-                        borderColor: colorObject.hex,
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                      }}
-                    >
-                      {/* Simple visual representation - in a real app this would be more detailed */}
-                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm text-center p-2">
-                        {profileObject.name} {productType === 'window' ? 'Window' : 'Door'}<br/>
-                        {width}mm × {height}mm<br/>
-                        {colorObject.name} / {glazingObject.name}
+                    {productType === 'window' ? (
+                      // Window visualization
+                      <div 
+                        className="relative shadow-lg"
+                        style={{
+                          width: `${Math.min(90, (width / height) * 70)}%`,
+                          height: `${Math.min(90, (height / width) * 70)}%`,
+                          maxWidth: '90%',
+                          maxHeight: '90%',
+                          backgroundColor: colorObject.hex,
+                          borderRadius: '2px',
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        <div 
+                          className="absolute inset-[10%] flex items-center justify-center overflow-hidden"
+                          style={{ 
+                            backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                            boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                            borderRadius: '1px',
+                          }}
+                        >
+                          {selectedGlazing === 'glz-security' && (
+                            <div className="absolute inset-0 pointer-events-none">
+                              <div className="absolute inset-0 bg-white opacity-10"
+                                   style={{ 
+                                     backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px)' 
+                                   }} 
+                              />
+                            </div>
+                          )}
+
+                          {profileObject && (
+                            <div className="text-xs text-center text-gray-600 font-medium opacity-70">
+                              {profileObject.name}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Window frame divisions based on profile type */}
+                        {profileObject && profileObject.id === 'wp-premium' && (
+                          <>
+                            <div className="absolute left-[50%] top-[10%] bottom-[10%] w-[3px]" 
+                                 style={{ backgroundColor: colorObject.hex, transform: 'translateX(-50%)' }} />
+                          </>
+                        )}
+                        
+                        {profileObject && profileObject.id === 'wp-elite' && (
+                          <>
+                            <div className="absolute left-[33%] top-[10%] bottom-[10%] w-[3px]" 
+                                 style={{ backgroundColor: colorObject.hex, transform: 'translateX(-50%)' }} />
+                            <div className="absolute left-[67%] top-[10%] bottom-[10%] w-[3px]" 
+                                 style={{ backgroundColor: colorObject.hex, transform: 'translateX(-50%)' }} />
+                          </>
+                        )}
                       </div>
+                    ) : (
+                      // Door visualization
+                      <div 
+                        className="relative shadow-lg"
+                        style={{
+                          width: `${Math.min(70, (width / height) * 50)}%`,
+                          height: `${Math.min(90, (height / width) * 70)}%`,
+                          maxWidth: '70%',
+                          maxHeight: '90%',
+                          backgroundColor: colorObject.hex,
+                          borderRadius: '2px',
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        <div 
+                          className="absolute inset-0 flex items-center justify-center"
+                          style={{ 
+                            backgroundColor: colorObject.hex,
+                          }}
+                        >
+                          {/* Door handle */}
+                          <div 
+                            className="absolute right-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md"
+                            style={{ transform: 'translateY(-50%)' }}
+                          />
+                          
+                          {/* Door glass panel */}
+                          {profileObject && (profileObject.id === 'dp-premium' || profileObject.id === 'dp-security') && (
+                            <div 
+                              className="absolute left-[20%] right-[20%] top-[20%] bottom-[50%] flex items-center justify-center"
+                              style={{ 
+                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                                borderRadius: '1px',
+                              }}
+                            >
+                              {selectedGlazing === 'glz-security' && (
+                                <div className="absolute inset-0 pointer-events-none">
+                                  <div className="absolute inset-0 bg-white opacity-10"
+                                       style={{ 
+                                         backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px)' 
+                                       }} 
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          
+                          {/* Premium door has additional lower panel */}
+                          {profileObject && profileObject.id === 'dp-premium' && (
+                            <div 
+                              className="absolute left-[20%] right-[20%] top-[60%] bottom-[20%] flex items-center justify-center"
+                              style={{ 
+                                backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                                boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
+                                borderRadius: '1px',
+                              }}
+                            >
+                              {selectedGlazing === 'glz-security' && (
+                                <div className="absolute inset-0 pointer-events-none">
+                                  <div className="absolute inset-0 bg-white opacity-10"
+                                       style={{ 
+                                         backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px)' 
+                                       }} 
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {profileObject && (
+                            <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-70">
+                              {profileObject.name}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-4 text-sm text-center text-muted-foreground">
+                    <div>
+                      <span className="font-medium">{width}mm × {height}mm</span>
+                    </div>
+                    <div className="mt-1">
+                      {colorObject.name} / {glazingObject.name}
                     </div>
                   </div>
                 </CardContent>
