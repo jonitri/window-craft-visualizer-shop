@@ -18,8 +18,8 @@ export const CartItemsList = ({ cart, updateQuantity, removeFromCart }: CartItem
           <CartItemComponent 
             key={item.id}
             item={item}
-            updateQuantity={updateQuantity}
-            removeFromCart={removeFromCart}
+            onUpdateQuantity={updateQuantity}
+            onRemove={removeFromCart}
           />
         ))}
       </div>

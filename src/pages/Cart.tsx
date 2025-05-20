@@ -18,12 +18,12 @@ type FormValues = {
 };
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart();
+  const { items, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Handle form submission
   const onSubmit = async (data: FormValues) => {
-    if (cart.length === 0) {
+    if (items.length === 0) {
       toast({
         title: "Cart is empty",
         description: "Please add some products to your cart first.",
@@ -37,8 +37,8 @@ const Cart = () => {
     // Prepare order data
     const orderData = {
       customer: data,
-      products: cart,
-      totalPrice: getTotalPrice(),
+      products: items,
+      totalPrice: cartTotal,
     };
     
     // Log the order data (would be sent to the backend in a real app)
@@ -69,20 +69,20 @@ const Cart = () => {
 
       {/* Cart Content */}
       <section className="container-custom section-padding">
-        {cart.length === 0 ? (
+        {items.length === 0 ? (
           <EmptyCart />
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <CartItemsList 
-              cart={cart}
+              cart={items}
               updateQuantity={updateQuantity}
               removeFromCart={removeFromCart}
             />
             
             <CartSummary 
-              cart={cart}
-              getTotalPrice={getTotalPrice}
+              cart={items}
+              cartTotal={cartTotal}
               clearCart={clearCart}
             />
             
@@ -91,7 +91,7 @@ const Cart = () => {
               <OrderForm 
                 onSubmitOrder={onSubmit}
                 isSubmitting={isSubmitting}
-                cartIsEmpty={cart.length === 0}
+                cartIsEmpty={items.length === 0}
               />
             </div>
           </div>
