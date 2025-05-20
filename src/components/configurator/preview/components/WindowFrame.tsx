@@ -6,28 +6,34 @@ interface WindowFrameProps {
   outsideColorObject: ColorOption;
   insideColorObject: ColorOption;
   frameThickness: number;
+  viewMode: 'front' | 'back';
 }
 
 export const WindowFrame = ({
   baseColorObject,
   outsideColorObject,
   insideColorObject,
-  frameThickness
+  frameThickness,
+  viewMode
 }: WindowFrameProps) => {
+  const isFrontView = viewMode === 'front';
+  const primaryColor = isFrontView ? outsideColorObject.hex : insideColorObject.hex;
+  const secondaryColor = isFrontView ? insideColorObject.hex : outsideColorObject.hex;
+
   return (
     <>
-      {/* Base frame with depth - positioned further back */}
+      {/* Base frame with depth */}
       <div 
         className="absolute inset-0 rounded-md"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'translateZ(-3px)', // Moved backward
+          transform: 'translateZ(-3px)',
           transformStyle: 'preserve-3d',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         }}
       ></div>
       
-      {/* Frame sides for depth - adjusted to connect with the recessed base */}
+      {/* Frame sides for depth */}
       <div 
         className="absolute left-0 top-0 bottom-0 w-6"
         style={{ 
@@ -68,11 +74,11 @@ export const WindowFrame = ({
         }}
       ></div>
       
-      {/* Outside frame (front face) - now positioned clearly in front of base */}
+      {/* Main frame face (primary color based on view) */}
       <div 
         className="absolute inset-0 rounded-md"
         style={{ 
-          backgroundColor: outsideColorObject.hex, 
+          backgroundColor: primaryColor, 
           transform: 'translateZ(1px)',
           boxShadow: '0 0 8px rgba(0,0,0,0.1)',
         }}
@@ -82,28 +88,8 @@ export const WindowFrame = ({
           className="absolute" 
           style={{ 
             inset: `${frameThickness}px`,
-            border: `2px solid ${outsideColorObject.hex}`,
-            borderColor: `${outsideColorObject.hex} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${outsideColorObject.hex}`,
-            boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
-          }}
-        ></div>
-      </div>
-
-      {/* Inside frame (back face) */}
-      <div 
-        className="absolute inset-0 rounded-md"
-        style={{ 
-          backgroundColor: insideColorObject.hex, 
-          transform: 'rotateY(180deg) translateZ(1px)',
-        }}
-      >
-        {/* Frame inner border */}
-        <div 
-          className="absolute" 
-          style={{ 
-            inset: `${frameThickness}px`,
-            border: `2px solid ${insideColorObject.hex}`,
-            borderColor: `${insideColorObject.hex} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${insideColorObject.hex}`,
+            border: `2px solid ${primaryColor}`,
+            borderColor: `${primaryColor} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${primaryColor}`,
             boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
           }}
         ></div>

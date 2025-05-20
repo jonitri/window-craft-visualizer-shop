@@ -9,6 +9,7 @@ interface FixedWindowProps {
   rubberColorObject: ColorOption;
   insideColorObject: ColorOption;
   profileObject: { id: string; name: string };
+  viewMode: 'front' | 'back';
 }
 
 export const FixedWindow = ({
@@ -17,11 +18,14 @@ export const FixedWindow = ({
   glassOpacity,
   rubberColorObject,
   insideColorObject,
-  profileObject
+  profileObject,
+  viewMode
 }: FixedWindowProps) => {
+  const isFrontView = viewMode === 'front';
+  
   return (
     <>
-      {/* Fixed front glass panel */}
+      {/* Glass panel */}
       <div 
         className="absolute flex items-center justify-center overflow-hidden"
         style={{ 
@@ -29,43 +33,34 @@ export const FixedWindow = ({
           backgroundColor: `rgba(220, 230, 240, ${glassOpacity})`,
           boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
           borderRadius: '2px',
-          transform: 'translateZ(5px)', // Positioned in front of the frame
+          transform: 'translateZ(5px)',
           border: `1px solid ${rubberColorObject.hex}`,
         }}
       >
         {/* Fixed label - positioned at the front */}
-        <div className="text-sm font-medium opacity-70 z-10 absolute">Fixed</div>
+        {isFrontView && (
+          <div className="text-sm font-medium opacity-70 z-10 absolute">Fixed</div>
+        )}
         
-        {/* Visualize glazing layers */}
+        {/* Inside frame with small bezel - only on back view */}
+        {!isFrontView && (
+          <div 
+            className="absolute pointer-events-none" 
+            style={{ 
+              inset: '0',
+              border: `8px solid ${insideColorObject.hex}`,
+              borderRadius: '2px',
+            }}
+          ></div>
+        )}
+        
+        {/* Glazing layers visualization */}
         <GlazingLayers glazingId={glazingObject.id} />
 
         {/* Profile name on front glass */}
         <div className="text-xs text-center text-gray-600 font-medium opacity-70 z-10 absolute bottom-4">
           {profileObject.name}
         </div>
-      </div>
-
-      {/* Fixed back glass panel */}
-      <div 
-        className="absolute overflow-hidden"
-        style={{ 
-          inset: `${frameThickness}px`,
-          backgroundColor: `rgba(220, 230, 240, ${glassOpacity})`,
-          boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
-          borderRadius: '2px',
-          transform: 'rotateY(180deg) translateZ(5px)', // Positioned at the back
-          border: `1px solid ${rubberColorObject.hex}`,
-        }}
-      >
-        {/* Inner frame with small bezel */}
-        <div 
-          className="absolute pointer-events-none" 
-          style={{ 
-            inset: '0',
-            border: `8px solid ${insideColorObject.hex}`, // Bezel around glass
-            borderRadius: '2px',
-          }}
-        ></div>
       </div>
     </>
   );

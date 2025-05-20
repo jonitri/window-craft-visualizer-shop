@@ -25,6 +25,7 @@ export interface ProductConfiguration {
   calculatedPrice: number;
   rotationX: number;
   rotationY: number;
+  viewMode: 'front' | 'back';
   
   // Derived objects and properties
   profileObject: any;
@@ -52,10 +53,11 @@ export interface ProductConfiguration {
   setHeight: (height: number) => void;
   setQuantity: (quantity: number) => void;
   
-  // Rotation handlers
+  // Rotation and view handlers
   handleRotateLeft: () => void;
   handleRotateRight: () => void;
   resetRotation: () => void;
+  toggleView: () => void;
 }
 
 export function useProductConfiguration() {
@@ -130,9 +132,11 @@ export function useProductConfiguration() {
     // From rotation hook
     rotationX: rotationHook.rotationX,
     rotationY: rotationHook.rotationY,
+    viewMode: rotationHook.viewMode,
     handleRotateLeft: rotationHook.handleRotateLeft,
     handleRotateRight: rotationHook.handleRotateRight,
     resetRotation: rotationHook.resetRotation,
+    toggleView: rotationHook.toggleView,
     
     // Price calculation
     calculatedPrice

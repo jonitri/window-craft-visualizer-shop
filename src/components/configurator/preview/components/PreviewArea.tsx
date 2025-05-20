@@ -18,6 +18,7 @@ interface PreviewAreaProps {
   profileObject: { id: string; name: string };
   rotationX: number;
   rotationY: number;
+  viewMode: 'front' | 'back';
   getGlassOpacity: (glazingId: string) => number;
   getFrameThickness: (profileId: string) => number;
   previewRef: RefObject<HTMLDivElement>;
@@ -37,6 +38,7 @@ export const PreviewArea = ({
   profileObject,
   rotationX,
   rotationY,
+  viewMode,
   getGlassOpacity,
   getFrameThickness,
   previewRef
@@ -68,6 +70,7 @@ export const PreviewArea = ({
           rotationY={rotationY}
           frameThickness={getFrameThickness(profileObject.id)}
           glassOpacity={getGlassOpacity(glazingObject.id)}
+          viewMode={viewMode}
         />
       ) : (
         <DoorPreview 

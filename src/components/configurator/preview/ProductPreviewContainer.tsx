@@ -1,8 +1,6 @@
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { PreviewControls } from './PreviewControls';
-import { WindowPreview } from './WindowPreview';
-import { DoorPreview } from './DoorPreview';
 import { ProductPreviewInfo } from './components/ProductPreviewInfo';
 import { PreviewArea } from './components/PreviewArea';
 import { ColorOption } from '@/data/products';
@@ -27,9 +25,11 @@ interface ProductPreviewContainerProps {
   openingDirectionObject: OpeningDirection | undefined;
   rotationX: number;
   rotationY: number;
+  viewMode: 'front' | 'back';
   onRotateLeft: () => void;
   onRotateRight: () => void;
   onResetRotation: () => void;
+  onToggleView: () => void;
 }
 
 export const ProductPreviewContainer = ({
@@ -48,9 +48,11 @@ export const ProductPreviewContainer = ({
   openingDirectionObject,
   rotationX,
   rotationY,
+  viewMode,
   onRotateLeft,
   onRotateRight,
-  onResetRotation
+  onResetRotation,
+  onToggleView
 }: ProductPreviewContainerProps) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const { getGlassOpacity } = useGlazingHelpers();
@@ -67,6 +69,8 @@ export const ProductPreviewContainer = ({
           onRotateLeft={onRotateLeft}
           onRotateRight={onRotateRight}
           onResetRotation={onResetRotation}
+          onToggleView={onToggleView}
+          viewMode={viewMode}
         />
         
         <PreviewArea 
@@ -83,6 +87,7 @@ export const ProductPreviewContainer = ({
           profileObject={profileObject}
           rotationX={rotationX}
           rotationY={rotationY}
+          viewMode={viewMode}
           getGlassOpacity={getGlassOpacity}
           getFrameThickness={getFrameThickness}
           previewRef={previewRef}
