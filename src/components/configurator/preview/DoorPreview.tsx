@@ -1,7 +1,14 @@
 
 import { forwardRef } from 'react';
 import { ColorOption } from '@/data/products';
-import { GlazingLayers } from './components/GlazingLayers';
+import { WindowShadow } from './components/WindowShadow';
+import { DoorGlassPanel } from './components/DoorGlassPanel';
+import { DoorHandle } from './components/DoorHandle';
+import { DoorHinge } from './components/DoorHinge';
+import { DoorRubberSeal } from './components/DoorRubberSeal';
+import { ProfileLabel } from './components/ProfileLabel';
+import { DoorFrameSides } from './components/DoorFrameSides';
+import { DoorSurface } from './components/DoorSurface';
 
 interface DoorPreviewProps {
   width: number;
@@ -31,6 +38,9 @@ export const DoorPreview = forwardRef<HTMLDivElement, DoorPreviewProps>(
     rotationY,
     glassOpacity
   }, ref) => {
+    const showGlassPanel = profileObject && (profileObject.id !== 'evolutionDrive-60');
+    const showSecondGlassPanel = profileObject && profileObject.id === 'bluEvolution-92';
+
     return (
       <div 
         ref={ref}
@@ -53,263 +63,101 @@ export const DoorPreview = forwardRef<HTMLDivElement, DoorPreviewProps>(
             transform: 'translateZ(0px)',
             transformStyle: 'preserve-3d',
           }}
-        ></div>
+        />
         
         {/* Frame sides for proper depth */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-10"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateY(-90deg) translateZ(0px)',
-            transformOrigin: 'left',
-            borderRight: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
-        
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-10"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateY(90deg) translateZ(0px)',
-            transformOrigin: 'right',
-            borderLeft: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
-        
-        <div 
-          className="absolute left-0 right-0 top-0 h-10"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateX(90deg) translateZ(0px)',
-            transformOrigin: 'top',
-            borderBottom: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
-        
-        <div 
-          className="absolute left-0 right-0 bottom-0 h-10"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateX(-90deg) translateZ(0px)',
-            transformOrigin: 'bottom',
-            borderTop: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
+        <DoorFrameSides baseColor={baseColorObject.hex} />
         
         {/* Outside surface (front) */}
-        <div 
-          className="absolute inset-0 rounded-md"
-          style={{ 
-            backgroundColor: outsideColorObject.hex, 
-            transform: 'translateZ(5px)',
-            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)',
-          }}
-        ></div>
+        <DoorSurface color={outsideColorObject.hex} isFront={true} />
 
         {/* Inside surface (back) */}
-        <div 
-          className="absolute inset-0 rounded-md"
-          style={{ 
-            backgroundColor: insideColorObject.hex, 
-            transform: 'rotateY(180deg) translateZ(5px)',
-            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)',
-          }}
-        ></div>
+        <DoorSurface color={insideColorObject.hex} isFront={false} />
         
-        {/* Door handle - front */}
-        <div 
-          className="absolute z-10"
-          style={{ 
-            right: '20%',
-            top: '50%',
-            width: '15px', 
-            height: '60px',
-            backgroundColor: '#999',
-            borderRadius: '3px',
-            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3), inset 1px 1px 2px rgba(255, 255, 255, 0.5)',
-            transform: 'translateY(-50%) translateZ(6px)',
-          }}
-        >
-          <div
-            className="absolute"
-            style={{
-              width: '25px',
-              height: '10px',
-              left: '-5px',
-              top: '25px',
-              backgroundColor: '#888',
-              borderRadius: '2px',
-              boxShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)'
-            }}
-          />
-        </div>
+        {/* Door handles */}
+        <DoorHandle position="right" isFront={true} />
+        <DoorHandle position="right" isFront={false} />
         
-        {/* Door handle - back */}
-        <div 
-          className="absolute z-10"
-          style={{ 
-            left: '20%', 
-            top: '50%',
-            width: '15px', 
-            height: '60px',
-            backgroundColor: '#999',
-            borderRadius: '3px',
-            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3), inset 1px 1px 2px rgba(255, 255, 255, 0.5)',
-            transform: 'translateY(-50%) rotateY(180deg) translateZ(6px)',
-          }}
-        >
-          <div
-            className="absolute"
-            style={{
-              width: '25px',
-              height: '10px',
-              left: '-5px',
-              top: '25px',
-              backgroundColor: '#888',
-              borderRadius: '2px',
-              boxShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)'
-            }}
-          />
-        </div>
-        
-        {/* Door glass panel - front */}
-        {profileObject && (profileObject.id !== 'evolutionDrive-60') && (
-          <div 
-            className="absolute flex items-center justify-center"
-            style={{ 
-              left: '20%',
-              right: '20%',
-              top: '20%',
-              bottom: '50%',
-              backgroundColor: `rgba(220, 230, 240, ${glassOpacity})`,
-              boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
-              borderRadius: '2px',
-              transform: 'translateZ(6px)',
-              border: `2px solid ${rubberColorObject.hex}`,
-            }}
-          >
-            {/* Profile name on door glass - clearly visible on front */}
-            <div className="text-xs text-center text-gray-600 font-medium opacity-70 z-10">
-              {profileObject.name}
-            </div>
+        {/* Door glass panels */}
+        {showGlassPanel && (
+          <>
+            {/* Top panel - front */}
+            <DoorGlassPanel 
+              position="top"
+              left="20%"
+              right="20%"
+              top="20%"
+              bottom="50%"
+              glassOpacity={glassOpacity}
+              rubberColor={rubberColorObject.hex}
+              glazingId={glazingObject.id}
+              profileName={profileObject.name}
+              isFront={true}
+            />
             
-            {/* Glazing layers visualization */}
-            <GlazingLayers glazingId={glazingObject.id} />
-          </div>
-        )}
-
-        {/* Door glass panel - back */}
-        {profileObject && (profileObject.id !== 'evolutionDrive-60') && (
-          <div 
-            className="absolute flex items-center justify-center"
-            style={{ 
-              left: '20%',
-              right: '20%',
-              top: '20%',
-              bottom: '50%',
-              backgroundColor: `rgba(220, 230, 240, ${glassOpacity})`,
-              boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
-              borderRadius: '2px',
-              transform: 'rotateY(180deg) translateZ(6px)',
-              border: `2px solid ${rubberColorObject.hex}`,
-            }}
-          >
-            {/* Glazing layers visualization */}
-            <GlazingLayers glazingId={glazingObject.id} />
-          </div>
+            {/* Top panel - back */}
+            <DoorGlassPanel 
+              position="top"
+              left="20%"
+              right="20%"
+              top="20%"
+              bottom="50%"
+              glassOpacity={glassOpacity}
+              rubberColor={rubberColorObject.hex}
+              glazingId={glazingObject.id}
+              isFront={false}
+            />
+          </>
         )}
         
-        {/* Premium door has additional lower panel - front */}
-        {profileObject && profileObject.id === 'bluEvolution-92' && (
-          <div 
-            className="absolute flex items-center justify-center"
-            style={{ 
-              left: '20%',
-              right: '20%',
-              top: '60%',
-              bottom: '20%',
-              backgroundColor: `rgba(220, 230, 240, ${glassOpacity})`,
-              boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
-              borderRadius: '2px',
-              transform: 'translateZ(6px)',
-              border: `2px solid ${rubberColorObject.hex}`,
-            }}
-          >
-            {/* Glazing layers visualization */}
-            <GlazingLayers glazingId={glazingObject.id} />
-          </div>
+        {/* Premium door additional panels */}
+        {showSecondGlassPanel && (
+          <>
+            {/* Bottom panel - front */}
+            <DoorGlassPanel 
+              position="bottom"
+              left="20%"
+              right="20%"
+              top="60%"
+              bottom="20%"
+              glassOpacity={glassOpacity}
+              rubberColor={rubberColorObject.hex}
+              glazingId={glazingObject.id}
+              isFront={true}
+            />
+            
+            {/* Bottom panel - back */}
+            <DoorGlassPanel 
+              position="bottom"
+              left="20%"
+              right="20%"
+              top="60%"
+              bottom="20%"
+              glassOpacity={glassOpacity}
+              rubberColor={rubberColorObject.hex}
+              glazingId={glazingObject.id}
+              isFront={false}
+            />
+          </>
         )}
 
-        {/* Premium door has additional lower panel - back */}
-        {profileObject && profileObject.id === 'bluEvolution-92' && (
-          <div 
-            className="absolute flex items-center justify-center"
-            style={{ 
-              left: '20%',
-              right: '20%',
-              top: '60%',
-              bottom: '20%',
-              backgroundColor: `rgba(220, 230, 240, ${glassOpacity})`,
-              boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
-              borderRadius: '2px',
-              transform: 'rotateY(180deg) translateZ(6px)',
-              border: `2px solid ${rubberColorObject.hex}`,
-            }}
-          >
-            {/* Glazing layers visualization */}
-            <GlazingLayers glazingId={glazingObject.id} />
-          </div>
-        )}
-
-        {/* Rubber seals - front */}
-        <div 
-          className="absolute rounded-sm pointer-events-none"
-          style={{ 
-            inset: '5%',
-            border: `3px solid ${rubberColorObject.hex}`,
-            opacity: 0.9,
-            transform: 'translateZ(6px)',
-          }}
-        ></div>
-
-        {/* Rubber seals - back */}
-        <div 
-          className="absolute rounded-sm pointer-events-none"
-          style={{ 
-            inset: '5%',
-            border: `3px solid ${rubberColorObject.hex}`,
-            opacity: 0.9,
-            transform: 'rotateY(180deg) translateZ(6px)',
-          }}
-        ></div>
+        {/* Rubber seals */}
+        <DoorRubberSeal rubberColor={rubberColorObject.hex} isFront={true} />
+        <DoorRubberSeal rubberColor={rubberColorObject.hex} isFront={false} />
         
-        {/* Door hinges - front */}
-        <div className="absolute left-[10%] top-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
-        <div className="absolute left-[10%] bottom-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
-        
-        {/* Door hinges - back */}
-        <div className="absolute right-[10%] top-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'rotateY(180deg) translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
-        <div className="absolute right-[10%] bottom-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'rotateY(180deg) translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
+        {/* Door hinges */}
+        <DoorHinge position="top" side="left" isFront={true} />
+        <DoorHinge position="bottom" side="left" isFront={true} />
+        <DoorHinge position="top" side="left" isFront={false} />
+        <DoorHinge position="bottom" side="left" isFront={false} />
 
-        {/* Profile name on the door - positioned on front */}
+        {/* Profile name on the door */}
         {profileObject && (
-          <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-90 z-20"
-               style={{ transform: 'translateZ(6px)' }}>
-            {profileObject.name}
-          </div>
+          <ProfileLabel profileName={profileObject.name} position="bottom" />
         )}
         
         {/* Door silhouette shadow for depth */}
-        <div
-          className="absolute"
-          style={{
-            inset: '-15px',
-            transform: 'translateZ(-10px)',
-            backgroundColor: 'rgba(0,0,0,0.1)',
-            filter: 'blur(15px)',
-            borderRadius: '10px',
-          }}
-        />
+        <WindowShadow />
       </div>
     );
   }
