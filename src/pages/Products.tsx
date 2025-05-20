@@ -39,27 +39,15 @@ const Products = () => {
               {windowProfiles.map((profile) => (
                 <div key={profile.id} className="salamander-card">
                   <div className="h-60 overflow-hidden">
-                    {profile.id === "greenline_76" && (
-                      <img 
-                        src="https://salamander-windows.com/wp-content/uploads/2022/06/greenline-Detail-United-Windows.jpg" 
-                        alt={profile.name} 
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                    )}
-                    {profile.id === "bluevolution_82" && (
-                      <img 
-                        src="https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-bluEvolution-facade.jpg" 
-                        alt={profile.name} 
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                    )}
-                    {profile.id === "streamline_76" && (
-                      <img 
-                        src="https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-Facade-streamline.jpg" 
-                        alt={profile.name} 
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                    )}
+                    <img 
+                      src={profile.imageUrl} 
+                      alt={profile.name} 
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/placeholder.svg';
+                      }}
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold mb-2 text-salamander-darkgray">{profile.name}</h3>
@@ -90,27 +78,15 @@ const Products = () => {
               {doorProfiles.map((profile) => (
                 <div key={profile.id} className="salamander-card">
                   <div className="h-60 overflow-hidden">
-                    {profile.id === "entrance_76" && (
-                      <img 
-                        src="https://salamander-windows.com/wp-content/uploads/2022/06/Front-Door.jpg" 
-                        alt={profile.name} 
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                    )}
-                    {profile.id === "sliding_82" && (
-                      <img 
-                        src="https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-Fassade-mit-evolutionDrive-SF.jpg" 
-                        alt={profile.name} 
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                    )}
-                    {profile.id === "patio_76" && (
-                      <img 
-                        src="https://salamander-windows.com/wp-content/uploads/2022/06/evolutionDrive-HST-detail-United-Windows.jpg" 
-                        alt={profile.name} 
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                    )}
+                    <img 
+                      src={profile.imageUrl} 
+                      alt={profile.name} 
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/placeholder.svg';
+                      }}
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold mb-2 text-salamander-darkgray">{profile.name}</h3>

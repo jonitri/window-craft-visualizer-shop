@@ -22,92 +22,171 @@ export interface ColorOption {
   name: string;
   hex: string;
   imageUrl: string;
+  category: 'base' | 'outside' | 'inside' | 'rubber';
   priceModifier: number;
 }
 
 // Window profiles
 export const windowProfiles: Profile[] = [
   {
-    id: 'wp-standard',
-    name: 'Standard Series',
-    description: 'Our cost-effective solution with excellent insulation properties.',
+    id: 'greenEvolution-free',
+    name: 'greenEvolution free',
+    description: 'Sustainable and eco-friendly window system with exceptional thermal insulation.',
     features: [
-      '70mm frame depth',
-      'Double glazing capability',
-      '2 gasket sealing system',
-      'U-value: 1.3 W/m²K'
+      'Highly sustainable materials',
+      'Optimal thermal insulation',
+      'Eco-friendly production',
+      'Energy-efficient design'
     ],
-    imageUrl: '/placeholder.svg',
-    basePrice: 200
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/greenline-Detail-United-Windows.jpg',
+    basePrice: 250
   },
   {
-    id: 'wp-premium',
-    name: 'Premium Series',
-    description: 'Enhanced thermal and sound insulation for comfortable living.',
+    id: 'bluEvolution-92',
+    name: 'bluEvolution 92',
+    description: 'Premium window system with outstanding insulation properties for maximum energy efficiency.',
     features: [
-      '80mm frame depth',
+      '92mm profile depth',
       'Triple glazing capability',
       '3 gasket sealing system',
-      'U-value: 0.9 W/m²K'
+      'U-value: 0.7 W/m²K'
     ],
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-bluEvolution-facade.jpg',
     basePrice: 350
   },
   {
-    id: 'wp-elite',
-    name: 'Elite Series',
-    description: 'Top-tier performance with maximum comfort and energy efficiency.',
+    id: 'evolutionDrive-HST',
+    name: 'evolutionDrive HST',
+    description: 'Premium lift-and-slide door system for large openings with smooth operation.',
     features: [
-      '90mm frame depth',
-      'Triple glazing as standard',
-      'Advanced thermal breaks',
-      'U-value: 0.7 W/m²K'
+      'Lift-and-slide mechanism',
+      'Large glass surfaces',
+      'Barrier-free threshold',
+      'Excellent thermal insulation'
     ],
-    imageUrl: '/placeholder.svg',
-    basePrice: 500
-  }
-];
-
-// Door profiles
-export const doorProfiles: Profile[] = [
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/evolutionDrive-HST-detail-United-Windows.jpg',
+    basePrice: 400
+  },
   {
-    id: 'dp-entry',
-    name: 'Entry Series',
-    description: 'Reliable, secure entry doors for everyday use.',
+    id: 'evolutionDrive-Plus',
+    name: 'evolutionDrive Plus+',
+    description: 'Enhanced sliding door system with premium features for comfort and efficiency.',
     features: [
-      '70mm frame depth',
+      'Enhanced thermal breaks',
       'Multi-point locking system',
-      'Standard threshold',
-      'U-value: 1.4 W/m²K'
+      'Smooth sliding operation',
+      'Customizable configurations'
     ],
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-evolutionDrive-HST-Villa-M.jpg',
     basePrice: 450
   },
   {
-    id: 'dp-security',
-    name: 'Security Series',
-    description: 'Enhanced protection with advanced security features.',
+    id: 'evolutionDrive-SF',
+    name: 'evolutionDrive SF',
+    description: 'Slim-framed sliding door system for modern architectural designs.',
     features: [
-      '80mm frame depth',
-      'Advanced multi-point locking',
-      'Reinforced panels',
-      'U-value: 1.1 W/m²K'
+      'Slim frame profile',
+      'Maximized glass area',
+      'Contemporary design',
+      'Excellent weather resistance'
     ],
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-Fassade-mit-evolutionDrive-SF.jpg',
+    basePrice: 500
+  },
+  {
+    id: 'evolutionDrive-60',
+    name: 'evolutionDrive 60',
+    description: 'Cost-effective sliding system with reliable performance and versatility.',
+    features: [
+      '60mm frame depth',
+      'Double glazing capability',
+      'Economical choice',
+      'Various opening options'
+    ],
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Front-Door.jpg',
+    basePrice: 300
+  }
+];
+
+// Door profiles (using the same profiles as windows in this case)
+export const doorProfiles: Profile[] = [
+  {
+    id: 'greenEvolution-free',
+    name: 'greenEvolution free',
+    description: 'Sustainable and eco-friendly door system with exceptional thermal insulation.',
+    features: [
+      'Highly sustainable materials',
+      'Optimal thermal insulation',
+      'Eco-friendly production',
+      'Energy-efficient design'
+    ],
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/greenline-Detail-United-Windows.jpg',
+    basePrice: 350
+  },
+  {
+    id: 'bluEvolution-92',
+    name: 'bluEvolution 92',
+    description: 'Premium door system with outstanding insulation properties for maximum energy efficiency.',
+    features: [
+      '92mm profile depth',
+      'Triple glazing capability',
+      '3 gasket sealing system',
+      'U-value: 0.7 W/m²K'
+    ],
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-bluEvolution-facade.jpg',
+    basePrice: 450
+  },
+  {
+    id: 'evolutionDrive-HST',
+    name: 'evolutionDrive HST',
+    description: 'Premium lift-and-slide door system for large openings with smooth operation.',
+    features: [
+      'Lift-and-slide mechanism',
+      'Large glass surfaces',
+      'Barrier-free threshold',
+      'Excellent thermal insulation'
+    ],
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/evolutionDrive-HST-detail-United-Windows.jpg',
+    basePrice: 600
+  },
+  {
+    id: 'evolutionDrive-Plus',
+    name: 'evolutionDrive Plus+',
+    description: 'Enhanced sliding door system with premium features for comfort and efficiency.',
+    features: [
+      'Enhanced thermal breaks',
+      'Multi-point locking system',
+      'Smooth sliding operation',
+      'Customizable configurations'
+    ],
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-evolutionDrive-HST-Villa-M.jpg',
     basePrice: 650
   },
   {
-    id: 'dp-premium',
-    name: 'Premium Entrance',
-    description: 'Luxurious entrance doors with superior insulation and security.',
+    id: 'evolutionDrive-SF',
+    name: 'evolutionDrive SF',
+    description: 'Slim-framed sliding door system for modern architectural designs.',
     features: [
-      '90mm frame depth',
-      'Biometric locking options',
-      'Low-threshold accessibility',
-      'U-value: 0.8 W/m²K'
+      'Slim frame profile',
+      'Maximized glass area',
+      'Contemporary design',
+      'Excellent weather resistance'
     ],
-    imageUrl: '/placeholder.svg',
-    basePrice: 850
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-Fassade-mit-evolutionDrive-SF.jpg',
+    basePrice: 700
+  },
+  {
+    id: 'evolutionDrive-60',
+    name: 'evolutionDrive 60',
+    description: 'Cost-effective sliding system with reliable performance and versatility.',
+    features: [
+      '60mm frame depth',
+      'Double glazing capability',
+      'Economical choice',
+      'Various opening options'
+    ],
+    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Front-Door.jpg',
+    basePrice: 450
   }
 ];
 
@@ -140,61 +219,36 @@ export const glazingOptions: GlazingOption[] = [
     priceModifier: 100
   },
   {
-    id: 'glz-acoustic',
-    name: 'Acoustic Glazing',
-    description: 'Specialized sound reduction glass for noisy environments.',
+    id: 'glz-quad',
+    name: '4 Glazing',
+    description: 'Maximum insulation for extreme conditions and ultimate energy efficiency.',
     features: [
-      'Laminated acoustic interlayer',
-      'Different glass thickness for each pane',
-      '38dB sound reduction',
-      'U-value: 1.0 W/m²K'
-    ],
-    imageUrl: '/placeholder.svg',
-    priceModifier: 150
-  },
-  {
-    id: 'glz-security',
-    name: 'Security Glazing',
-    description: 'Impact-resistant glazing for enhanced security.',
-    features: [
-      'Laminated security glass',
-      'P4A rating',
-      'Virtually unbreakable',
-      'U-value: 1.1 W/m²K'
+      '60mm total thickness',
+      'Krypton and Argon filled',
+      'Triple Low-E coating',
+      'U-value: 0.5 W/m²K'
     ],
     imageUrl: '/placeholder.svg',
     priceModifier: 200
   }
 ];
 
-// Color options
-export const colorOptions: ColorOption[] = [
+// Base color options (main frame color)
+export const baseColorOptions: ColorOption[] = [
   {
     id: 'col-white',
     name: 'White',
     hex: '#FFFFFF',
     imageUrl: '/placeholder.svg',
+    category: 'base',
     priceModifier: 0 // Base price
   },
   {
-    id: 'col-anthracite',
-    name: 'Anthracite Grey',
-    hex: '#383E42',
-    imageUrl: '/placeholder.svg',
-    priceModifier: 50
-  },
-  {
-    id: 'col-black',
-    name: 'Jet Black',
-    hex: '#1D1D1D',
-    imageUrl: '/placeholder.svg',
-    priceModifier: 50
-  },
-  {
-    id: 'col-oak',
+    id: 'col-golden-oak',
     name: 'Golden Oak',
     hex: '#D4A76A',
     imageUrl: '/placeholder.svg',
+    category: 'base',
     priceModifier: 100
   },
   {
@@ -202,15 +256,168 @@ export const colorOptions: ColorOption[] = [
     name: 'Walnut',
     hex: '#5C4033',
     imageUrl: '/placeholder.svg',
+    category: 'base',
     priceModifier: 100
   },
   {
-    id: 'col-custom',
-    name: 'Custom RAL Color',
-    hex: '#0073CF',
+    id: 'col-black',
+    name: 'Black',
+    hex: '#1D1D1D',
     imageUrl: '/placeholder.svg',
-    priceModifier: 150
+    category: 'base',
+    priceModifier: 100
   }
+];
+
+// Outside color options (Salamander colors)
+export const outsideColorOptions: ColorOption[] = [
+  {
+    id: 'col-out-white',
+    name: 'White',
+    hex: '#FFFFFF',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 0
+  },
+  {
+    id: 'col-out-cream-white',
+    name: 'Cream White',
+    hex: '#F5F5DC',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-light-gray',
+    name: 'Light Gray',
+    hex: '#D3D3D3',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-silver-gray',
+    name: 'Silver Gray',
+    hex: '#C0C0C0',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-anthracite-gray',
+    name: 'Anthracite Gray',
+    hex: '#383E42',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-green',
+    name: 'Green',
+    hex: '#0B6623',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-brown',
+    name: 'Brown',
+    hex: '#964B00',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-wine-red',
+    name: 'Wine Red',
+    hex: '#722F37',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-midnight-blue',
+    name: 'Midnight Blue',
+    hex: '#191970',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-black',
+    name: 'Black',
+    hex: '#000000',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-golden-oak',
+    name: 'Golden Oak',
+    hex: '#D4A76A',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 100
+  },
+  {
+    id: 'col-out-walnut',
+    name: 'Walnut',
+    hex: '#5C4033',
+    imageUrl: '/placeholder.svg',
+    category: 'outside',
+    priceModifier: 100
+  }
+];
+
+// Inside colors (same as outside for simplicity)
+export const insideColorOptions: ColorOption[] = outsideColorOptions.map(color => ({
+  ...color,
+  id: color.id.replace('out', 'in'),
+  category: 'inside' as const
+}));
+
+// Rubber seal colors
+export const rubberColorOptions: ColorOption[] = [
+  {
+    id: 'col-rubber-black',
+    name: 'Black',
+    hex: '#000000',
+    imageUrl: '/placeholder.svg',
+    category: 'rubber',
+    priceModifier: 0
+  },
+  {
+    id: 'col-rubber-gray',
+    name: 'Gray',
+    hex: '#808080',
+    imageUrl: '/placeholder.svg',
+    category: 'rubber',
+    priceModifier: 10
+  },
+  {
+    id: 'col-rubber-brown',
+    name: 'Brown',
+    hex: '#964B00',
+    imageUrl: '/placeholder.svg',
+    category: 'rubber',
+    priceModifier: 10
+  },
+  {
+    id: 'col-rubber-white',
+    name: 'White',
+    hex: '#FFFFFF',
+    imageUrl: '/placeholder.svg',
+    category: 'rubber',
+    priceModifier: 10
+  }
+];
+
+// All color options combined
+export const colorOptions = [
+  ...baseColorOptions,
+  ...outsideColorOptions,
+  ...insideColorOptions,
+  ...rubberColorOptions
 ];
 
 export const calculatePrice = (
