@@ -57,33 +57,54 @@ export const ProductPreview = ({
       case 'glz-quad':
         return 0.6; // 4 glazing is even less transparent
       default:
-        return 0.9; // Double glazing (standard)
+        return 0.85; // Double glazing (standard)
+    }
+  };
+  
+  // Helper function to get frame thickness based on profile
+  const getFrameThickness = () => {
+    if (profileObject.id.includes('bluEvolution')) {
+      return 24; // Premium profiles have thicker frames
+    } else if (profileObject.id.includes('evolutionDrive')) {
+      return 20; // Mid-range profiles
+    } else {
+      return 16; // Standard profiles
     }
   };
 
-  // Update the getOpeningDirectionIcon function to use triangle-like indicators
+  // Update the getOpeningDirectionIcon function to use arrow indicators
   const getOpeningDirectionIcon = (direction: string) => {
     switch(direction) {
       case 'left':
         return (
-          <div className="w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-primary border-b-8 border-b-transparent" />
+          <div className="w-6 h-6 flex items-center justify-center">
+            <div className="w-0 h-0 border-t-[6px] border-t-transparent border-r-[10px] border-r-primary border-b-[6px] border-b-transparent" />
+          </div>
         );
       case 'right':
         return (
-          <div className="w-0 h-0 border-t-8 border-t-transparent border-l-8 border-l-primary border-b-8 border-b-transparent" />
+          <div className="w-6 h-6 flex items-center justify-center">
+            <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-primary border-b-[6px] border-b-transparent" />
+          </div>
         );
       case 'top-left':
         return (
-          <div className="w-0 h-0 border-r-8 border-r-transparent border-l-8 border-l-transparent border-b-8 border-b-primary transform rotate-180" />
+          <div className="w-6 h-6 flex items-center justify-center">
+            <div className="w-0 h-0 border-r-[6px] border-r-transparent border-l-[6px] border-l-transparent border-b-[10px] border-b-primary transform rotate-[225deg]" />
+          </div>
         );
       case 'top-right':
         return (
-          <div className="w-0 h-0 border-r-8 border-r-transparent border-l-8 border-l-transparent border-b-8 border-b-primary transform rotate-180" />
+          <div className="w-6 h-6 flex items-center justify-center">
+            <div className="w-0 h-0 border-r-[6px] border-r-transparent border-l-[6px] border-l-transparent border-b-[10px] border-b-primary transform rotate-[135deg]" />
+          </div>
         );
       default:
         return null;
     }
   };
+
+  const frameThickness = getFrameThickness();
 
   return (
     <Card className="mb-6">
@@ -124,200 +145,326 @@ export const ProductPreview = ({
         
         <div 
           className="bg-secondary rounded-lg p-8 flex items-center justify-center relative"
-          style={{ perspective: '1000px', height: '450px', overflow: 'hidden' }}
+          style={{ 
+            perspective: '2000px', 
+            height: '450px', 
+            overflow: 'hidden',
+            background: 'linear-gradient(to bottom, #e0e8f0, #c0d0e0)'
+          }}
         >
           {productType === 'window' ? (
             // Window visualization with improved 3D appearance
             <div 
               ref={previewRef}
-              className="relative shadow-lg transition-transform duration-500"
+              className="relative transition-transform duration-500"
               style={{
                 width: `${Math.min(70, (width / height) * 55)}%`,
                 height: `${Math.min(70, (height / width) * 55)}%`,
-                maxWidth: '70%',
-                maxHeight: '70%',
+                maxWidth: '80%',
+                maxHeight: '80%',
                 transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
                 transformStyle: 'preserve-3d',
+                boxShadow: '0px 20px 40px rgba(0,0,0,0.3)',
               }}
             >
-              {/* Window frame with depth */}
+              {/* Base frame with depth */}
               <div 
-                className="absolute inset-0 z-10 transform-gpu"
+                className="absolute inset-0 rounded-md"
                 style={{ 
                   backgroundColor: baseColorObject.hex,
-                  backfaceVisibility: 'hidden',
+                  transform: 'translateZ(0px)',
                   transformStyle: 'preserve-3d',
-                  boxShadow: '0 0 15px rgba(0,0,0,0.2)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                 }}
               ></div>
               
-              {/* Side panels to create depth - left side */}
+              {/* Frame sides for depth - larger values for better 3D effect */}
               <div 
-                className="absolute left-0 top-0 bottom-0 z-20 transform-gpu"
+                className="absolute left-0 top-0 bottom-0 w-6"
                 style={{ 
-                  width: '20px',
                   backgroundColor: baseColorObject.hex,
-                  transform: 'rotateY(-90deg) translateZ(-10px)',
+                  transform: 'rotateY(-90deg) translateZ(-3px)',
                   transformOrigin: 'left',
-                  backfaceVisibility: 'hidden',
+                  borderRight: '1px solid rgba(0,0,0,0.1)',
                 }}
               ></div>
               
-              {/* Side panels to create depth - right side */}
               <div 
-                className="absolute right-0 top-0 bottom-0 z-20 transform-gpu"
+                className="absolute right-0 top-0 bottom-0 w-6"
                 style={{ 
-                  width: '20px',
                   backgroundColor: baseColorObject.hex,
-                  transform: 'rotateY(90deg) translateZ(-10px)',
+                  transform: 'rotateY(90deg) translateZ(-3px)',
                   transformOrigin: 'right',
-                  backfaceVisibility: 'hidden',
+                  borderLeft: '1px solid rgba(0,0,0,0.1)',
                 }}
               ></div>
               
-              {/* Side panels to create depth - top side */}
               <div 
-                className="absolute left-0 right-0 top-0 z-20 transform-gpu"
+                className="absolute left-0 right-0 top-0 h-6"
                 style={{ 
-                  height: '20px',
                   backgroundColor: baseColorObject.hex,
-                  transform: 'rotateX(90deg) translateZ(-10px)',
+                  transform: 'rotateX(90deg) translateZ(-3px)',
                   transformOrigin: 'top',
-                  backfaceVisibility: 'hidden',
+                  borderBottom: '1px solid rgba(0,0,0,0.1)',
                 }}
               ></div>
               
-              {/* Side panels to create depth - bottom side */}
               <div 
-                className="absolute left-0 right-0 bottom-0 z-20 transform-gpu"
+                className="absolute left-0 right-0 bottom-0 h-6"
                 style={{ 
-                  height: '20px',
                   backgroundColor: baseColorObject.hex,
-                  transform: 'rotateX(-90deg) translateZ(-10px)',
+                  transform: 'rotateX(-90deg) translateZ(-3px)',
                   transformOrigin: 'bottom',
-                  backfaceVisibility: 'hidden',
+                  borderTop: '1px solid rgba(0,0,0,0.1)',
                 }}
               ></div>
               
-              {/* Outside frame color */}
+              {/* Outside frame (front face) */}
               <div 
-                className="absolute inset-0 z-30 transform-gpu"
+                className="absolute inset-0 rounded-md"
                 style={{ 
                   backgroundColor: outsideColorObject.hex, 
-                  transform: 'rotateY(0deg) translateZ(1px)',
-                  backfaceVisibility: 'hidden',
+                  transform: 'translateZ(1px)',
                 }}
               >
-                {/* Frame internal borders for realistic appearance */}
-                <div className="absolute inset-[8%] border-8 border-solid" style={{ borderColor: outsideColorObject.hex }}></div>
+                {/* Frame inner border */}
+                <div 
+                  className="absolute" 
+                  style={{ 
+                    inset: `${frameThickness}px`,
+                    border: `2px solid ${outsideColorObject.hex}`,
+                    borderColor: `${outsideColorObject.hex} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${outsideColorObject.hex}`,
+                    boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
+                  }}
+                ></div>
               </div>
 
-              {/* Inside frame color */}
+              {/* Inside frame (back face) */}
               <div 
-                className="absolute inset-0 z-30 transform-gpu"
+                className="absolute inset-0 rounded-md"
                 style={{ 
                   backgroundColor: insideColorObject.hex, 
                   transform: 'rotateY(180deg) translateZ(1px)',
-                  backfaceVisibility: 'hidden',
                 }}
               >
-                {/* Frame internal borders for realistic appearance */}
-                <div className="absolute inset-[8%] border-8 border-solid" style={{ borderColor: insideColorObject.hex }}></div>
+                {/* Frame inner border */}
+                <div 
+                  className="absolute" 
+                  style={{ 
+                    inset: `${frameThickness}px`,
+                    border: `2px solid ${insideColorObject.hex}`,
+                    borderColor: `${insideColorObject.hex} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${insideColorObject.hex}`,
+                    boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
+                  }}
+                ></div>
               </div>
               
-              {/* Render window based on type - with improved visuals */}
+              {/* Render window based on type */}
               {selectedWindowType === 'single-leaf' && (
-                <div 
-                  className="absolute inset-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
-                  style={{ 
-                    backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                    boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                    borderRadius: '1px',
-                    transform: 'translateZ(2px)',
-                    borderColor: outsideColorObject.hex,
-                  }}
-                >
-                  {/* Opening direction indicator - centered */}
-                  <div className="absolute inset-0 flex items-center justify-center">
+                <>
+                  {/* Front glass panel */}
+                  <div 
+                    className="absolute flex items-center justify-center overflow-hidden"
+                    style={{ 
+                      inset: `${frameThickness}px`,
+                      backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
+                      transform: 'translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    {/* Opening direction indicator */}
                     <div className="absolute">
-                      {getOpeningDirectionIcon(selectedOpeningDirection)}
+                      {selectedOpeningDirection !== 'fixed' && getOpeningDirectionIcon(selectedOpeningDirection)}
                     </div>
-                  </div>
-                  
-                  {/* Visualize glazing layers */}
-                  {glazingObject.id === 'glz-double' && (
-                    <div className="absolute inset-0 border-r border-white opacity-30"></div>
-                  )}
-                  
-                  {glazingObject.id === 'glz-triple' && (
-                    <>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
-                    </>
-                  )}
-                  
-                  {glazingObject.id === 'glz-quad' && (
-                    <>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                    
+                    {/* Glazing layers visualization */}
+                    {glazingObject.id === 'glz-double' && (
                       <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
-                    </>
-                  )}
+                    )}
+                    
+                    {glazingObject.id === 'glz-triple' && (
+                      <>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
+                      </>
+                    )}
+                    
+                    {glazingObject.id === 'glz-quad' && (
+                      <>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
+                      </>
+                    )}
 
-                  {profileObject && (
                     <div className="text-xs text-center text-gray-600 font-medium opacity-70">
                       {profileObject.name}
                     </div>
-                  )}
-                </div>
+                  </div>
+
+                  {/* Back glass panel - sash frame */}
+                  <div 
+                    className="absolute overflow-hidden"
+                    style={{ 
+                      inset: `${frameThickness}px`,
+                      backgroundColor: insideColorObject.hex,
+                      borderRadius: '2px',
+                      transform: 'rotateY(180deg) translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    {/* Inner sash frame with glass opening */}
+                    <div
+                      className="absolute"
+                      style={{ 
+                        inset: '8px',
+                        backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      }}
+                    >
+                      {/* Glazing layers visualization */}
+                      {glazingObject.id === 'glz-double' && (
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                      )}
+                      
+                      {glazingObject.id === 'glz-triple' && (
+                        <>
+                          <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
+                          <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
+                        </>
+                      )}
+                      
+                      {glazingObject.id === 'glz-quad' && (
+                        <>
+                          <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                          <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                          <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </>
               )}
               
               {selectedWindowType === 'double-leaf' && (
                 <>
-                  {/* Left leaf - with frame */}
+                  {/* Left leaf - front */}
                   <div 
-                    className="absolute top-[12%] bottom-[12%] left-[12%] right-[51%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
+                    className="absolute overflow-hidden"
                     style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      left: `${frameThickness}px`,
+                      width: `calc(50% - ${frameThickness * 1.5}px)`,
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                      borderRadius: '1px',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
                       transform: 'translateZ(2px)',
-                      borderColor: outsideColorObject.hex,
+                      border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="absolute">
-                        {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
-                          getOpeningDirectionIcon(selectedOpeningDirection) : null}
-                      </div>
+                      {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
+                        getOpeningDirectionIcon(selectedOpeningDirection) : null}
                     </div>
                   </div>
                   
-                  {/* Right leaf - with frame */}
+                  {/* Left leaf - back (with glass opening) */}
                   <div 
-                    className="absolute top-[12%] bottom-[12%] left-[51%] right-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
+                    className="absolute overflow-hidden"
                     style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      left: `${frameThickness}px`,
+                      width: `calc(50% - ${frameThickness * 1.5}px)`,
+                      backgroundColor: insideColorObject.hex,
+                      borderRadius: '2px',
+                      transform: 'rotateY(180deg) translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    <div
+                      className="absolute"
+                      style={{ 
+                        inset: '8px',
+                        backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      }}
+                    ></div>
+                  </div>
+                  
+                  {/* Right leaf - front */}
+                  <div 
+                    className="absolute overflow-hidden"
+                    style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      right: `${frameThickness}px`,
+                      width: `calc(50% - ${frameThickness * 1.5}px)`,
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                      borderRadius: '1px',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
                       transform: 'translateZ(2px)',
-                      borderColor: outsideColorObject.hex,
+                      border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="absolute">
-                        {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? 
-                          getOpeningDirectionIcon(selectedOpeningDirection) : null}
-                      </div>
+                      {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? 
+                        getOpeningDirectionIcon(selectedOpeningDirection) : null}
                     </div>
                   </div>
                   
-                  {/* Central divider */}
+                  {/* Right leaf - back (with glass opening) */}
                   <div 
-                    className="absolute left-[50%] top-[12%] bottom-[12%] w-[2%] z-50 transform-gpu" 
+                    className="absolute overflow-hidden"
                     style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      right: `${frameThickness}px`,
+                      width: `calc(50% - ${frameThickness * 1.5}px)`,
+                      backgroundColor: insideColorObject.hex,
+                      borderRadius: '2px',
+                      transform: 'rotateY(180deg) translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    <div
+                      className="absolute"
+                      style={{ 
+                        inset: '8px',
+                        backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      }}
+                    ></div>
+                  </div>
+                  
+                  {/* Central divider - front */}
+                  <div 
+                    className="absolute" 
+                    style={{ 
+                      left: '50%',
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      width: `${frameThickness}px`,
                       backgroundColor: outsideColorObject.hex, 
                       transform: 'translateX(-50%) translateZ(2px)',
+                      boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+                    }} 
+                  />
+                  
+                  {/* Central divider - back */}
+                  <div 
+                    className="absolute" 
+                    style={{ 
+                      left: '50%',
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      width: `${frameThickness}px`,
+                      backgroundColor: insideColorObject.hex, 
+                      transform: 'translateX(-50%) rotateY(180deg) translateZ(2px)',
+                      boxShadow: '0 0 5px rgba(0,0,0,0.2)',
                     }} 
                   />
                 </>
@@ -325,202 +472,484 @@ export const ProductPreview = ({
               
               {selectedWindowType === 'triple-leaf' && (
                 <>
-                  {/* Left leaf */}
+                  {/* Left leaf - front */}
                   <div 
-                    className="absolute top-[12%] bottom-[12%] left-[12%] right-[67%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
+                    className="absolute overflow-hidden"
                     style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      left: `${frameThickness}px`,
+                      width: `calc(33.33% - ${frameThickness * 1.33}px)`,
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                      borderRadius: '1px',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
                       transform: 'translateZ(2px)',
-                      borderColor: outsideColorObject.hex,
+                      border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="absolute">
-                        {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
-                          getOpeningDirectionIcon(selectedOpeningDirection) : null}
-                      </div>
+                      {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
+                        getOpeningDirectionIcon(selectedOpeningDirection) : null}
                     </div>
                   </div>
                   
-                  {/* Middle leaf */}
+                  {/* Left leaf - back (with glass opening) */}
                   <div 
-                    className="absolute top-[12%] bottom-[12%] left-[35%] right-[35%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
+                    className="absolute overflow-hidden"
                     style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      left: `${frameThickness}px`,
+                      width: `calc(33.33% - ${frameThickness * 1.33}px)`,
+                      backgroundColor: insideColorObject.hex,
+                      borderRadius: '2px',
+                      transform: 'rotateY(180deg) translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    <div
+                      className="absolute"
+                      style={{ 
+                        inset: '8px',
+                        backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      }}
+                    ></div>
+                  </div>
+                  
+                  {/* Middle leaf - front */}
+                  <div 
+                    className="absolute overflow-hidden"
+                    style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      left: `calc(33.33% + ${frameThickness * 0.67}px)`,
+                      width: `calc(33.34% - ${frameThickness * 1.34}px)`,
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                      borderRadius: '1px',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
                       transform: 'translateZ(2px)',
-                      borderColor: outsideColorObject.hex,
+                      border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   />
                   
-                  {/* Right leaf */}
+                  {/* Middle leaf - back (with glass opening) */}
                   <div 
-                    className="absolute top-[12%] bottom-[12%] left-[67%] right-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
+                    className="absolute overflow-hidden"
                     style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      left: `calc(33.33% + ${frameThickness * 0.67}px)`,
+                      width: `calc(33.34% - ${frameThickness * 1.34}px)`,
+                      backgroundColor: insideColorObject.hex,
+                      borderRadius: '2px',
+                      transform: 'rotateY(180deg) translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    <div
+                      className="absolute"
+                      style={{ 
+                        inset: '8px',
+                        backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      }}
+                    ></div>
+                  </div>
+                  
+                  {/* Right leaf - front */}
+                  <div 
+                    className="absolute overflow-hidden"
+                    style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      right: `${frameThickness}px`,
+                      width: `calc(33.33% - ${frameThickness * 1.33}px)`,
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                      borderRadius: '1px',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
                       transform: 'translateZ(2px)',
-                      borderColor: outsideColorObject.hex,
+                      border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="absolute">
-                        {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? 
-                          getOpeningDirectionIcon(selectedOpeningDirection) : null}
-                      </div>
+                      {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? 
+                        getOpeningDirectionIcon(selectedOpeningDirection) : null}
                     </div>
                   </div>
                   
-                  {/* Left divider */}
+                  {/* Right leaf - back (with glass opening) */}
                   <div 
-                    className="absolute left-[34%] top-[12%] bottom-[12%] w-[2%] z-50 transform-gpu" 
+                    className="absolute overflow-hidden"
                     style={{ 
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      right: `${frameThickness}px`,
+                      width: `calc(33.33% - ${frameThickness * 1.33}px)`,
+                      backgroundColor: insideColorObject.hex,
+                      borderRadius: '2px',
+                      transform: 'rotateY(180deg) translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    <div
+                      className="absolute"
+                      style={{ 
+                        inset: '8px',
+                        backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      }}
+                    ></div>
+                  </div>
+                  
+                  {/* Dividers - front */}
+                  <div 
+                    className="absolute" 
+                    style={{ 
+                      left: '33.33%',
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      width: `${frameThickness}px`,
                       backgroundColor: outsideColorObject.hex, 
                       transform: 'translateX(-50%) translateZ(2px)',
+                      boxShadow: '0 0 5px rgba(0,0,0,0.2)',
                     }} 
                   />
                   
-                  {/* Right divider */}
                   <div 
-                    className="absolute left-[66%] top-[12%] bottom-[12%] w-[2%] z-50 transform-gpu" 
+                    className="absolute" 
                     style={{ 
+                      left: '66.67%',
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      width: `${frameThickness}px`,
                       backgroundColor: outsideColorObject.hex, 
                       transform: 'translateX(-50%) translateZ(2px)',
+                      boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+                    }} 
+                  />
+                  
+                  {/* Dividers - back */}
+                  <div 
+                    className="absolute" 
+                    style={{ 
+                      left: '33.33%',
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      width: `${frameThickness}px`,
+                      backgroundColor: insideColorObject.hex, 
+                      transform: 'translateX(-50%) rotateY(180deg) translateZ(2px)',
+                      boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+                    }} 
+                  />
+                  
+                  <div 
+                    className="absolute" 
+                    style={{ 
+                      left: '66.67%',
+                      top: `${frameThickness}px`,
+                      bottom: `${frameThickness}px`,
+                      width: `${frameThickness}px`,
+                      backgroundColor: insideColorObject.hex, 
+                      transform: 'translateX(-50%) rotateY(180deg) translateZ(2px)',
+                      boxShadow: '0 0 5px rgba(0,0,0,0.2)',
                     }} 
                   />
                 </>
               )}
               
               {selectedWindowType === 'fixed' && (
-                <div 
-                  className="absolute inset-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
-                  style={{ 
-                    backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                    boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                    borderRadius: '1px',
-                    transform: 'translateZ(2px)',
-                    borderColor: outsideColorObject.hex,
-                  }}
-                >
-                  <div className="text-sm font-medium opacity-70">Fixed</div>
-                  
-                  {/* Visualize glazing layers */}
-                  {glazingObject.id === 'glz-double' && (
-                    <div className="absolute inset-0 border-r border-white opacity-30"></div>
-                  )}
-                  
-                  {glazingObject.id === 'glz-triple' && (
-                    <>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
-                    </>
-                  )}
-                  
-                  {glazingObject.id === 'glz-quad' && (
-                    <>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                <>
+                  {/* Fixed front glass panel */}
+                  <div 
+                    className="absolute flex items-center justify-center overflow-hidden"
+                    style={{ 
+                      inset: `${frameThickness}px`,
+                      backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
+                      transform: 'translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  >
+                    <div className="text-sm font-medium opacity-70">Fixed</div>
+                    
+                    {/* Visualize glazing layers */}
+                    {glazingObject.id === 'glz-double' && (
                       <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
-                    </>
-                  )}
+                    )}
+                    
+                    {glazingObject.id === 'glz-triple' && (
+                      <>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
+                      </>
+                    )}
+                    
+                    {glazingObject.id === 'glz-quad' && (
+                      <>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
+                        <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
+                      </>
+                    )}
 
-                  {profileObject && (
                     <div className="text-xs text-center text-gray-600 font-medium opacity-70">
                       {profileObject.name}
                     </div>
-                  )}
-                </div>
+                  </div>
+
+                  {/* Fixed back glass panel */}
+                  <div 
+                    className="absolute overflow-hidden"
+                    style={{ 
+                      inset: `${frameThickness}px`,
+                      backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2px',
+                      transform: 'rotateY(180deg) translateZ(2px)',
+                      border: `1px solid ${rubberColorObject.hex}`,
+                    }}
+                  />
+                </>
               )}
 
-              {/* Rubber seals */}
-              <div 
-                className="absolute inset-[10%] rounded-sm pointer-events-none z-60 transform-gpu"
-                style={{ 
-                  border: `2px solid ${rubberColorObject.hex}`,
-                  opacity: 0.9,
-                  transform: 'translateZ(3px)',
+              {/* Add hardware details like handles for opening windows */}
+              {selectedWindowType !== 'fixed' && (
+                <>
+                  {/* Handle for front side */}
+                  <div
+                    className="absolute z-10"
+                    style={{
+                      width: '12px',
+                      height: '30px',
+                      right: selectedWindowType === 'double-leaf' || selectedOpeningDirection === 'right' ? 
+                        `calc(${frameThickness * 2}px)` : 
+                        '50%',
+                      top: '50%',
+                      transform: 'translateY(-50%) translateZ(3px)',
+                      backgroundColor: '#888',
+                      borderRadius: '2px',
+                      boxShadow: '0 0 3px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    <div
+                      className="absolute"
+                      style={{
+                        width: '20px',
+                        height: '5px',
+                        left: '-4px',
+                        top: '12px',
+                        backgroundColor: '#777',
+                        borderRadius: '1px',
+                      }}
+                    />
+                  </div>
+
+                  {/* Handle for back side */}
+                  <div
+                    className="absolute z-10"
+                    style={{
+                      width: '12px',
+                      height: '30px',
+                      left: selectedWindowType === 'double-leaf' || selectedOpeningDirection === 'left' ? 
+                        `calc(${frameThickness * 2}px)` : 
+                        '50%',
+                      top: '50%',
+                      transform: 'translateY(-50%) rotateY(180deg) translateZ(3px)',
+                      backgroundColor: '#888',
+                      borderRadius: '2px',
+                      boxShadow: '0 0 3px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    <div
+                      className="absolute"
+                      style={{
+                        width: '20px',
+                        height: '5px',
+                        left: '-4px',
+                        top: '12px',
+                        backgroundColor: '#777',
+                        borderRadius: '1px',
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Window silhouette shadow for depth */}
+              <div
+                className="absolute"
+                style={{
+                  inset: '-10px',
+                  transform: 'translateZ(-5px)',
+                  backgroundColor: 'rgba(0,0,0,0.07)',
+                  filter: 'blur(10px)',
+                  borderRadius: '8px',
                 }}
-              ></div>
+              />
             </div>
           ) : (
-            // Door visualization
+            // Door visualization - with enhanced 3D appearance
             <div 
               ref={previewRef}
-              className="relative shadow-lg transition-transform duration-500"
+              className="relative transition-transform duration-500"
               style={{
                 width: `${Math.min(60, (width / height) * 45)}%`,
                 height: `${Math.min(80, (height / width) * 75)}%`,
                 maxWidth: '70%',
                 maxHeight: '80%',
-                backgroundColor: baseColorObject.hex,
-                borderRadius: '2px',
-                transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
                 transformStyle: 'preserve-3d',
+                transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
+                boxShadow: '0px 30px 60px rgba(0,0,0,0.4)',
               }}
             >
               {/* Base frame */}
               <div 
-                className="absolute inset-0 z-10 transform-gpu"
+                className="absolute inset-0 rounded-md"
                 style={{ 
                   backgroundColor: baseColorObject.hex,
-                  backfaceVisibility: 'hidden',
+                  transform: 'translateZ(0px)',
+                  transformStyle: 'preserve-3d',
                 }}
               ></div>
               
-              {/* Outside frame color */}
+              {/* Frame sides for proper depth */}
               <div 
-                className="absolute inset-0 z-20 transform-gpu"
+                className="absolute left-0 top-0 bottom-0 w-10"
+                style={{ 
+                  backgroundColor: baseColorObject.hex,
+                  transform: 'rotateY(-90deg) translateZ(0px)',
+                  transformOrigin: 'left',
+                  borderRight: '1px solid rgba(0,0,0,0.1)',
+                }}
+              ></div>
+              
+              <div 
+                className="absolute right-0 top-0 bottom-0 w-10"
+                style={{ 
+                  backgroundColor: baseColorObject.hex,
+                  transform: 'rotateY(90deg) translateZ(0px)',
+                  transformOrigin: 'right',
+                  borderLeft: '1px solid rgba(0,0,0,0.1)',
+                }}
+              ></div>
+              
+              <div 
+                className="absolute left-0 right-0 top-0 h-10"
+                style={{ 
+                  backgroundColor: baseColorObject.hex,
+                  transform: 'rotateX(90deg) translateZ(0px)',
+                  transformOrigin: 'top',
+                  borderBottom: '1px solid rgba(0,0,0,0.1)',
+                }}
+              ></div>
+              
+              <div 
+                className="absolute left-0 right-0 bottom-0 h-10"
+                style={{ 
+                  backgroundColor: baseColorObject.hex,
+                  transform: 'rotateX(-90deg) translateZ(0px)',
+                  transformOrigin: 'bottom',
+                  borderTop: '1px solid rgba(0,0,0,0.1)',
+                }}
+              ></div>
+              
+              {/* Outside surface (front) */}
+              <div 
+                className="absolute inset-0 rounded-md"
                 style={{ 
                   backgroundColor: outsideColorObject.hex, 
                   transform: 'translateZ(5px)',
-                  backfaceVisibility: 'hidden',
+                  boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)',
                 }}
               ></div>
 
-              {/* Inside frame color */}
+              {/* Inside surface (back) */}
               <div 
-                className="absolute inset-0 z-20 transform-gpu"
+                className="absolute inset-0 rounded-md"
                 style={{ 
                   backgroundColor: insideColorObject.hex, 
                   transform: 'rotateY(180deg) translateZ(5px)',
-                  backfaceVisibility: 'hidden',
+                  boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)',
                 }}
               ></div>
               
               {/* Door handle - front */}
               <div 
-                className="absolute right-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md z-40 transform-gpu"
+                className="absolute z-10"
                 style={{ 
+                  right: '20%',
+                  top: '50%',
+                  width: '15px', 
+                  height: '60px',
+                  backgroundColor: '#999',
+                  borderRadius: '3px',
+                  boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3), inset 1px 1px 2px rgba(255, 255, 255, 0.5)',
                   transform: 'translateY(-50%) translateZ(6px)',
                 }}
-              />
+              >
+                <div
+                  className="absolute"
+                  style={{
+                    width: '25px',
+                    height: '10px',
+                    left: '-5px',
+                    top: '25px',
+                    backgroundColor: '#888',
+                    borderRadius: '2px',
+                    boxShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)'
+                  }}
+                />
+              </div>
               
               {/* Door handle - back */}
               <div 
-                className="absolute left-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md z-40 transform-gpu"
+                className="absolute z-10"
                 style={{ 
+                  left: '20%', 
+                  top: '50%',
+                  width: '15px', 
+                  height: '60px',
+                  backgroundColor: '#999',
+                  borderRadius: '3px',
+                  boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3), inset 1px 1px 2px rgba(255, 255, 255, 0.5)',
                   transform: 'translateY(-50%) rotateY(180deg) translateZ(6px)',
                 }}
-              />
+              >
+                <div
+                  className="absolute"
+                  style={{
+                    width: '25px',
+                    height: '10px',
+                    left: '-5px',
+                    top: '25px',
+                    backgroundColor: '#888',
+                    borderRadius: '2px',
+                    boxShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)'
+                  }}
+                />
+              </div>
               
-              {/* Door glass panel */}
+              {/* Door glass panel - front */}
               {profileObject && (profileObject.id !== 'evolutionDrive-60') && (
                 <div 
-                  className="absolute left-[20%] right-[20%] top-[20%] bottom-[50%] flex items-center justify-center z-30 transform-gpu"
+                  className="absolute flex items-center justify-center"
                   style={{ 
+                    left: '20%',
+                    right: '20%',
+                    top: '20%',
+                    bottom: '50%',
                     backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                    boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                    borderRadius: '1px',
+                    boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
+                    borderRadius: '2px',
                     transform: 'translateZ(6px)',
+                    border: `2px solid ${rubberColorObject.hex}`,
                   }}
                 >
-                  {/* Visualize glazing layers */}
+                  {/* Glazing layers visualization */}
                   {glazingObject.id === 'glz-double' && (
-                    <div className="absolute inset-0 border-r border-white opacity-30"></div>
+                    <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
                   )}
                   
                   {glazingObject.id === 'glz-triple' && (
@@ -539,44 +968,81 @@ export const ProductPreview = ({
                   )}
                 </div>
               )}
-              
-              {/* Premium door has additional lower panel */}
-              {profileObject && profileObject.id === 'bluEvolution-92' && (
+
+              {/* Door glass panel - back */}
+              {profileObject && (profileObject.id !== 'evolutionDrive-60') && (
                 <div 
-                  className="absolute left-[20%] right-[20%] top-[60%] bottom-[20%] flex items-center justify-center z-30 transform-gpu"
+                  className="absolute flex items-center justify-center"
                   style={{ 
+                    left: '20%',
+                    right: '20%',
+                    top: '20%',
+                    bottom: '50%',
                     backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
-                    boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
-                    borderRadius: '1px',
-                    transform: 'translateZ(6px)',
+                    boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
+                    borderRadius: '2px',
+                    transform: 'rotateY(180deg) translateZ(6px)',
+                    border: `2px solid ${rubberColorObject.hex}`,
                   }}
                 >
-                  {/* Visualize glazing layers */}
+                  {/* Glazing layers visualization */}
                   {glazingObject.id === 'glz-double' && (
-                    <div className="absolute inset-0 border-r border-white opacity-30"></div>
+                    <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
                   )}
-                  
-                  {glazingObject.id === 'glz-triple' && (
-                    <>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '33%'}}></div>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '66%'}}></div>
-                    </>
+                </div>
+              )}
+              
+              {/* Premium door has additional lower panel - front */}
+              {profileObject && profileObject.id === 'bluEvolution-92' && (
+                <div 
+                  className="absolute flex items-center justify-center"
+                  style={{ 
+                    left: '20%',
+                    right: '20%',
+                    top: '60%',
+                    bottom: '20%',
+                    backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                    boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
+                    borderRadius: '2px',
+                    transform: 'translateZ(6px)',
+                    border: `2px solid ${rubberColorObject.hex}`,
+                  }}
+                >
+                  {/* Glazing layers visualization */}
+                  {glazingObject.id === 'glz-double' && (
+                    <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
                   )}
-                  
-                  {glazingObject.id === 'glz-quad' && (
-                    <>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '25%'}}></div>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
-                      <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '75%'}}></div>
-                    </>
+                </div>
+              )}
+
+              {/* Premium door has additional lower panel - back */}
+              {profileObject && profileObject.id === 'bluEvolution-92' && (
+                <div 
+                  className="absolute flex items-center justify-center"
+                  style={{ 
+                    left: '20%',
+                    right: '20%',
+                    top: '60%',
+                    bottom: '20%',
+                    backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
+                    boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3)',
+                    borderRadius: '2px',
+                    transform: 'rotateY(180deg) translateZ(6px)',
+                    border: `2px solid ${rubberColorObject.hex}`,
+                  }}
+                >
+                  {/* Glazing layers visualization */}
+                  {glazingObject.id === 'glz-double' && (
+                    <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
                   )}
                 </div>
               )}
 
               {/* Rubber seals - front */}
               <div 
-                className="absolute inset-[5%] rounded-sm pointer-events-none z-50 transform-gpu"
+                className="absolute rounded-sm pointer-events-none"
                 style={{ 
+                  inset: '5%',
                   border: `3px solid ${rubberColorObject.hex}`,
                   opacity: 0.9,
                   transform: 'translateZ(6px)',
@@ -585,20 +1051,41 @@ export const ProductPreview = ({
 
               {/* Rubber seals - back */}
               <div 
-                className="absolute inset-[5%] rounded-sm pointer-events-none z-50 transform-gpu"
+                className="absolute rounded-sm pointer-events-none"
                 style={{ 
+                  inset: '5%',
                   border: `3px solid ${rubberColorObject.hex}`,
                   opacity: 0.9,
                   transform: 'rotateY(180deg) translateZ(6px)',
                 }}
               ></div>
+              
+              {/* Door hinges - front */}
+              <div className="absolute left-[10%] top-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
+              <div className="absolute left-[10%] bottom-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
+              
+              {/* Door hinges - back */}
+              <div className="absolute right-[10%] top-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'rotateY(180deg) translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
+              <div className="absolute right-[10%] bottom-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'rotateY(180deg) translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
 
               {profileObject && (
-                <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-70 z-60 transform-gpu"
+                <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-90 z-20"
                      style={{ transform: 'translateZ(6px)' }}>
                   {profileObject.name}
                 </div>
               )}
+              
+              {/* Door silhouette shadow for depth */}
+              <div
+                className="absolute"
+                style={{
+                  inset: '-15px',
+                  transform: 'translateZ(-10px)',
+                  backgroundColor: 'rgba(0,0,0,0.1)',
+                  filter: 'blur(15px)',
+                  borderRadius: '10px',
+                }}
+              />
             </div>
           )}
         </div>
