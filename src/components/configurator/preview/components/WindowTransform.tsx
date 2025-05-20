@@ -22,6 +22,9 @@ export const WindowTransform = ({
   const isFrontView = viewMode === 'front';
   const effectiveRotation = isFrontView ? rotationY : rotationY + 180;
   
+  // Determine the separation distance between front and back sides
+  const viewDepth = 8; // 8px depth between front and back of window
+  
   return (
     <div 
       className="relative transition-all duration-300"

@@ -19,6 +19,7 @@ export const WindowFrame = ({
   const isFrontView = viewMode === 'front';
   const primaryColor = isFrontView ? outsideColorObject.hex : insideColorObject.hex;
   const secondaryColor = isFrontView ? insideColorObject.hex : outsideColorObject.hex;
+  const frameDepth = 8; // Controls the visual depth of the window frame
 
   return (
     <>
@@ -27,7 +28,7 @@ export const WindowFrame = ({
         className="absolute inset-0 rounded-md"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'translateZ(-3px)',
+          transform: `translateZ(-${frameDepth}px)`,
           transformStyle: 'preserve-3d',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         }}
@@ -38,7 +39,7 @@ export const WindowFrame = ({
         className="absolute left-0 top-0 bottom-0 w-6"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateY(-90deg) translateZ(-3px)',
+          transform: `rotateY(-90deg) translateZ(-${frameDepth}px)`,
           transformOrigin: 'left',
           borderRight: '1px solid rgba(0,0,0,0.1)',
         }}
@@ -48,7 +49,7 @@ export const WindowFrame = ({
         className="absolute right-0 top-0 bottom-0 w-6"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateY(90deg) translateZ(-3px)',
+          transform: `rotateY(90deg) translateZ(-${frameDepth}px)`,
           transformOrigin: 'right',
           borderLeft: '1px solid rgba(0,0,0,0.1)',
         }}
@@ -58,7 +59,7 @@ export const WindowFrame = ({
         className="absolute left-0 right-0 top-0 h-6"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateX(90deg) translateZ(-3px)',
+          transform: `rotateX(90deg) translateZ(-${frameDepth}px)`,
           transformOrigin: 'top',
           borderBottom: '1px solid rgba(0,0,0,0.1)',
         }}
@@ -68,13 +69,13 @@ export const WindowFrame = ({
         className="absolute left-0 right-0 bottom-0 h-6"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateX(-90deg) translateZ(-3px)',
+          transform: `rotateX(-90deg) translateZ(-${frameDepth}px)`,
           transformOrigin: 'bottom',
           borderTop: '1px solid rgba(0,0,0,0.1)',
         }}
       ></div>
       
-      {/* Main frame face (primary color based on view) */}
+      {/* Front face (primary color based on view) */}
       <div 
         className="absolute inset-0 rounded-md"
         style={{ 
@@ -94,6 +95,39 @@ export const WindowFrame = ({
           }}
         ></div>
       </div>
+      
+      {/* Back face of frame */}
+      <div 
+        className="absolute inset-0 rounded-md"
+        style={{ 
+          backgroundColor: secondaryColor, 
+          transform: 'translateZ(-7px)',
+          boxShadow: 'inset 0 0 8px rgba(0,0,0,0.15)',
+        }}
+      >
+        {/* Inner cutout area that shows the glass on back side */}
+        <div 
+          className="absolute" 
+          style={{ 
+            inset: `${frameThickness}px`,
+            border: `2px solid ${secondaryColor}`,
+            borderColor: `${secondaryColor} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${secondaryColor}`,
+            boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
+          }}
+        ></div>
+      </div>
+      
+      {/* Back glass panel (always visible but more prominent from back side) */}
+      <div 
+        className="absolute"
+        style={{ 
+          inset: `${frameThickness}px`,
+          backgroundColor: 'rgba(220, 230, 240, 0.6)',
+          transform: 'translateZ(-6px)',
+          backdropFilter: 'blur(1px)',
+          boxShadow: 'inset 0 0 15px rgba(255, 255, 255, 0.3)',
+        }}
+      ></div>
     </>
   );
 };
