@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
+  Profile,
   windowProfiles, 
   doorProfiles, 
   glazingOptions, 
@@ -14,6 +14,7 @@ import {
 import { windowTypes, openingDirections } from '@/data/windowTypes';
 
 export interface ProductConfiguration {
+  // State properties
   productType: 'window' | 'door';
   selectedWindowType: string;
   selectedOpeningDirection: string;
@@ -29,6 +30,8 @@ export interface ProductConfiguration {
   calculatedPrice: number;
   rotationX: number;
   rotationY: number;
+  
+  // Derived objects and properties
   profileObject: any;
   glazingObject: any;
   baseColorObject: any;
@@ -38,6 +41,26 @@ export interface ProductConfiguration {
   windowTypeObject: any;
   openingDirectionObject: any;
   totalColorModifier: number;
+  availableProfiles: Profile[];
+  
+  // Setters
+  setProductType: (type: 'window' | 'door') => void;
+  setSelectedWindowType: (type: string) => void;
+  setSelectedOpeningDirection: (direction: string) => void;
+  setSelectedProfile: (profileId: string) => void;
+  setSelectedGlazing: (glazingId: string) => void;
+  setSelectedBaseColor: (colorId: string) => void;
+  setSelectedOutsideColor: (colorId: string) => void;
+  setSelectedInsideColor: (colorId: string) => void;
+  setSelectedRubberColor: (colorId: string) => void;
+  setWidth: (width: number) => void;
+  setHeight: (height: number) => void;
+  setQuantity: (quantity: number) => void;
+  
+  // Rotation handlers
+  handleRotateLeft: () => void;
+  handleRotateRight: () => void;
+  resetRotation: () => void;
 }
 
 export function useProductConfiguration() {
