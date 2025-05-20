@@ -84,14 +84,14 @@ const Cart = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="bg-secondary">
+      <div className="bg-secondary">
         <div className="container-custom section-padding">
           <h1 className="heading-1 text-center mb-6">Your Cart</h1>
           <p className="text-xl text-muted-foreground text-center max-w-3xl mx-auto">
             Review your configured products and submit your order request.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Cart Content */}
       <section className="container-custom section-padding">
@@ -128,8 +128,11 @@ const Cart = () => {
                         <div className="text-sm text-muted-foreground">Glazing:</div>
                         <div className="text-sm">{item.glazing}</div>
                         
-                        <div className="text-sm text-muted-foreground">Color:</div>
-                        <div className="text-sm">{item.color}</div>
+                        <div className="text-sm text-muted-foreground">Colors:</div>
+                        <div className="text-sm">
+                          Base: {item.colors.base}, Outside: {item.colors.outside},
+                          Inside: {item.colors.inside}, Rubber: {item.colors.rubber}
+                        </div>
                         
                         <div className="text-sm text-muted-foreground">Dimensions:</div>
                         <div className="text-sm">{item.dimensions.width}mm × {item.dimensions.height}mm</div>
