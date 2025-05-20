@@ -60,6 +60,13 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
         },
+        salamander: {
+          green: '#4C8055',
+          lightgreen: '#7AB27D',
+          gray: '#6B7280',
+          lightgray: '#F3F4F6',
+          darkgray: '#374151',
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',
