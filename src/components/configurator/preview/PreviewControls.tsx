@@ -1,13 +1,15 @@
 
 import { Button } from '@/components/ui/button';
-import { RotateCw, RotateCcw, SwitchCamera } from 'lucide-react';
+import { RotateCw, RotateCcw, Play, Pause, SwitchCamera } from 'lucide-react';
 
 interface PreviewControlsProps {
   onRotateLeft: () => void;
   onRotateRight: () => void;
   onResetRotation: () => void;
   onToggleView: () => void;
+  onToggleAutoRotation: () => void;
   viewMode: 'front' | 'back';
+  isAutoRotating: boolean;
 }
 
 export const PreviewControls = ({
@@ -15,7 +17,9 @@ export const PreviewControls = ({
   onRotateRight,
   onResetRotation,
   onToggleView,
-  viewMode
+  onToggleAutoRotation,
+  viewMode,
+  isAutoRotating
 }: PreviewControlsProps) => {
   return (
     <div className="flex mb-4 justify-between items-center">
@@ -28,6 +32,7 @@ export const PreviewControls = ({
           size="sm" 
           onClick={onRotateLeft} 
           className="flex items-center gap-1"
+          disabled={isAutoRotating}
         >
           <RotateCcw className="h-4 w-4" />
         </Button>
@@ -44,8 +49,18 @@ export const PreviewControls = ({
           size="sm" 
           onClick={onRotateRight} 
           className="flex items-center gap-1"
+          disabled={isAutoRotating}
         >
           <RotateCw className="h-4 w-4" />
+        </Button>
+        <Button 
+          variant={isAutoRotating ? "default" : "outline"} 
+          size="sm" 
+          onClick={onToggleAutoRotation} 
+          className="flex items-center gap-1 ml-2"
+        >
+          {isAutoRotating ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          {isAutoRotating ? 'Stop' : '360° View'}
         </Button>
         <Button 
           variant="outline" 

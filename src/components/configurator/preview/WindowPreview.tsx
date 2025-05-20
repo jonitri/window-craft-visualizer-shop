@@ -48,158 +48,88 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
     const isFixedWindow = selectedWindowType === 'fixed';
     const isFrontView = viewMode === 'front';
     
+    // Calculate effective rotation for smooth transitions
+    const effectiveRotation = isFrontView ? rotationY : rotationY + 180;
+    
     return (
       <div 
         ref={ref}
-        className="relative transition-all duration-500"
+        className="relative transition-all duration-300"
         style={{
           width: `${Math.min(70, (width / height) * 55)}%`,
           height: `${Math.min(70, (height / width) * 55)}%`,
           maxWidth: '80%',
           maxHeight: '80%',
-          transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
+          transform: `rotateX(${rotationX}deg) rotateY(${effectiveRotation}deg)`,
           transformStyle: 'preserve-3d',
           boxShadow: '0px 20px 40px rgba(0,0,0,0.3)',
         }}
       >
         {/* Main window frame - conditionally render based on view */}
-        {isFrontView ? (
-          <>
-            {/* Front view elements */}
-            <WindowFrame
-              baseColorObject={baseColorObject}
-              outsideColorObject={outsideColorObject}
-              insideColorObject={insideColorObject}
-              frameThickness={frameThickness}
-              viewMode="front"
-            />
-            
-            {/* Window content based on type - front view */}
-            {selectedWindowType === 'single-leaf' && (
-              <SingleLeafWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                selectedOpeningDirection={selectedOpeningDirection}
-                viewMode="front"
-              />
-            )}
-            
-            {selectedWindowType === 'double-leaf' && (
-              <DoubleLeafWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                outsideColorObject={outsideColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                selectedOpeningDirection={selectedOpeningDirection}
-                viewMode="front"
-              />
-            )}
-            
-            {selectedWindowType === 'triple-leaf' && (
-              <TripleLeafWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                outsideColorObject={outsideColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                selectedOpeningDirection={selectedOpeningDirection}
-                viewMode="front"
-              />
-            )}
-            
-            {isFixedWindow && (
-              <FixedWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                viewMode="front"
-              />
-            )}
-
-            {/* Window handles for front view */}
-            <WindowHandles isFixed={isFixedWindow} viewMode="front" />
-          </>
-        ) : (
-          <>
-            {/* Back view elements */}
-            <WindowFrame
-              baseColorObject={baseColorObject}
-              outsideColorObject={outsideColorObject}
-              insideColorObject={insideColorObject}
-              frameThickness={frameThickness}
-              viewMode="back"
-            />
-            
-            {/* Window content based on type - back view */}
-            {selectedWindowType === 'single-leaf' && (
-              <SingleLeafWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                selectedOpeningDirection={selectedOpeningDirection}
-                viewMode="back"
-              />
-            )}
-            
-            {selectedWindowType === 'double-leaf' && (
-              <DoubleLeafWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                outsideColorObject={outsideColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                selectedOpeningDirection={selectedOpeningDirection}
-                viewMode="back"
-              />
-            )}
-            
-            {selectedWindowType === 'triple-leaf' && (
-              <TripleLeafWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                outsideColorObject={outsideColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                selectedOpeningDirection={selectedOpeningDirection}
-                viewMode="back"
-              />
-            )}
-            
-            {isFixedWindow && (
-              <FixedWindow 
-                frameThickness={frameThickness}
-                glazingObject={glazingObject}
-                glassOpacity={glassOpacity}
-                rubberColorObject={rubberColorObject}
-                insideColorObject={insideColorObject}
-                profileObject={profileObject}
-                viewMode="back"
-              />
-            )}
-
-            {/* Window handles for back view */}
-            <WindowHandles isFixed={isFixedWindow} viewMode="back" />
-          </>
+        <WindowFrame
+          baseColorObject={baseColorObject}
+          outsideColorObject={outsideColorObject}
+          insideColorObject={insideColorObject}
+          frameThickness={frameThickness}
+          viewMode={viewMode}
+        />
+        
+        {/* Window content based on type - front view */}
+        {selectedWindowType === 'single-leaf' && (
+          <SingleLeafWindow 
+            frameThickness={frameThickness}
+            glazingObject={glazingObject}
+            glassOpacity={glassOpacity}
+            rubberColorObject={rubberColorObject}
+            insideColorObject={insideColorObject}
+            profileObject={profileObject}
+            selectedOpeningDirection={selectedOpeningDirection}
+            viewMode={viewMode}
+          />
         )}
+        
+        {selectedWindowType === 'double-leaf' && (
+          <DoubleLeafWindow 
+            frameThickness={frameThickness}
+            glazingObject={glazingObject}
+            glassOpacity={glassOpacity}
+            rubberColorObject={rubberColorObject}
+            outsideColorObject={outsideColorObject}
+            insideColorObject={insideColorObject}
+            profileObject={profileObject}
+            selectedOpeningDirection={selectedOpeningDirection}
+            viewMode={viewMode}
+          />
+        )}
+        
+        {selectedWindowType === 'triple-leaf' && (
+          <TripleLeafWindow 
+            frameThickness={frameThickness}
+            glazingObject={glazingObject}
+            glassOpacity={glassOpacity}
+            rubberColorObject={rubberColorObject}
+            outsideColorObject={outsideColorObject}
+            insideColorObject={insideColorObject}
+            profileObject={profileObject}
+            selectedOpeningDirection={selectedOpeningDirection}
+            viewMode={viewMode}
+          />
+        )}
+        
+        {isFixedWindow && (
+          <FixedWindow 
+            frameThickness={frameThickness}
+            glazingObject={glazingObject}
+            glassOpacity={glassOpacity}
+            rubberColorObject={rubberColorObject}
+            insideColorObject={insideColorObject}
+            profileObject={profileObject}
+            viewMode={viewMode}
+          />
+        )}
+
+        {/* Window handles for non-fixed windows */}
+        <WindowHandles isFixed={isFixedWindow} viewMode={viewMode} />
 
         {/* Window shadow for depth effect */}
         <WindowShadow />

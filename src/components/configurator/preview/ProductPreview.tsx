@@ -20,10 +20,12 @@ interface ProductPreviewProps {
   rotationX: number;
   rotationY: number;
   viewMode: 'front' | 'back';
+  isAutoRotating: boolean;
   onRotateLeft: () => void;
   onRotateRight: () => void;
   onResetRotation: () => void;
   onToggleView: () => void;
+  onToggleAutoRotation: () => void;
 }
 
 export const ProductPreview = (props: ProductPreviewProps) => {

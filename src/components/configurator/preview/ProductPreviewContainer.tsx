@@ -26,10 +26,12 @@ interface ProductPreviewContainerProps {
   rotationX: number;
   rotationY: number;
   viewMode: 'front' | 'back';
+  isAutoRotating: boolean;
   onRotateLeft: () => void;
   onRotateRight: () => void;
   onResetRotation: () => void;
   onToggleView: () => void;
+  onToggleAutoRotation: () => void;
 }
 
 export const ProductPreviewContainer = ({
@@ -49,10 +51,12 @@ export const ProductPreviewContainer = ({
   rotationX,
   rotationY,
   viewMode,
+  isAutoRotating,
   onRotateLeft,
   onRotateRight,
   onResetRotation,
-  onToggleView
+  onToggleView,
+  onToggleAutoRotation
 }: ProductPreviewContainerProps) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const { getGlassOpacity } = useGlazingHelpers();
@@ -70,7 +74,9 @@ export const ProductPreviewContainer = ({
           onRotateRight={onRotateRight}
           onResetRotation={onResetRotation}
           onToggleView={onToggleView}
+          onToggleAutoRotation={onToggleAutoRotation}
           viewMode={viewMode}
+          isAutoRotating={isAutoRotating}
         />
         
         <PreviewArea 

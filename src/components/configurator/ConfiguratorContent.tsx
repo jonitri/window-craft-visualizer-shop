@@ -105,10 +105,12 @@ export const ConfiguratorContent: React.FC<ConfiguratorContentProps> = ({ config
           rotationX={config.rotationX}
           rotationY={config.rotationY}
           viewMode={config.viewMode}
+          isAutoRotating={config.isAutoRotating}
           onRotateLeft={config.handleRotateLeft}
           onRotateRight={config.handleRotateRight}
           onResetRotation={config.resetRotation}
           onToggleView={config.toggleView}
+          onToggleAutoRotation={config.toggleAutoRotation}
         />
         
         <ProductSummary
