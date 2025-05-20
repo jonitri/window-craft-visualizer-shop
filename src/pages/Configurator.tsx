@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -37,7 +38,7 @@ import {
 import { windowTypes, openingDirections, type WindowType, type OpeningDirection } from '@/data/windowTypes';
 import { useCart } from '@/context/CartContext';
 import { toast } from '@/hooks/use-toast';
-import { Palette, Square, Droplet, RotateCw } from 'lucide-react';
+import { Palette, Square, Droplet, "rotate-cw" as RotateCw, "rotate-ccw" as RotateCcw, "triangle-left" as TriangleLeft, "triangle-right" as TriangleRight } from 'lucide-react';
 
 const Configurator = () => {
   const [searchParams] = useSearchParams();
@@ -62,8 +63,8 @@ const Configurator = () => {
   const [height, setHeight] = useState<number>(1200); // Default 1200mm
   const [quantity, setQuantity] = useState<number>(1);
   const [calculatedPrice, setCalculatedPrice] = useState<number>(0);
-  const [rotation, setRotation] = useState<number>(0);
-  const [isRotating, setIsRotating] = useState<boolean>(false);
+  const [rotationX, setRotationX] = useState<number>(0);
+  const [rotationY, setRotationY] = useState<number>(0);
   
   // Get profiles based on product type
   const availableProfiles = productType === 'window' ? windowProfiles : doorProfiles;
@@ -160,37 +161,35 @@ const Configurator = () => {
     }
   };
 
-  // Handle preview rotation
-  const handleRotate = () => {
-    setRotation((prev) => (prev + 90) % 360);
+  // Handle horizontal rotation (left-right)
+  const handleRotateLeft = () => {
+    setRotationY((prev) => prev - 30);
   };
 
-  // Toggle rotation mode
-  const toggleRotationMode = () => {
-    setIsRotating(!isRotating);
+  // Handle horizontal rotation (right-left)
+  const handleRotateRight = () => {
+    setRotationY((prev) => prev + 30);
   };
 
-  // Handle mouse move for 3D-like rotation when in rotation mode
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isRotating || !previewRef.current) return;
-    
-    const rect = previewRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Calculate rotation based on mouse position
-    const rotX = ((y / rect.height) * 180) - 90;
-    const rotY = ((x / rect.width) * 180) - 90;
-    
-    if (previewRef.current) {
-      previewRef.current.style.transform = `rotateX(${-rotX}deg) rotateY(${rotY}deg)`;
-    }
+  // Reset rotation
+  const resetRotation = () => {
+    setRotationX(0);
+    setRotationY(0);
   };
 
-  // Reset rotation when leaving rotation mode
-  const handleMouseLeave = () => {
-    if (isRotating && previewRef.current) {
-      previewRef.current.style.transform = `rotate(${rotation}deg)`;
+  // Helper to get opening direction icon
+  const getOpeningDirectionIcon = (direction: string) => {
+    switch(direction) {
+      case 'left':
+        return <TriangleLeft className="text-primary" />;
+      case 'right':
+        return <TriangleRight className="text-primary" />;
+      case 'top-left':
+        return <TriangleLeft className="text-primary rotate-90" />;
+      case 'top-right':
+        return <TriangleRight className="text-primary rotate-90" />;
+      default:
+        return null;
     }
   };
 
@@ -700,27 +699,39 @@ const Configurator = () => {
                   <CardDescription>Visualization of your configuration</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex mb-2 justify-between items-center">
-                    <div className="text-sm text-muted-foreground">Click on preview for 3D rotation</div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleRotate} 
-                      className="flex items-center gap-1"
-                    >
-                      <RotateCw className="h-4 w-4" />
-                      <span>Rotate 90°</span>
-                    </Button>
+                  <div className="flex mb-4 justify-between items-center">
+                    <div className="text-sm text-muted-foreground">Use the buttons to rotate the product</div>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={handleRotateLeft} 
+                        className="flex items-center gap-1"
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={resetRotation} 
+                        className="flex items-center gap-1"
+                      >
+                        Reset
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={handleRotateRight} 
+                        className="flex items-center gap-1"
+                      >
+                        <RotateCw className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                   
                   <div 
-                    className="bg-secondary rounded-lg p-4 flex items-center justify-center relative perspective"
-                    style={{
-                      aspectRatio: productType === 'window' ? '4/3' : '2/4',
-                      minHeight: '450px',
-                      perspective: '800px',
-                    }}
-                    onClick={toggleRotationMode}
+                    className="bg-secondary rounded-lg p-8 flex items-center justify-center relative perspective h-[450px]"
+                    style={{ perspective: '1000px' }}
                   >
                     {productType === 'window' ? (
                       // Window visualization
@@ -728,40 +739,61 @@ const Configurator = () => {
                         ref={previewRef}
                         className="relative shadow-lg transition-transform duration-500"
                         style={{
-                          width: `${Math.min(90, (width / height) * 75)}%`,
-                          height: `${Math.min(90, (height / width) * 75)}%`,
-                          maxWidth: '90%',
-                          maxHeight: '90%',
+                          width: `${Math.min(80, (width / height) * 65)}%`,
+                          height: `${Math.min(80, (height / width) * 65)}%`,
+                          maxWidth: '80%',
+                          maxHeight: '80%',
                           backgroundColor: baseColorObject.hex,
                           borderRadius: '2px',
-                          transform: `rotate(${rotation}deg)`,
+                          transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
                           transformStyle: 'preserve-3d',
                         }}
-                        onMouseMove={handleMouseMove}
-                        onMouseLeave={handleMouseLeave}
                       >
+                        {/* Base frame */}
+                        <div 
+                          className="absolute inset-0 z-10 transform-gpu"
+                          style={{ 
+                            backgroundColor: baseColorObject.hex,
+                            backfaceVisibility: 'hidden',
+                            transformStyle: 'preserve-3d',
+                          }}
+                        ></div>
+                        
                         {/* Outside frame color */}
                         <div 
-                          className="absolute inset-0 z-10"
-                          style={{ backgroundColor: outsideColorObject.hex }}
+                          className="absolute inset-0 z-20 transform-gpu"
+                          style={{ 
+                            backgroundColor: outsideColorObject.hex, 
+                            transform: 'rotateY(0deg) translateZ(5px)',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        ></div>
+
+                        {/* Inside frame color */}
+                        <div 
+                          className="absolute inset-0 z-20 transform-gpu"
+                          style={{ 
+                            backgroundColor: insideColorObject.hex, 
+                            transform: 'rotateY(180deg) translateZ(5px)',
+                            backfaceVisibility: 'hidden',
+                          }}
                         ></div>
                         
                         {/* Render window based on type */}
                         {selectedWindowType === 'single-leaf' && (
                           <div 
-                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-20"
+                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
                             style={{ 
                               backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                               boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                               borderRadius: '1px',
+                              transform: 'translateZ(6px)',
                             }}
                           >
                             {/* Opening direction indicator */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div 
-                                className="text-3xl opacity-70 text-primary font-light"
-                              >
-                                {openingDirectionObject.icon}
+                              <div className="absolute text-3xl">
+                                {getOpeningDirectionIcon(selectedOpeningDirection)}
                               </div>
                             </div>
                             
@@ -796,95 +828,114 @@ const Configurator = () => {
                         {selectedWindowType === 'double-leaf' && (
                           <>
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[50%] flex items-center justify-center overflow-hidden z-20"
+                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[50%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
+                                transform: 'translateZ(6px)',
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="text-3xl opacity-70 text-primary font-light">
-                                  {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? openingDirectionObject.icon : ''}
+                                <div className="absolute">
+                                  {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
+                                    getOpeningDirectionIcon(selectedOpeningDirection) : null}
                                 </div>
                               </div>
                             </div>
                             
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[50%] right-[10%] flex items-center justify-center overflow-hidden z-20"
+                              className="absolute top-[10%] bottom-[10%] left-[50%] right-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
+                                transform: 'translateZ(6px)',
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="text-3xl opacity-70 text-primary font-light">
-                                  {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? openingDirectionObject.icon : ''}
+                                <div className="absolute">
+                                  {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? 
+                                    getOpeningDirectionIcon(selectedOpeningDirection) : null}
                                 </div>
                               </div>
                             </div>
                             
-                            <div className="absolute left-[50%] top-[10%] bottom-[10%] w-[3px] z-30" 
-                                 style={{ backgroundColor: outsideColorObject.hex, transform: 'translateX(-50%)' }} />
+                            <div className="absolute left-[50%] top-[10%] bottom-[10%] w-[3px] z-40 transform-gpu" 
+                                 style={{ 
+                                   backgroundColor: outsideColorObject.hex, 
+                                   transform: 'translateX(-50%) translateZ(6px)',
+                                 }} />
                           </>
                         )}
                         
                         {selectedWindowType === 'triple-leaf' && (
                           <>
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[67%] flex items-center justify-center overflow-hidden z-20"
+                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[67%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
+                                transform: 'translateZ(6px)',
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="text-3xl opacity-70 text-primary font-light">
-                                  {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? openingDirectionObject.icon : ''}
+                                <div className="absolute">
+                                  {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
+                                    getOpeningDirectionIcon(selectedOpeningDirection) : null}
                                 </div>
                               </div>
                             </div>
                             
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[33%] right-[33%] flex items-center justify-center overflow-hidden z-20"
+                              className="absolute top-[10%] bottom-[10%] left-[33%] right-[33%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
+                                transform: 'translateZ(6px)',
                               }}
                             />
                             
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[67%] right-[10%] flex items-center justify-center overflow-hidden z-20"
+                              className="absolute top-[10%] bottom-[10%] left-[67%] right-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
+                                transform: 'translateZ(6px)',
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="text-3xl opacity-70 text-primary font-light">
-                                  {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? openingDirectionObject.icon : ''}
+                                <div className="absolute">
+                                  {selectedOpeningDirection === 'right' || selectedOpeningDirection === 'top-right' ? 
+                                    getOpeningDirectionIcon(selectedOpeningDirection) : null}
                                 </div>
                               </div>
                             </div>
                             
-                            <div className="absolute left-[33%] top-[10%] bottom-[10%] w-[3px] z-30" 
-                                 style={{ backgroundColor: outsideColorObject.hex, transform: 'translateX(-50%)' }} />
-                            <div className="absolute left-[67%] top-[10%] bottom-[10%] w-[3px] z-30" 
-                                 style={{ backgroundColor: outsideColorObject.hex, transform: 'translateX(-50%)' }} />
+                            <div className="absolute left-[33%] top-[10%] bottom-[10%] w-[3px] z-40 transform-gpu" 
+                                 style={{ 
+                                   backgroundColor: outsideColorObject.hex, 
+                                   transform: 'translateX(-50%) translateZ(6px)',
+                                 }} />
+                            <div className="absolute left-[67%] top-[10%] bottom-[10%] w-[3px] z-40 transform-gpu" 
+                                 style={{ 
+                                   backgroundColor: outsideColorObject.hex, 
+                                   transform: 'translateX(-50%) translateZ(6px)',
+                                 }} />
                           </>
                         )}
                         
                         {selectedWindowType === 'fixed' && (
                           <div 
-                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-20"
+                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
                             style={{ 
                               backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                               boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                               borderRadius: '1px',
+                              transform: 'translateZ(6px)',
                             }}
                           >
                             <div className="text-sm font-medium opacity-70">Fixed</div>
@@ -917,12 +968,23 @@ const Configurator = () => {
                           </div>
                         )}
 
-                        {/* Rubber seals */}
+                        {/* Rubber seals - front */}
                         <div 
-                          className="absolute inset-[8%] rounded-sm pointer-events-none z-15"
+                          className="absolute inset-[8%] rounded-sm pointer-events-none z-50 transform-gpu"
                           style={{ 
                             border: `2px solid ${rubberColorObject.hex}`,
-                            opacity: 0.7
+                            opacity: 0.9,
+                            transform: 'translateZ(6px)',
+                          }}
+                        ></div>
+
+                        {/* Rubber seals - back */}
+                        <div 
+                          className="absolute inset-[8%] rounded-sm pointer-events-none z-50 transform-gpu"
+                          style={{ 
+                            border: `2px solid ${rubberColorObject.hex}`,
+                            opacity: 0.9,
+                            transform: 'rotateY(180deg) translateZ(6px)',
                           }}
                         ></div>
                       </div>
@@ -932,37 +994,70 @@ const Configurator = () => {
                         ref={previewRef}
                         className="relative shadow-lg transition-transform duration-500"
                         style={{
-                          width: `${Math.min(70, (width / height) * 50)}%`,
-                          height: `${Math.min(90, (height / width) * 80)}%`,
+                          width: `${Math.min(60, (width / height) * 45)}%`,
+                          height: `${Math.min(80, (height / width) * 75)}%`,
                           maxWidth: '70%',
-                          maxHeight: '90%',
+                          maxHeight: '80%',
                           backgroundColor: baseColorObject.hex,
                           borderRadius: '2px',
-                          transform: `rotate(${rotation}deg)`,
+                          transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
                           transformStyle: 'preserve-3d',
                         }}
-                        onMouseMove={handleMouseMove}
-                        onMouseLeave={handleMouseLeave}
                       >
+                        {/* Base frame */}
                         <div 
-                          className="absolute inset-0 z-10"
-                          style={{ backgroundColor: outsideColorObject.hex }}
+                          className="absolute inset-0 z-10 transform-gpu"
+                          style={{ 
+                            backgroundColor: baseColorObject.hex,
+                            backfaceVisibility: 'hidden',
+                          }}
                         ></div>
                         
-                        {/* Door handle */}
+                        {/* Outside frame color */}
                         <div 
-                          className="absolute right-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md z-40"
-                          style={{ transform: 'translateY(-50%)' }}
+                          className="absolute inset-0 z-20 transform-gpu"
+                          style={{ 
+                            backgroundColor: outsideColorObject.hex, 
+                            transform: 'translateZ(5px)',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        ></div>
+
+                        {/* Inside frame color */}
+                        <div 
+                          className="absolute inset-0 z-20 transform-gpu"
+                          style={{ 
+                            backgroundColor: insideColorObject.hex, 
+                            transform: 'rotateY(180deg) translateZ(5px)',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        ></div>
+                        
+                        {/* Door handle - front */}
+                        <div 
+                          className="absolute right-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md z-40 transform-gpu"
+                          style={{ 
+                            transform: 'translateY(-50%) translateZ(6px)',
+                          }}
+                        />
+                        
+                        {/* Door handle - back */}
+                        <div 
+                          className="absolute left-[20%] top-[50%] w-[15px] h-[30px] bg-gray-400 rounded-sm shadow-md z-40 transform-gpu"
+                          style={{ 
+                            transform: 'translateY(-50%) rotateY(180deg) translateZ(6px)',
+                          }}
                         />
                         
                         {/* Door glass panel */}
                         {profileObject && (profileObject.id !== 'evolutionDrive-60') && (
                           <div 
-                            className="absolute left-[20%] right-[20%] top-[20%] bottom-[50%] flex items-center justify-center z-20"
+                            className="absolute left-[20%] right-[20%] top-[20%] bottom-[50%] flex items-center justify-center z-30 transform-gpu"
                             style={{ 
                               backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                               boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                               borderRadius: '1px',
+                              transform: 'translateZ(6px)',
                             }}
                           >
                             {/* Visualize glazing layers */}
@@ -990,11 +1085,12 @@ const Configurator = () => {
                         {/* Premium door has additional lower panel */}
                         {profileObject && profileObject.id === 'bluEvolution-92' && (
                           <div 
-                            className="absolute left-[20%] right-[20%] top-[60%] bottom-[20%] flex items-center justify-center z-20"
+                            className="absolute left-[20%] right-[20%] top-[60%] bottom-[20%] flex items-center justify-center z-30 transform-gpu"
                             style={{ 
                               backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                               boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                               borderRadius: '1px',
+                              transform: 'translateZ(6px)',
                             }}
                           >
                             {/* Visualize glazing layers */}
@@ -1019,28 +1115,32 @@ const Configurator = () => {
                           </div>
                         )}
 
-                        {/* Rubber seals */}
+                        {/* Rubber seals - front */}
                         <div 
-                          className="absolute inset-[5%] rounded-sm pointer-events-none z-15"
+                          className="absolute inset-[5%] rounded-sm pointer-events-none z-50 transform-gpu"
                           style={{ 
                             border: `3px solid ${rubberColorObject.hex}`,
-                            opacity: 0.8
+                            opacity: 0.9,
+                            transform: 'translateZ(6px)',
+                          }}
+                        ></div>
+
+                        {/* Rubber seals - back */}
+                        <div 
+                          className="absolute inset-[5%] rounded-sm pointer-events-none z-50 transform-gpu"
+                          style={{ 
+                            border: `3px solid ${rubberColorObject.hex}`,
+                            opacity: 0.9,
+                            transform: 'rotateY(180deg) translateZ(6px)',
                           }}
                         ></div>
 
                         {profileObject && (
-                          <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-70 z-30">
+                          <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-70 z-60 transform-gpu"
+                               style={{ transform: 'translateZ(6px)' }}>
                             {profileObject.name}
                           </div>
                         )}
-                      </div>
-                    )}
-                    
-                    {isRotating && (
-                      <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center rounded-lg">
-                        <div className="bg-white px-4 py-2 rounded-md text-sm font-medium">
-                          Drag to rotate in 3D
-                        </div>
                       </div>
                     )}
                   </div>
