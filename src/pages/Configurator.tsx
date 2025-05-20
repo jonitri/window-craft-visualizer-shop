@@ -27,7 +27,7 @@ import { GlazingSelector } from '@/components/configurator/GlazingSelector';
 import { ColorSelector } from '@/components/configurator/ColorSelector';
 import { DimensionsSelector } from '@/components/configurator/DimensionsSelector';
 import { QuantitySelector } from '@/components/configurator/QuantitySelector';
-import { ProductPreview } from '@/components/configurator/ProductPreview';
+import { ProductPreview } from '@/components/configurator/preview/ProductPreview';
 import { ProductSummary } from '@/components/configurator/ProductSummary';
 
 const Configurator = () => {
