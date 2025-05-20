@@ -4,6 +4,7 @@ import { PreviewControls } from './PreviewControls';
 import { WindowPreview } from './WindowPreview';
 import { DoorPreview } from './DoorPreview';
 import { ProductPreviewInfo } from './components/ProductPreviewInfo';
+import { PreviewArea } from './components/PreviewArea';
 import { ColorOption } from '@/data/products';
 import { WindowType, OpeningDirection } from '@/data/windowTypes';
 import { useGlazingHelpers } from './hooks/useGlazingHelpers';
