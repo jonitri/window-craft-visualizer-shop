@@ -19,7 +19,7 @@ export const WindowFrame = ({
   const isFrontView = viewMode === 'front';
   const primaryColor = isFrontView ? outsideColorObject.hex : insideColorObject.hex;
   const secondaryColor = isFrontView ? insideColorObject.hex : outsideColorObject.hex;
-  const frameDepth = 8; // Controls the visual depth of the window frame
+  const frameDepth = 10; // Increased depth of window frame for better visibility
 
   return (
     <>
@@ -34,48 +34,48 @@ export const WindowFrame = ({
         }}
       ></div>
       
-      {/* Frame sides */}
+      {/* Frame sides - with increased width for better visibility */}
       {/* Left side */}
       <div 
-        className="absolute left-0 top-0 bottom-0 w-6"
+        className="absolute left-0 top-0 bottom-0 w-10"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateY(-90deg) translateZ(0)',
+          transform: 'rotateY(-90deg) translateZ(5px)',
           transformOrigin: 'left',
-          borderRight: '1px solid rgba(0,0,0,0.1)',
+          borderRight: '2px solid rgba(0,0,0,0.15)',
         }}
       ></div>
       
       {/* Right side */}
       <div 
-        className="absolute right-0 top-0 bottom-0 w-6"
+        className="absolute right-0 top-0 bottom-0 w-10"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateY(90deg) translateZ(0)',
+          transform: 'rotateY(90deg) translateZ(5px)',
           transformOrigin: 'right',
-          borderLeft: '1px solid rgba(0,0,0,0.1)',
+          borderLeft: '2px solid rgba(0,0,0,0.15)',
         }}
       ></div>
       
       {/* Top side */}
       <div 
-        className="absolute left-0 right-0 top-0 h-6"
+        className="absolute left-0 right-0 top-0 h-10"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateX(90deg) translateZ(0)',
+          transform: 'rotateX(90deg) translateZ(5px)',
           transformOrigin: 'top',
-          borderBottom: '1px solid rgba(0,0,0,0.1)',
+          borderBottom: '2px solid rgba(0,0,0,0.15)',
         }}
       ></div>
       
       {/* Bottom side */}
       <div 
-        className="absolute left-0 right-0 bottom-0 h-6"
+        className="absolute left-0 right-0 bottom-0 h-10"
         style={{ 
           backgroundColor: baseColorObject.hex,
-          transform: 'rotateX(-90deg) translateZ(0)',
+          transform: 'rotateX(-90deg) translateZ(5px)',
           transformOrigin: 'bottom',
-          borderTop: '1px solid rgba(0,0,0,0.1)',
+          borderTop: '2px solid rgba(0,0,0,0.15)',
         }}
       ></div>
       
@@ -105,7 +105,7 @@ export const WindowFrame = ({
         className="absolute inset-0 rounded-md"
         style={{ 
           backgroundColor: secondaryColor, 
-          transform: 'translateZ(-7px)',
+          transform: `translateZ(-${frameDepth}px)`,
           boxShadow: 'inset 0 0 8px rgba(0,0,0,0.15)',
         }}
       >
@@ -127,7 +127,7 @@ export const WindowFrame = ({
         style={{ 
           inset: `${frameThickness}px`,
           backgroundColor: 'rgba(220, 230, 240, 0.6)',
-          transform: 'translateZ(-6px)',
+          transform: 'translateZ(-8px)',
           backdropFilter: 'blur(1px)',
           boxShadow: 'inset 0 0 15px rgba(255, 255, 255, 0.3)',
         }}

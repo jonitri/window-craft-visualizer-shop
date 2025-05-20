@@ -30,7 +30,7 @@ export const WindowTransform = ({
         height: `${Math.min(70, (height / width) * 55)}%`,
         maxWidth: '80%',
         maxHeight: '80%',
-        transform: `rotateX(${rotationX}deg) rotateY(${effectiveRotation}deg)`,
+        transform: `perspective(1000px) rotateX(${rotationX}deg) rotateY(${effectiveRotation}deg)`,
         transformStyle: 'preserve-3d',
         boxShadow: '0px 20px 40px rgba(0,0,0,0.3)',
       }}
