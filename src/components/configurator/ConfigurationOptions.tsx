@@ -38,10 +38,10 @@ export const ConfigurationOptions = ({ children }: ConfigurationOptionsProps) =>
       ref={optionsRef}
       className="lg:col-span-6 space-y-8 overflow-y-auto pb-24"
       style={{ 
-        height: 'calc(100vh - 120px)', 
+        height: 'calc(100vh - 80px)', 
         paddingRight: '1rem',
         position: 'sticky',
-        top: '120px'
+        top: '80px'
       }}
     >
       {children}

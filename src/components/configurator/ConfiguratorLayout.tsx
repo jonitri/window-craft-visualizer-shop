@@ -11,7 +11,7 @@ export const ConfiguratorLayout = ({ children }: ConfiguratorLayoutProps) => {
     <Layout>
       {/* Hero Section */}
       <section className="bg-secondary">
-        <div className="container-custom section-padding">
+        <div className="container-custom py-8">
           <h1 className="heading-1 text-center mb-6">Product Configurator</h1>
           <p className="text-xl text-muted-foreground text-center max-w-3xl mx-auto">
             Design your perfect window or door. Customize every detail to match your home and preferences.
@@ -21,7 +21,7 @@ export const ConfiguratorLayout = ({ children }: ConfiguratorLayoutProps) => {
 
       {/* Configurator Section */}
       <section className="container-custom pb-24">
-        <div className="grid lg:grid-cols-10 gap-8 pt-8">
+        <div className="grid lg:grid-cols-10 gap-8 pt-4">
           {children}
         </div>
       </section>
