@@ -176,17 +176,25 @@ const Configurator = () => {
     setRotationY(0);
   };
 
-  // Helper to get opening direction icon
+  // Update the getOpeningDirectionIcon function to use triangle-like indicators
   const getOpeningDirectionIcon = (direction: string) => {
     switch(direction) {
       case 'left':
-        return <ChevronLeft className="text-primary" />;
+        return (
+          <div className="w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-primary border-b-8 border-b-transparent" />
+        );
       case 'right':
-        return <ChevronRight className="text-primary" />;
+        return (
+          <div className="w-0 h-0 border-t-8 border-t-transparent border-l-8 border-l-primary border-b-8 border-b-transparent" />
+        );
       case 'top-left':
-        return <ChevronLeft className="text-primary rotate-90" />;
+        return (
+          <div className="w-0 h-0 border-r-8 border-r-transparent border-l-8 border-l-transparent border-b-8 border-b-primary transform rotate-180" />
+        );
       case 'top-right':
-        return <ChevronRight className="text-primary rotate-90" />;
+        return (
+          <div className="w-0 h-0 border-r-8 border-r-transparent border-l-8 border-l-transparent border-b-8 border-b-primary transform rotate-180" />
+        );
       default:
         return null;
     }
@@ -729,69 +737,123 @@ const Configurator = () => {
                   </div>
                   
                   <div 
-                    className="bg-secondary rounded-lg p-8 flex items-center justify-center relative perspective h-[450px]"
-                    style={{ perspective: '1000px' }}
+                    className="bg-secondary rounded-lg p-8 flex items-center justify-center relative"
+                    style={{ perspective: '1000px', height: '450px', overflow: 'hidden' }}
                   >
                     {productType === 'window' ? (
-                      // Window visualization
+                      // Window visualization with improved 3D appearance
                       <div 
                         ref={previewRef}
                         className="relative shadow-lg transition-transform duration-500"
                         style={{
-                          width: `${Math.min(80, (width / height) * 65)}%`,
-                          height: `${Math.min(80, (height / width) * 65)}%`,
-                          maxWidth: '80%',
-                          maxHeight: '80%',
-                          backgroundColor: baseColorObject.hex,
-                          borderRadius: '2px',
+                          width: `${Math.min(70, (width / height) * 55)}%`,
+                          height: `${Math.min(70, (height / width) * 55)}%`,
+                          maxWidth: '70%',
+                          maxHeight: '70%',
                           transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
                           transformStyle: 'preserve-3d',
                         }}
                       >
-                        {/* Base frame */}
+                        {/* Window frame with depth */}
                         <div 
                           className="absolute inset-0 z-10 transform-gpu"
                           style={{ 
                             backgroundColor: baseColorObject.hex,
                             backfaceVisibility: 'hidden',
                             transformStyle: 'preserve-3d',
+                            boxShadow: '0 0 15px rgba(0,0,0,0.2)',
+                          }}
+                        ></div>
+                        
+                        {/* Side panels to create depth - left side */}
+                        <div 
+                          className="absolute left-0 top-0 bottom-0 z-20 transform-gpu"
+                          style={{ 
+                            width: '20px',
+                            backgroundColor: baseColorObject.hex,
+                            transform: 'rotateY(-90deg) translateZ(-10px)',
+                            transformOrigin: 'left',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        ></div>
+                        
+                        {/* Side panels to create depth - right side */}
+                        <div 
+                          className="absolute right-0 top-0 bottom-0 z-20 transform-gpu"
+                          style={{ 
+                            width: '20px',
+                            backgroundColor: baseColorObject.hex,
+                            transform: 'rotateY(90deg) translateZ(-10px)',
+                            transformOrigin: 'right',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        ></div>
+                        
+                        {/* Side panels to create depth - top side */}
+                        <div 
+                          className="absolute left-0 right-0 top-0 z-20 transform-gpu"
+                          style={{ 
+                            height: '20px',
+                            backgroundColor: baseColorObject.hex,
+                            transform: 'rotateX(90deg) translateZ(-10px)',
+                            transformOrigin: 'top',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        ></div>
+                        
+                        {/* Side panels to create depth - bottom side */}
+                        <div 
+                          className="absolute left-0 right-0 bottom-0 z-20 transform-gpu"
+                          style={{ 
+                            height: '20px',
+                            backgroundColor: baseColorObject.hex,
+                            transform: 'rotateX(-90deg) translateZ(-10px)',
+                            transformOrigin: 'bottom',
+                            backfaceVisibility: 'hidden',
                           }}
                         ></div>
                         
                         {/* Outside frame color */}
                         <div 
-                          className="absolute inset-0 z-20 transform-gpu"
+                          className="absolute inset-0 z-30 transform-gpu"
                           style={{ 
                             backgroundColor: outsideColorObject.hex, 
-                            transform: 'rotateY(0deg) translateZ(5px)',
+                            transform: 'rotateY(0deg) translateZ(1px)',
                             backfaceVisibility: 'hidden',
                           }}
-                        ></div>
+                        >
+                          {/* Frame internal borders for realistic appearance */}
+                          <div className="absolute inset-[8%] border-8 border-solid" style={{ borderColor: outsideColorObject.hex }}></div>
+                        </div>
 
                         {/* Inside frame color */}
                         <div 
-                          className="absolute inset-0 z-20 transform-gpu"
+                          className="absolute inset-0 z-30 transform-gpu"
                           style={{ 
                             backgroundColor: insideColorObject.hex, 
-                            transform: 'rotateY(180deg) translateZ(5px)',
+                            transform: 'rotateY(180deg) translateZ(1px)',
                             backfaceVisibility: 'hidden',
                           }}
-                        ></div>
+                        >
+                          {/* Frame internal borders for realistic appearance */}
+                          <div className="absolute inset-[8%] border-8 border-solid" style={{ borderColor: insideColorObject.hex }}></div>
+                        </div>
                         
-                        {/* Render window based on type */}
+                        {/* Render window based on type - with improved visuals */}
                         {selectedWindowType === 'single-leaf' && (
                           <div 
-                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
+                            className="absolute inset-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
                             style={{ 
                               backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                               boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                               borderRadius: '1px',
-                              transform: 'translateZ(6px)',
+                              transform: 'translateZ(2px)',
+                              borderColor: outsideColorObject.hex,
                             }}
                           >
-                            {/* Opening direction indicator */}
+                            {/* Opening direction indicator - centered */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="absolute text-3xl">
+                              <div className="absolute">
                                 {getOpeningDirectionIcon(selectedOpeningDirection)}
                               </div>
                             </div>
@@ -826,13 +888,15 @@ const Configurator = () => {
                         
                         {selectedWindowType === 'double-leaf' && (
                           <>
+                            {/* Left leaf - with frame */}
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[50%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
+                              className="absolute top-[12%] bottom-[12%] left-[12%] right-[51%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
-                                transform: 'translateZ(6px)',
+                                transform: 'translateZ(2px)',
+                                borderColor: outsideColorObject.hex,
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
@@ -843,13 +907,15 @@ const Configurator = () => {
                               </div>
                             </div>
                             
+                            {/* Right leaf - with frame */}
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[50%] right-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
+                              className="absolute top-[12%] bottom-[12%] left-[51%] right-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
-                                transform: 'translateZ(6px)',
+                                transform: 'translateZ(2px)',
+                                borderColor: outsideColorObject.hex,
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
@@ -860,23 +926,28 @@ const Configurator = () => {
                               </div>
                             </div>
                             
-                            <div className="absolute left-[50%] top-[10%] bottom-[10%] w-[3px] z-40 transform-gpu" 
-                                 style={{ 
-                                   backgroundColor: outsideColorObject.hex, 
-                                   transform: 'translateX(-50%) translateZ(6px)',
-                                 }} />
+                            {/* Central divider */}
+                            <div 
+                              className="absolute left-[50%] top-[12%] bottom-[12%] w-[2%] z-50 transform-gpu" 
+                              style={{ 
+                                backgroundColor: outsideColorObject.hex, 
+                                transform: 'translateX(-50%) translateZ(2px)',
+                              }} 
+                            />
                           </>
                         )}
                         
                         {selectedWindowType === 'triple-leaf' && (
                           <>
+                            {/* Left leaf */}
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[10%] right-[67%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
+                              className="absolute top-[12%] bottom-[12%] left-[12%] right-[67%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
-                                transform: 'translateZ(6px)',
+                                transform: 'translateZ(2px)',
+                                borderColor: outsideColorObject.hex,
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
@@ -887,23 +958,27 @@ const Configurator = () => {
                               </div>
                             </div>
                             
+                            {/* Middle leaf */}
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[33%] right-[33%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
+                              className="absolute top-[12%] bottom-[12%] left-[35%] right-[35%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
-                                transform: 'translateZ(6px)',
+                                transform: 'translateZ(2px)',
+                                borderColor: outsideColorObject.hex,
                               }}
                             />
                             
+                            {/* Right leaf */}
                             <div 
-                              className="absolute top-[10%] bottom-[10%] left-[67%] right-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
+                              className="absolute top-[12%] bottom-[12%] left-[67%] right-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
                               style={{ 
                                 backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                                 boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                                 borderRadius: '1px',
-                                transform: 'translateZ(6px)',
+                                transform: 'translateZ(2px)',
+                                borderColor: outsideColorObject.hex,
                               }}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
@@ -914,27 +989,35 @@ const Configurator = () => {
                               </div>
                             </div>
                             
-                            <div className="absolute left-[33%] top-[10%] bottom-[10%] w-[3px] z-40 transform-gpu" 
-                                 style={{ 
-                                   backgroundColor: outsideColorObject.hex, 
-                                   transform: 'translateX(-50%) translateZ(6px)',
-                                 }} />
-                            <div className="absolute left-[67%] top-[10%] bottom-[10%] w-[3px] z-40 transform-gpu" 
-                                 style={{ 
-                                   backgroundColor: outsideColorObject.hex, 
-                                   transform: 'translateX(-50%) translateZ(6px)',
-                                 }} />
+                            {/* Left divider */}
+                            <div 
+                              className="absolute left-[34%] top-[12%] bottom-[12%] w-[2%] z-50 transform-gpu" 
+                              style={{ 
+                                backgroundColor: outsideColorObject.hex, 
+                                transform: 'translateX(-50%) translateZ(2px)',
+                              }} 
+                            />
+                            
+                            {/* Right divider */}
+                            <div 
+                              className="absolute left-[66%] top-[12%] bottom-[12%] w-[2%] z-50 transform-gpu" 
+                              style={{ 
+                                backgroundColor: outsideColorObject.hex, 
+                                transform: 'translateX(-50%) translateZ(2px)',
+                              }} 
+                            />
                           </>
                         )}
                         
                         {selectedWindowType === 'fixed' && (
                           <div 
-                            className="absolute inset-[10%] flex items-center justify-center overflow-hidden z-30 transform-gpu"
+                            className="absolute inset-[12%] flex items-center justify-center overflow-hidden z-40 transform-gpu border-4"
                             style={{ 
                               backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                               boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15)',
                               borderRadius: '1px',
-                              transform: 'translateZ(6px)',
+                              transform: 'translateZ(2px)',
+                              borderColor: outsideColorObject.hex,
                             }}
                           >
                             <div className="text-sm font-medium opacity-70">Fixed</div>
@@ -967,23 +1050,13 @@ const Configurator = () => {
                           </div>
                         )}
 
-                        {/* Rubber seals - front */}
+                        {/* Rubber seals */}
                         <div 
-                          className="absolute inset-[8%] rounded-sm pointer-events-none z-50 transform-gpu"
+                          className="absolute inset-[10%] rounded-sm pointer-events-none z-60 transform-gpu"
                           style={{ 
                             border: `2px solid ${rubberColorObject.hex}`,
                             opacity: 0.9,
-                            transform: 'translateZ(6px)',
-                          }}
-                        ></div>
-
-                        {/* Rubber seals - back */}
-                        <div 
-                          className="absolute inset-[8%] rounded-sm pointer-events-none z-50 transform-gpu"
-                          style={{ 
-                            border: `2px solid ${rubberColorObject.hex}`,
-                            opacity: 0.9,
-                            transform: 'rotateY(180deg) translateZ(6px)',
+                            transform: 'translateZ(3px)',
                           }}
                         ></div>
                       </div>
