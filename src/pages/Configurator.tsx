@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -38,7 +37,7 @@ import {
 import { windowTypes, openingDirections, type WindowType, type OpeningDirection } from '@/data/windowTypes';
 import { useCart } from '@/context/CartContext';
 import { toast } from '@/hooks/use-toast';
-import { Palette, Square, Droplet, "rotate-cw" as RotateCw, "rotate-ccw" as RotateCcw, "triangle-left" as TriangleLeft, "triangle-right" as TriangleRight } from 'lucide-react';
+import { Palette, Square, Droplet, RotateCw, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Configurator = () => {
   const [searchParams] = useSearchParams();
@@ -181,13 +180,13 @@ const Configurator = () => {
   const getOpeningDirectionIcon = (direction: string) => {
     switch(direction) {
       case 'left':
-        return <TriangleLeft className="text-primary" />;
+        return <ChevronLeft className="text-primary" />;
       case 'right':
-        return <TriangleRight className="text-primary" />;
+        return <ChevronRight className="text-primary" />;
       case 'top-left':
-        return <TriangleLeft className="text-primary rotate-90" />;
+        return <ChevronLeft className="text-primary rotate-90" />;
       case 'top-right':
-        return <TriangleRight className="text-primary rotate-90" />;
+        return <ChevronRight className="text-primary rotate-90" />;
       default:
         return null;
     }
