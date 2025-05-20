@@ -105,7 +105,7 @@ export const ProductPreview = ({
 
   const frameThickness = getFrameThickness();
   
-  // Calculate handle position based on window type
+  // Calculate handle position based on window type and height
   const getHandlePosition = (isRightSide: boolean) => {
     if (selectedWindowType === 'double-leaf') {
       return isRightSide ? '20%' : '80%';
@@ -270,7 +270,7 @@ export const ProductPreview = ({
               {/* Render window based on type */}
               {selectedWindowType === 'single-leaf' && (
                 <>
-                  {/* Front glass panel */}
+                  {/* Front glass panel - now positioned in front of the frame */}
                   <div 
                     className="absolute flex items-center justify-center overflow-hidden"
                     style={{ 
@@ -278,7 +278,7 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'translateZ(5px)', // Moved in front of the frame
+                      transform: 'translateZ(5px)', // Positioned in front of the frame
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
@@ -312,7 +312,7 @@ export const ProductPreview = ({
                     </div>
                   </div>
 
-                  {/* Back glass panel - with glass opening (no full sash) */}
+                  {/* Back glass panel - with opening instead of a full sash */}
                   <div 
                     className="absolute overflow-hidden"
                     style={{ 
@@ -320,16 +320,16 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'rotateY(180deg) translateZ(5px)',
+                      transform: 'rotateY(180deg) translateZ(5px)', // Positioned at the back
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
-                    {/* Inner frame with small bezel */}
+                    {/* Inner frame with small bezel around glass */}
                     <div 
                       className="absolute pointer-events-none" 
                       style={{ 
                         inset: '0',
-                        border: `8px solid ${insideColorObject.hex}`,
+                        border: `8px solid ${insideColorObject.hex}`, // Bezel around glass
                         borderRadius: '2px',
                       }}
                     ></div>
@@ -370,7 +370,7 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'translateZ(5px)', // Moved in front of the frame
+                      transform: 'translateZ(5px)', // Positioned in front of the frame
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
@@ -391,7 +391,7 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'rotateY(180deg) translateZ(5px)',
+                      transform: 'rotateY(180deg) translateZ(5px)', // Positioned at the back
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
@@ -400,7 +400,7 @@ export const ProductPreview = ({
                       className="absolute pointer-events-none" 
                       style={{ 
                         inset: '0',
-                        border: `8px solid ${insideColorObject.hex}`,
+                        border: `8px solid ${insideColorObject.hex}`, // Bezel around glass 
                         borderRadius: '2px',
                       }}
                     ></div>
@@ -417,7 +417,7 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'translateZ(5px)', // Moved in front of the frame
+                      transform: 'translateZ(5px)', // Positioned in front of the frame
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
@@ -438,7 +438,7 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'rotateY(180deg) translateZ(5px)',
+                      transform: 'rotateY(180deg) translateZ(5px)', // Positioned at the back
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
@@ -447,7 +447,7 @@ export const ProductPreview = ({
                       className="absolute pointer-events-none" 
                       style={{ 
                         inset: '0',
-                        border: `8px solid ${insideColorObject.hex}`,
+                        border: `8px solid ${insideColorObject.hex}`, // Bezel around glass
                         borderRadius: '2px',
                       }}
                     ></div>
@@ -681,7 +681,7 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'translateZ(2px)',
+                      transform: 'translateZ(5px)', // Positioned in front of the frame
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
@@ -720,23 +720,33 @@ export const ProductPreview = ({
                       backgroundColor: 'rgba(220, 230, 240, ' + getGlassOpacity() + ')',
                       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.3)',
                       borderRadius: '2px',
-                      transform: 'rotateY(180deg) translateZ(2px)',
+                      transform: 'rotateY(180deg) translateZ(5px)', // Positioned at the back
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
-                  />
+                  >
+                    {/* Inner frame with small bezel */}
+                    <div 
+                      className="absolute pointer-events-none" 
+                      style={{ 
+                        inset: '0',
+                        border: `8px solid ${insideColorObject.hex}`, // Bezel around glass
+                        borderRadius: '2px',
+                      }}
+                    ></div>
+                  </div>
                 </>
               )}
 
               {/* Add hardware details like handles for opening windows */}
               {selectedWindowType !== 'fixed' && (
                 <>
-                  {/* Handle for front side */}
+                  {/* Handle for front side - positioned properly */}
                   <div
                     className="absolute z-10"
                     style={{
                       width: '12px',
                       height: '30px',
-                      right: getHandlePosition(true),
+                      right: '20px',
                       top: '50%',
                       transform: 'translateY(-50%) translateZ(6px)',
                       backgroundColor: '#888',
@@ -757,13 +767,13 @@ export const ProductPreview = ({
                     />
                   </div>
 
-                  {/* Handle for back side */}
+                  {/* Handle for back side - positioned properly */}
                   <div
                     className="absolute z-10"
                     style={{
                       width: '12px',
                       height: '30px',
-                      left: getHandlePosition(false),
+                      left: '20px',
                       top: '50%',
                       transform: 'translateY(-50%) rotateY(180deg) translateZ(6px)',
                       backgroundColor: '#888',
