@@ -1,5 +1,6 @@
 
 import { ColorOption } from '@/data/products';
+import { DoorFrameSides } from './DoorFrameSides';
 
 interface WindowFrameProps {
   baseColorObject: ColorOption;
@@ -34,46 +35,8 @@ export const WindowFrame = ({
         }}
       ></div>
       
-      {/* Frame sides for depth */}
-      <div 
-        className="absolute left-0 top-0 bottom-0 w-6"
-        style={{ 
-          backgroundColor: baseColorObject.hex,
-          transform: `rotateY(-90deg) translateZ(-${frameDepth}px)`,
-          transformOrigin: 'left',
-          borderRight: '1px solid rgba(0,0,0,0.1)',
-        }}
-      ></div>
-      
-      <div 
-        className="absolute right-0 top-0 bottom-0 w-6"
-        style={{ 
-          backgroundColor: baseColorObject.hex,
-          transform: `rotateY(90deg) translateZ(-${frameDepth}px)`,
-          transformOrigin: 'right',
-          borderLeft: '1px solid rgba(0,0,0,0.1)',
-        }}
-      ></div>
-      
-      <div 
-        className="absolute left-0 right-0 top-0 h-6"
-        style={{ 
-          backgroundColor: baseColorObject.hex,
-          transform: `rotateX(90deg) translateZ(-${frameDepth}px)`,
-          transformOrigin: 'top',
-          borderBottom: '1px solid rgba(0,0,0,0.1)',
-        }}
-      ></div>
-      
-      <div 
-        className="absolute left-0 right-0 bottom-0 h-6"
-        style={{ 
-          backgroundColor: baseColorObject.hex,
-          transform: `rotateX(-90deg) translateZ(-${frameDepth}px)`,
-          transformOrigin: 'bottom',
-          borderTop: '1px solid rgba(0,0,0,0.1)',
-        }}
-      ></div>
+      {/* Frame sides for depth - using the new DoorFrameSides component */}
+      <DoorFrameSides baseColor={baseColorObject.hex} />
       
       {/* Front face (primary color based on view) */}
       <div 
