@@ -1,12 +1,13 @@
 
 import { forwardRef } from 'react';
 import { ColorOption } from '@/data/products';
-import { OpeningDirectionIcon } from './components/OpeningDirectionIcon';
-import { GlazingLayers } from './components/GlazingLayers';
 import { SingleLeafWindow } from './window-types/SingleLeafWindow';
 import { DoubleLeafWindow } from './window-types/DoubleLeafWindow';
 import { TripleLeafWindow } from './window-types/TripleLeafWindow';
 import { FixedWindow } from './window-types/FixedWindow';
+import { WindowFrame } from './components/WindowFrame';
+import { WindowHandles } from './components/WindowHandles';
+import { WindowShadow } from './components/WindowShadow';
 
 interface WindowPreviewProps {
   width: number;
@@ -42,6 +43,8 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
     frameThickness,
     glassOpacity
   }, ref) => {
+    const isFixedWindow = selectedWindowType === 'fixed';
+    
     return (
       <div 
         ref={ref}
@@ -56,100 +59,15 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
           boxShadow: '0px 20px 40px rgba(0,0,0,0.3)',
         }}
       >
-        {/* Base frame with depth - positioned further back */}
-        <div 
-          className="absolute inset-0 rounded-md"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'translateZ(-3px)', // Moved backward
-            transformStyle: 'preserve-3d',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          }}
-        ></div>
+        {/* Main window frame */}
+        <WindowFrame
+          baseColorObject={baseColorObject}
+          outsideColorObject={outsideColorObject}
+          insideColorObject={insideColorObject}
+          frameThickness={frameThickness}
+        />
         
-        {/* Frame sides for depth - adjusted to connect with the recessed base */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-6"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateY(-90deg) translateZ(-3px)',
-            transformOrigin: 'left',
-            borderRight: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
-        
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-6"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateY(90deg) translateZ(-3px)',
-            transformOrigin: 'right',
-            borderLeft: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
-        
-        <div 
-          className="absolute left-0 right-0 top-0 h-6"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateX(90deg) translateZ(-3px)',
-            transformOrigin: 'top',
-            borderBottom: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
-        
-        <div 
-          className="absolute left-0 right-0 bottom-0 h-6"
-          style={{ 
-            backgroundColor: baseColorObject.hex,
-            transform: 'rotateX(-90deg) translateZ(-3px)',
-            transformOrigin: 'bottom',
-            borderTop: '1px solid rgba(0,0,0,0.1)',
-          }}
-        ></div>
-        
-        {/* Outside frame (front face) - now positioned clearly in front of base */}
-        <div 
-          className="absolute inset-0 rounded-md"
-          style={{ 
-            backgroundColor: outsideColorObject.hex, 
-            transform: 'translateZ(1px)',
-            boxShadow: '0 0 8px rgba(0,0,0,0.1)',
-          }}
-        >
-          {/* Inner cutout area that shows the glass */}
-          <div 
-            className="absolute" 
-            style={{ 
-              inset: `${frameThickness}px`,
-              border: `2px solid ${outsideColorObject.hex}`,
-              borderColor: `${outsideColorObject.hex} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${outsideColorObject.hex}`,
-              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
-            }}
-          ></div>
-        </div>
-
-        {/* Inside frame (back face) */}
-        <div 
-          className="absolute inset-0 rounded-md"
-          style={{ 
-            backgroundColor: insideColorObject.hex, 
-            transform: 'rotateY(180deg) translateZ(1px)',
-          }}
-        >
-          {/* Frame inner border */}
-          <div 
-            className="absolute" 
-            style={{ 
-              inset: `${frameThickness}px`,
-              border: `2px solid ${insideColorObject.hex}`,
-              borderColor: `${insideColorObject.hex} rgba(0,0,0,0.2) rgba(0,0,0,0.2) ${insideColorObject.hex}`,
-              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
-            }}
-          ></div>
-        </div>
-        
-        {/* Render window based on type */}
+        {/* Window content based on type */}
         {selectedWindowType === 'single-leaf' && (
           <SingleLeafWindow 
             frameThickness={frameThickness}
@@ -188,7 +106,7 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
           />
         )}
         
-        {selectedWindowType === 'fixed' && (
+        {isFixedWindow && (
           <FixedWindow 
             frameThickness={frameThickness}
             glazingObject={glazingObject}
@@ -199,76 +117,11 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
           />
         )}
 
-        {/* Add hardware details like handles for opening windows */}
-        {selectedWindowType !== 'fixed' && (
-          <>
-            {/* Handle for front side - positioned properly */}
-            <div
-              className="absolute z-10"
-              style={{
-                width: '12px',
-                height: '30px',
-                right: '20px',
-                top: '50%',
-                transform: 'translateY(-50%) translateZ(6px)',
-                backgroundColor: '#888',
-                borderRadius: '2px',
-                boxShadow: '0 0 3px rgba(0,0,0,0.3)'
-              }}
-            >
-              <div
-                className="absolute"
-                style={{
-                  width: '20px',
-                  height: '5px',
-                  left: '-4px',
-                  top: '12px',
-                  backgroundColor: '#777',
-                  borderRadius: '1px',
-                }}
-              />
-            </div>
+        {/* Window handles for opening windows */}
+        <WindowHandles isFixed={isFixedWindow} />
 
-            {/* Handle for back side - positioned properly */}
-            <div
-              className="absolute z-10"
-              style={{
-                width: '12px',
-                height: '30px',
-                left: '20px',
-                top: '50%',
-                transform: 'translateY(-50%) rotateY(180deg) translateZ(6px)',
-                backgroundColor: '#888',
-                borderRadius: '2px',
-                boxShadow: '0 0 3px rgba(0,0,0,0.3)'
-              }}
-            >
-              <div
-                className="absolute"
-                style={{
-                  width: '20px',
-                  height: '5px',
-                  left: '-4px',
-                  top: '12px',
-                  backgroundColor: '#777',
-                  borderRadius: '1px',
-                }}
-              />
-            </div>
-          </>
-        )}
-
-        {/* Window silhouette shadow for depth */}
-        <div
-          className="absolute"
-          style={{
-            inset: '-10px',
-            transform: 'translateZ(-10px)',
-            backgroundColor: 'rgba(0,0,0,0.07)',
-            filter: 'blur(10px)',
-            borderRadius: '8px',
-          }}
-        />
+        {/* Window shadow for depth effect */}
+        <WindowShadow />
       </div>
     );
   }
