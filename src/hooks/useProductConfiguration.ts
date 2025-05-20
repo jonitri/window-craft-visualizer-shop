@@ -1,17 +1,12 @@
-import { useState, useEffect } from 'react';
+
 import { useSearchParams } from 'react-router-dom';
-import { 
-  Profile,
-  windowProfiles, 
-  doorProfiles, 
-  glazingOptions, 
-  baseColorOptions,
-  outsideColorOptions,
-  insideColorOptions,
-  rubberColorOptions,
-  calculatePrice
-} from '@/data/products';
-import { windowTypes, openingDirections } from '@/data/windowTypes';
+import { useProductType } from './configurator/useProductType';
+import { useWindowConfiguration } from './configurator/useWindowConfiguration';
+import { useDimensions } from './configurator/useDimensions';
+import { useAppearance } from './configurator/useAppearance';
+import { useRotation } from './configurator/useRotation';
+import { usePriceCalculation } from './configurator/usePriceCalculation';
+import { Profile } from '@/data/products';
 
 export interface ProductConfiguration {
   // State properties
@@ -70,132 +65,76 @@ export function useProductConfiguration() {
   const initialType = searchParams.get('type') === 'door' ? 'door' : 'window';
   const initialProfileId = searchParams.get('profile') || '';
   
-  // State for configuration
-  const [productType, setProductType] = useState<'window' | 'door'>(initialType as 'window' | 'door');
-  const [selectedWindowType, setSelectedWindowType] = useState<string>('single-leaf');
-  const [selectedOpeningDirection, setSelectedOpeningDirection] = useState<string>('left');
-  const [selectedProfile, setSelectedProfile] = useState<string>(initialProfileId);
-  const [selectedGlazing, setSelectedGlazing] = useState<string>('glz-double');
-  const [selectedBaseColor, setSelectedBaseColor] = useState<string>('col-white');
-  const [selectedOutsideColor, setSelectedOutsideColor] = useState<string>('col-out-white');
-  const [selectedInsideColor, setSelectedInsideColor] = useState<string>('col-in-white');
-  const [selectedRubberColor, setSelectedRubberColor] = useState<string>('col-rubber-black');
-  const [width, setWidth] = useState<number>(1000); // Default 1000mm
-  const [height, setHeight] = useState<number>(1200); // Default 1200mm
-  const [quantity, setQuantity] = useState<number>(1);
-  const [calculatedPrice, setCalculatedPrice] = useState<number>(0);
-  const [rotationX, setRotationX] = useState<number>(0);
-  const [rotationY, setRotationY] = useState<number>(0);
+  // Use all the smaller hooks
+  const productTypeHook = useProductType(initialType as 'window' | 'door');
+  const windowConfigHook = useWindowConfiguration();
+  const dimensionsHook = useDimensions();
+  const appearanceHook = useAppearance();
+  const rotationHook = useRotation();
   
-  // Get profiles based on product type
-  const availableProfiles = productType === 'window' ? windowProfiles : doorProfiles;
-  
-  // Find the selected profile, glazing and color objects
-  const profileObject = availableProfiles.find(p => p.id === selectedProfile) || availableProfiles[0];
-  const glazingObject = glazingOptions.find(g => g.id === selectedGlazing) || glazingOptions[0];
-  const baseColorObject = baseColorOptions.find(c => c.id === selectedBaseColor) || baseColorOptions[0];
-  const outsideColorObject = outsideColorOptions.find(c => c.id === selectedOutsideColor) || outsideColorOptions[0];
-  const insideColorObject = insideColorOptions.find(c => c.id === selectedInsideColor) || insideColorOptions[0];
-  const rubberColorObject = rubberColorOptions.find(c => c.id === selectedRubberColor) || rubberColorOptions[0];
-  const windowTypeObject = windowTypes.find(w => w.id === selectedWindowType) || windowTypes[0];
-  const openingDirectionObject = openingDirections.find(o => o.id === selectedOpeningDirection) || openingDirections[0];
+  // Calculate the price based on all configurations
+  const calculatedPrice = usePriceCalculation(
+    productTypeHook.profileObject?.basePrice || 0,
+    appearanceHook.glazingObject?.priceModifier || 0,
+    appearanceHook.totalColorModifier,
+    dimensionsHook.width,
+    dimensionsHook.height,
+    productTypeHook.productType,
+    windowConfigHook.windowTypeObject?.leafCount || 1
+  );
 
-  // Combined color price modifier
-  const totalColorModifier = baseColorObject.priceModifier + outsideColorObject.priceModifier + 
-                           insideColorObject.priceModifier + rubberColorObject.priceModifier;
-  
-  // Update calculated price whenever options change
-  useEffect(() => {
-    if (profileObject) {
-      // Add 10% to price for each additional leaf for windows
-      let leafMultiplier = 1;
-      if (productType === 'window' && windowTypeObject) {
-        leafMultiplier = 1 + ((windowTypeObject.leafCount - 1) * 0.1);
-      }
-      
-      const price = calculatePrice(
-        profileObject.basePrice * leafMultiplier,
-        glazingObject.priceModifier,
-        totalColorModifier,
-        width,
-        height
-      );
-      setCalculatedPrice(price);
-    }
-  }, [
-    selectedProfile, selectedGlazing, selectedWindowType,
-    selectedBaseColor, selectedOutsideColor, selectedInsideColor, selectedRubberColor,
-    width, height, profileObject, glazingObject, totalColorModifier, productType, windowTypeObject
-  ]);
-  
-  // Set a default profile if none is selected
-  useEffect(() => {
-    if (!selectedProfile && availableProfiles.length > 0) {
-      setSelectedProfile(availableProfiles[0].id);
-    }
-  }, [productType, availableProfiles, selectedProfile]);
-
-  // Handle rotation
-  const handleRotateLeft = () => {
-    setRotationY((prev) => prev - 30);
-  };
-
-  const handleRotateRight = () => {
-    setRotationY((prev) => prev + 30);
-  };
-
-  const resetRotation = () => {
-    setRotationX(0);
-    setRotationY(0);
-  };
-
+  // Return the complete configuration object with all properties
   return {
-    // All state variables
-    productType,
-    selectedWindowType,
-    selectedOpeningDirection,
-    selectedProfile,
-    selectedGlazing,
-    selectedBaseColor,
-    selectedOutsideColor,
-    selectedInsideColor,
-    selectedRubberColor,
-    width,
-    height,
-    quantity,
-    calculatedPrice,
-    rotationX,
-    rotationY,
+    // From product type hook
+    productType: productTypeHook.productType,
+    selectedProfile: productTypeHook.selectedProfile,
+    profileObject: productTypeHook.profileObject,
+    availableProfiles: productTypeHook.availableProfiles,
+    setProductType: productTypeHook.setProductType,
+    setSelectedProfile: productTypeHook.setSelectedProfile,
     
-    // Derived objects
-    availableProfiles,
-    profileObject,
-    glazingObject,
-    baseColorObject,
-    outsideColorObject,
-    insideColorObject,
-    rubberColorObject,
-    windowTypeObject,
-    openingDirectionObject,
-    totalColorModifier,
+    // From window configuration hook
+    selectedWindowType: windowConfigHook.selectedWindowType,
+    selectedOpeningDirection: windowConfigHook.selectedOpeningDirection,
+    windowTypeObject: windowConfigHook.windowTypeObject,
+    openingDirectionObject: windowConfigHook.openingDirectionObject,
+    setSelectedWindowType: windowConfigHook.setSelectedWindowType,
+    setSelectedOpeningDirection: windowConfigHook.setSelectedOpeningDirection,
     
-    // Setters
-    setProductType,
-    setSelectedWindowType,
-    setSelectedOpeningDirection,
-    setSelectedProfile,
-    setSelectedGlazing,
-    setSelectedBaseColor,
-    setSelectedOutsideColor,
-    setSelectedInsideColor,
-    setSelectedRubberColor,
-    setWidth,
-    setHeight,
-    setQuantity,
+    // From dimensions hook
+    width: dimensionsHook.width,
+    height: dimensionsHook.height,
+    quantity: dimensionsHook.quantity,
+    setWidth: dimensionsHook.setWidth,
+    setHeight: dimensionsHook.setHeight,
+    setQuantity: dimensionsHook.setQuantity,
     
-    // Rotation handlers
-    handleRotateLeft,
-    handleRotateRight,
-    resetRotation
+    // From appearance hook
+    selectedGlazing: appearanceHook.selectedGlazing,
+    selectedBaseColor: appearanceHook.selectedBaseColor,
+    selectedOutsideColor: appearanceHook.selectedOutsideColor,
+    selectedInsideColor: appearanceHook.selectedInsideColor,
+    selectedRubberColor: appearanceHook.selectedRubberColor,
+    glazingObject: appearanceHook.glazingObject,
+    baseColorObject: appearanceHook.baseColorObject,
+    outsideColorObject: appearanceHook.outsideColorObject,
+    insideColorObject: appearanceHook.insideColorObject,
+    rubberColorObject: appearanceHook.rubberColorObject,
+    totalColorModifier: appearanceHook.totalColorModifier,
+    setSelectedGlazing: appearanceHook.setSelectedGlazing,
+    setSelectedBaseColor: appearanceHook.setSelectedBaseColor,
+    setSelectedOutsideColor: appearanceHook.setSelectedOutsideColor,
+    setSelectedInsideColor: appearanceHook.setSelectedInsideColor,
+    setSelectedRubberColor: appearanceHook.setSelectedRubberColor,
+    
+    // From rotation hook
+    rotationX: rotationHook.rotationX,
+    rotationY: rotationHook.rotationY,
+    handleRotateLeft: rotationHook.handleRotateLeft,
+    handleRotateRight: rotationHook.handleRotateRight,
+    resetRotation: rotationHook.resetRotation,
+    
+    // Price calculation
+    calculatedPrice
   };
 }
