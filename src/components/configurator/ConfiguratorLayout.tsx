@@ -21,7 +21,7 @@ export const ConfiguratorLayout = ({ children }: ConfiguratorLayoutProps) => {
 
       {/* Configurator Section */}
       <section className="container-custom py-8">
-        <div className="grid lg:grid-cols-10 gap-6 min-h-[calc(100vh-300px)]">
+        <div className="grid lg:grid-cols-10 gap-6 min-h-[calc(100vh-200px)]">
           {children}
         </div>
       </section>
