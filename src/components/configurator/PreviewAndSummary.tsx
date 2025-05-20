@@ -7,8 +7,8 @@ interface PreviewAndSummaryProps {
 
 export const PreviewAndSummary = ({ children }: PreviewAndSummaryProps) => {
   return (
-    <div className="lg:col-span-4 space-y-8">
-      <div className="sticky top-20">
+    <div className="lg:col-span-4 space-y-6">
+      <div>
         {children}
       </div>
     </div>

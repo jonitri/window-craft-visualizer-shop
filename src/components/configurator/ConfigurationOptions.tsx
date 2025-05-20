@@ -36,15 +36,14 @@ export const ConfigurationOptions = ({ children }: ConfigurationOptionsProps) =>
   return (
     <div 
       ref={optionsRef}
-      className="lg:col-span-6 space-y-8 overflow-y-auto pb-24"
+      className="lg:col-span-6"
       style={{ 
-        height: 'calc(100vh - 80px)', 
         paddingRight: '1rem',
-        position: 'sticky',
-        top: '80px'
       }}
     >
-      {children}
+      <div className="space-y-6">
+        {children}
+      </div>
     </div>
   );
 };
