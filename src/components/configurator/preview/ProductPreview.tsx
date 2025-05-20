@@ -19,9 +19,11 @@ interface ProductPreviewProps {
   openingDirectionObject: OpeningDirection | undefined;
   rotationX: number;
   rotationY: number;
+  viewMode: 'front' | 'back';
   onRotateLeft: () => void;
   onRotateRight: () => void;
   onResetRotation: () => void;
+  onToggleView: () => void;
 }
 
 export const ProductPreview = (props: ProductPreviewProps) => {
