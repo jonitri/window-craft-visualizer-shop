@@ -20,8 +20,8 @@ export const ConfiguratorLayout = ({ children }: ConfiguratorLayoutProps) => {
       </section>
 
       {/* Configurator Section */}
-      <section className="container-custom section-padding">
-        <div className="grid lg:grid-cols-10 gap-8">
+      <section className="container-custom pb-24">
+        <div className="grid lg:grid-cols-10 gap-8 pt-8">
           {children}
         </div>
       </section>

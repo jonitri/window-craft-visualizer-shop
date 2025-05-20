@@ -37,7 +37,12 @@ export const ConfigurationOptions = ({ children }: ConfigurationOptionsProps) =>
     <div 
       ref={optionsRef}
       className="lg:col-span-6 space-y-8 overflow-y-auto pb-24"
-      style={{ maxHeight: 'calc(100vh - 120px)', paddingRight: '1rem' }}
+      style={{ 
+        height: 'calc(100vh - 120px)', 
+        paddingRight: '1rem',
+        position: 'sticky',
+        top: '120px'
+      }}
     >
       {children}
     </div>
