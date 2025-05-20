@@ -56,18 +56,18 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
           boxShadow: '0px 20px 40px rgba(0,0,0,0.3)',
         }}
       >
-        {/* Base frame with depth */}
+        {/* Base frame with depth - positioned further back */}
         <div 
           className="absolute inset-0 rounded-md"
           style={{ 
             backgroundColor: baseColorObject.hex,
-            transform: 'translateZ(0px)',
+            transform: 'translateZ(-3px)', // Moved backward
             transformStyle: 'preserve-3d',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           }}
         ></div>
         
-        {/* Frame sides for depth - larger values for better 3D effect */}
+        {/* Frame sides for depth - adjusted to connect with the recessed base */}
         <div 
           className="absolute left-0 top-0 bottom-0 w-6"
           style={{ 
@@ -108,15 +108,16 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
           }}
         ></div>
         
-        {/* Outside frame (front face) */}
+        {/* Outside frame (front face) - now positioned clearly in front of base */}
         <div 
           className="absolute inset-0 rounded-md"
           style={{ 
             backgroundColor: outsideColorObject.hex, 
             transform: 'translateZ(1px)',
+            boxShadow: '0 0 8px rgba(0,0,0,0.1)',
           }}
         >
-          {/* Frame inner border */}
+          {/* Inner cutout area that shows the glass */}
           <div 
             className="absolute" 
             style={{ 
@@ -262,7 +263,7 @@ export const WindowPreview = forwardRef<HTMLDivElement, WindowPreviewProps>(
           className="absolute"
           style={{
             inset: '-10px',
-            transform: 'translateZ(-5px)',
+            transform: 'translateZ(-10px)',
             backgroundColor: 'rgba(0,0,0,0.07)',
             filter: 'blur(10px)',
             borderRadius: '8px',
