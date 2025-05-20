@@ -4,11 +4,11 @@ import { CartItem } from '@/context/CartContext';
 
 interface CartSummaryProps {
   cart: CartItem[];
-  getTotalPrice: () => number;
+  cartTotal: number;
   clearCart: () => void;
 }
 
-export const CartSummary = ({ cart, getTotalPrice, clearCart }: CartSummaryProps) => {
+export const CartSummary = ({ cart, cartTotal, clearCart }: CartSummaryProps) => {
   if (cart.length === 0) return null;
   
   return (
@@ -17,7 +17,7 @@ export const CartSummary = ({ cart, getTotalPrice, clearCart }: CartSummaryProps
         Clear Cart
       </Button>
       <div className="text-xl font-bold">
-        Total: ${getTotalPrice().toFixed(2)}
+        Total: ${cartTotal.toFixed(2)}
       </div>
     </div>
   );

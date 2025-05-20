@@ -6,21 +6,21 @@ import {
   Card,
   CardContent,
 } from '@/components/ui/card';
-import { useCart } from '@/context/CartContext';
 import { Trash2 } from 'lucide-react';
 
 interface CartItemProps {
   item: CartItemType;
+  onUpdateQuantity: (itemId: string, quantity: number) => void;
+  onRemove: (itemId: string) => void;
 }
 
-export const CartItem = ({ item }: CartItemProps) => {
-  const { updateQuantity, removeFromCart } = useCart();
+export const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
   const [quantity, setQuantity] = useState(item.quantity);
   
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity < 1) return;
     setQuantity(newQuantity);
-    updateQuantity(item.id, newQuantity);
+    onUpdateQuantity(item.id, newQuantity);
   };
   
   return (
@@ -126,7 +126,7 @@ export const CartItem = ({ item }: CartItemProps) => {
                 variant="ghost" 
                 size="sm" 
                 className="text-destructive hover:text-destructive hover:bg-destructive/10" 
-                onClick={() => removeFromCart(item.id)}
+                onClick={() => onRemove(item.id)}
               >
                 <Trash2 className="h-4 w-4 mr-1" />
                 Remove
