@@ -307,7 +307,8 @@ export const ProductPreview = ({
                       </>
                     )}
 
-                    <div className="text-xs text-center text-gray-600 font-medium opacity-70">
+                    {/* Profile name on front glass - now positioned properly on the front */}
+                    <div className="text-xs text-center text-gray-600 font-medium opacity-70 z-10 absolute">
                       {profileObject.name}
                     </div>
                   </div>
@@ -358,6 +359,7 @@ export const ProductPreview = ({
               )}
               
               {selectedWindowType === 'double-leaf' && (
+                // ... keep existing code (double-leaf window rendering) the same but update text positioning
                 <>
                   {/* Left leaf - front */}
                   <div 
@@ -377,6 +379,11 @@ export const ProductPreview = ({
                     <div className="absolute inset-0 flex items-center justify-center">
                       {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
                         getOpeningDirectionIcon(selectedOpeningDirection) : null}
+                    </div>
+                    
+                    {/* Profile name on the left leaf */}
+                    <div className="text-xs text-center text-gray-600 font-medium opacity-70 z-10 absolute top-2 left-0 right-0">
+                      {profileObject.name}
                     </div>
                   </div>
                   
@@ -484,6 +491,7 @@ export const ProductPreview = ({
               )}
               
               {selectedWindowType === 'triple-leaf' && (
+                // ... keep existing code (triple-leaf window rendering) the same but update text positioning
                 <>
                   {/* Left leaf - front */}
                   <div 
@@ -503,6 +511,11 @@ export const ProductPreview = ({
                     <div className="absolute inset-0 flex items-center justify-center">
                       {selectedOpeningDirection === 'left' || selectedOpeningDirection === 'top-left' ? 
                         getOpeningDirectionIcon(selectedOpeningDirection) : null}
+                    </div>
+                    
+                    {/* Profile name on left leaf */}
+                    <div className="text-xs text-center text-gray-600 font-medium opacity-70 z-10 absolute top-2 left-0 right-0">
+                      {profileObject.name}
                     </div>
                   </div>
                   
@@ -685,7 +698,8 @@ export const ProductPreview = ({
                       border: `1px solid ${rubberColorObject.hex}`,
                     }}
                   >
-                    <div className="text-sm font-medium opacity-70">Fixed</div>
+                    {/* Fixed label - positioned at the front */}
+                    <div className="text-sm font-medium opacity-70 z-10 absolute">Fixed</div>
                     
                     {/* Visualize glazing layers */}
                     {glazingObject.id === 'glz-double' && (
@@ -707,7 +721,8 @@ export const ProductPreview = ({
                       </>
                     )}
 
-                    <div className="text-xs text-center text-gray-600 font-medium opacity-70">
+                    {/* Profile name on front glass */}
+                    <div className="text-xs text-center text-gray-600 font-medium opacity-70 z-10 absolute bottom-4">
                       {profileObject.name}
                     </div>
                   </div>
@@ -739,6 +754,7 @@ export const ProductPreview = ({
 
               {/* Add hardware details like handles for opening windows */}
               {selectedWindowType !== 'fixed' && (
+                // ... keep existing code (window hardware) the same
                 <>
                   {/* Handle for front side - positioned properly */}
                   <div
@@ -966,6 +982,11 @@ export const ProductPreview = ({
                     border: `2px solid ${rubberColorObject.hex}`,
                   }}
                 >
+                  {/* Profile name on door glass - clearly visible on front */}
+                  <div className="text-xs text-center text-gray-600 font-medium opacity-70 z-10">
+                    {profileObject.name}
+                  </div>
+                  
                   {/* Glazing layers visualization */}
                   {glazingObject.id === 'glz-double' && (
                     <div className="absolute inset-0 border-r border-white opacity-30" style={{left: '50%'}}></div>
@@ -1087,6 +1108,7 @@ export const ProductPreview = ({
               <div className="absolute right-[10%] top-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'rotateY(180deg) translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
               <div className="absolute right-[10%] bottom-[20%] w-[15px] h-[40px] bg-gray-400 rounded-sm" style={{ transform: 'rotateY(180deg) translateZ(6px)', boxShadow: '2px 2px 4px rgba(0,0,0,0.2)' }} />
 
+              {/* Profile name on the door - positioned on front */}
               {profileObject && (
                 <div className="absolute bottom-[5%] left-0 right-0 text-xs text-center text-gray-100 font-medium opacity-90 z-20"
                      style={{ transform: 'translateZ(6px)' }}>
