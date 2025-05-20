@@ -9,7 +9,12 @@ export interface CartItem {
   name: string;
   profile: string;
   glazing: string;
-  color: string;
+  colors: {
+    base: string;
+    outside: string;
+    inside: string;
+    rubber: string;
+  };
   dimensions: {
     width: number;
     height: number;
@@ -42,7 +47,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       (cartItem.type === item.type && 
        cartItem.profile === item.profile && 
        cartItem.glazing === item.glazing && 
-       cartItem.color === item.color && 
+       cartItem.colors.base === item.colors.base &&
+       cartItem.colors.outside === item.colors.outside &&
+       cartItem.colors.inside === item.colors.inside &&
+       cartItem.colors.rubber === item.colors.rubber &&
        cartItem.dimensions.width === item.dimensions.width &&
        cartItem.dimensions.height === item.dimensions.height)
     );
