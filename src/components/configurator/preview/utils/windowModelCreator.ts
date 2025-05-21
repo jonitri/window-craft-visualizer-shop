@@ -16,7 +16,31 @@ export function createWindowModel(
   modelRef: React.MutableRefObject<THREE.Group | null>,
   props: WindowModelProps
 ): void {
-  if (!scene || !props.textureRef.current) return;
+  console.log("Creating window model", props);
+  if (!scene) {
+    console.error("Scene is not available");
+    return;
+  }
+  
+  if (!props.textureRef.current) {
+    console.error("Texture is not loaded");
+    return;
+  }
+  
+  // Clear any existing model
+  if (modelRef.current) {
+    scene.remove(modelRef.current);
+    modelRef.current.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.geometry.dispose();
+        if (Array.isArray(child.material)) {
+          child.material.forEach(material => material.dispose());
+        } else {
+          child.material.dispose();
+        }
+      }
+    });
+  }
   
   const { width, height, baseColorObject, outsideColorObject, insideColorObject, textureRef } = props;
   const windowGroup = new THREE.Group();
@@ -32,11 +56,15 @@ export function createWindowModel(
   const frontMaterial = new THREE.MeshStandardMaterial({
     map: textureRef.current,
     side: THREE.FrontSide,
+    transparent: true,
+    opacity: 0.9,
   });
   
   const backMaterial = new THREE.MeshStandardMaterial({
     map: textureRef.current,
     side: THREE.BackSide,
+    transparent: true,
+    opacity: 0.9,
   });
 
   const frontPanel = new THREE.Mesh(geometry, frontMaterial);
@@ -87,7 +115,11 @@ function createWindowFrame(windowGroup: THREE.Group, props: WindowFrameProps): v
     frameThickness, 
     frameDepth
   );
-  const topFrameMaterial = new THREE.MeshStandardMaterial({ color: baseColor });
+  const topFrameMaterial = new THREE.MeshStandardMaterial({ 
+    color: baseColor,
+    roughness: 0.7,
+    metalness: 0.3
+  });
   const topFrame = new THREE.Mesh(topFrameGeometry, topFrameMaterial);
   topFrame.position.y = windowHeight/2 + frameThickness/2;
   windowGroup.add(topFrame);

@@ -48,17 +48,18 @@ export const PreviewArea = ({
 }: PreviewAreaProps) => {
   return (
     <div 
-      className="bg-secondary rounded-lg p-8 flex items-center justify-center relative"
+      className="bg-secondary rounded-lg p-4 flex items-center justify-center relative"
       style={{ 
         perspective: '2000px', 
         height: '450px', 
         overflow: 'hidden',
-        background: 'linear-gradient(to bottom, #e0e8f0, #c0d0e0)'
+        background: 'linear-gradient(to bottom, #e0e8f0, #c0d0e0)',
+        position: 'relative'
       }}
     >
-      {/* ThreeJS 360° Preview */}
+      {/* ThreeJS 3D Preview */}
       {productType === 'window' && (
-        <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div className="absolute inset-0 flex items-center justify-center">
           <ThreeJSWindowModel
             width={width}
             height={height}
