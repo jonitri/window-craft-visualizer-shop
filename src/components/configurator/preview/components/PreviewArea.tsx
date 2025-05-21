@@ -57,19 +57,21 @@ export const PreviewArea = ({
       }}
     >
       {/* ThreeJS 360° Preview */}
-      <div className="absolute inset-0 flex items-center justify-center" style={{ display: productType === 'window' ? 'flex' : 'none' }}>
-        <ThreeJSWindowModel
-          width={width}
-          height={height}
-          rotationX={rotationX}
-          rotationY={rotationY}
-          baseColorObject={baseColorObject}
-          outsideColorObject={outsideColorObject}
-          insideColorObject={insideColorObject}
-          viewMode={viewMode}
-          isAutoRotating={isAutoRotating}
-        />
-      </div>
+      {productType === 'window' && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <ThreeJSWindowModel
+            width={width}
+            height={height}
+            rotationX={rotationX}
+            rotationY={rotationY}
+            baseColorObject={baseColorObject}
+            outsideColorObject={outsideColorObject}
+            insideColorObject={insideColorObject}
+            viewMode={viewMode}
+            isAutoRotating={isAutoRotating}
+          />
+        </div>
+      )}
 
       {/* Original Preview (hidden when ThreeJS is active) */}
       <div className="hidden">
