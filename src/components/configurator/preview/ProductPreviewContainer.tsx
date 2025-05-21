@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { PreviewControls } from './PreviewControls';
 import { ProductPreviewInfo } from './components/ProductPreviewInfo';
@@ -94,6 +93,7 @@ export const ProductPreviewContainer = ({
           rotationX={rotationX}
           rotationY={rotationY}
           viewMode={viewMode}
+          isAutoRotating={isAutoRotating}
           getGlassOpacity={getGlassOpacity}
           getFrameThickness={getFrameThickness}
           previewRef={previewRef}
