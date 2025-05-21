@@ -17,6 +17,7 @@ interface ThreeJSWindowModelProps {
   insideColorObject: ColorOption;
   viewMode: 'front' | 'back';
   isAutoRotating: boolean;
+  windowType?: 'single-leaf' | 'double-leaf' | 'triple-leaf' | 'fixed';
 }
 
 export const ThreeJSWindowModel = ({
@@ -28,9 +29,10 @@ export const ThreeJSWindowModel = ({
   outsideColorObject,
   insideColorObject,
   viewMode,
-  isAutoRotating
+  isAutoRotating,
+  windowType = 'single-leaf'
 }: ThreeJSWindowModelProps) => {
-  console.log("ThreeJSWindowModel rendered with dimensions:", width, height);
+  console.log(`ThreeJSWindowModel rendered with dimensions: ${width}x${height}, type: ${windowType}`);
   const mountRef = useRef<HTMLDivElement>(null);
   const windowModelRef = useRef<THREE.Group | null>(null);
   const modelCreatedRef = useRef<boolean>(false);
@@ -57,16 +59,17 @@ export const ThreeJSWindowModel = ({
           baseColorObject,
           outsideColorObject,
           insideColorObject,
-          textureRef: { current: texture }
+          textureRef: { current: texture },
+          windowType
         }
       );
       
       modelCreatedRef.current = true;
-      console.log("Window model created successfully");
+      console.log(`${windowType} window model created successfully`);
     } catch (error) {
       console.error("Error creating window model:", error);
     }
-  }, [width, height, baseColorObject, outsideColorObject, insideColorObject]);
+  }, [width, height, baseColorObject, outsideColorObject, insideColorObject, windowType]);
   
   const textureRef = useTextureLoader(handleTextureLoaded);
   
@@ -83,7 +86,7 @@ export const ThreeJSWindowModel = ({
   // Debug log for component mounting and props changes
   useEffect(() => {
     console.log("ThreeJSWindowModel mounted or updated");
-    console.log("Current props:", { width, height, rotationX, rotationY, viewMode, isAutoRotating });
+    console.log("Current props:", { width, height, rotationX, rotationY, viewMode, isAutoRotating, windowType });
     console.log("Scene initialized:", !!sceneRefs.scene.current);
     console.log("Renderer initialized:", !!sceneRefs.renderer.current);
     console.log("Model created:", modelCreatedRef.current);
@@ -91,7 +94,7 @@ export const ThreeJSWindowModel = ({
     return () => {
       console.log("ThreeJSWindowModel unmounting");
     };
-  }, [width, height, rotationX, rotationY, viewMode, isAutoRotating]);
+  }, [width, height, rotationX, rotationY, viewMode, isAutoRotating, windowType]);
 
   return (
     <div 

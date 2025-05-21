@@ -70,6 +70,7 @@ export const PreviewArea = ({
             insideColorObject={insideColorObject}
             viewMode={viewMode}
             isAutoRotating={isAutoRotating}
+            windowType={selectedWindowType as 'single-leaf' | 'double-leaf' | 'triple-leaf' | 'fixed'}
           />
         </div>
       )}

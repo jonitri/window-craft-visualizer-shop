@@ -19,6 +19,12 @@ export function useTextureLoader(
         url,
         (texture) => {
           console.log("Texture loaded successfully");
+          // Apply texture settings for better appearance
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.set(1, 1);
+          texture.needsUpdate = true;
+          
           textureRef.current = texture;
           onTextureLoaded(texture);
           setHasError(false);
@@ -46,7 +52,10 @@ export function useTextureLoader(
 
     return () => {
       // Clean up texture if needed
-      textureRef.current = null;
+      if (textureRef.current) {
+        textureRef.current.dispose();
+        textureRef.current = null;
+      }
     };
   }, [onTextureLoaded]);
 
@@ -56,21 +65,48 @@ export function useTextureLoader(
       console.log("Creating basic texture after failure");
       // Create a simple canvas texture as fallback
       const canvas = document.createElement('canvas');
-      canvas.width = 256;
-      canvas.height = 256;
+      canvas.width = 512;
+      canvas.height = 512;
       const context = canvas.getContext('2d');
       if (context) {
-        context.fillStyle = 'white';
-        context.fillRect(0, 0, 256, 256);
-        context.strokeStyle = 'gray';
-        context.strokeRect(10, 10, 236, 236);
-        context.font = '20px Arial';
-        context.fillStyle = 'black';
+        // Create a more detailed fallback texture
+        // Background gradient
+        const gradient = context.createLinearGradient(0, 0, 512, 512);
+        gradient.addColorStop(0, '#e0e8f0');
+        gradient.addColorStop(1, '#c0d0e0');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, 512, 512);
+        
+        // Window frame
+        context.strokeStyle = 'rgba(80, 80, 80, 0.7)';
+        context.lineWidth = 40;
+        context.strokeRect(50, 50, 412, 412);
+        
+        // Glass panel effect
+        context.fillStyle = 'rgba(200, 220, 240, 0.7)';
+        context.fillRect(70, 70, 372, 372);
+        
+        // Add reflections
+        context.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        context.beginPath();
+        context.moveTo(70, 70);
+        context.lineTo(170, 70);
+        context.lineTo(70, 170);
+        context.closePath();
+        context.fill();
+        
+        // Add some text
+        context.font = '40px Arial';
+        context.fillStyle = 'rgba(0, 0, 0, 0.6)';
         context.textAlign = 'center';
-        context.fillText('Window', 128, 128);
+        context.fillText('Window', 256, 256);
       }
       
       const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.needsUpdate = true;
+      
       textureRef.current = texture;
       onTextureLoaded(texture);
     }
