@@ -312,12 +312,18 @@ function createFixedWindow(
   backPanel.position.z = -0.02;
   group.add(backPanel);
 
-  // Add a "Fixed" label in the center (optional)
-  const labelGeometry = new THREE.TextGeometry('Fixed', {
-    font: undefined, // You would need to load a font
-    size: 0.1,
-    height: 0.01,
-  });
+  // Add a "Fixed" label using simple geometry instead of TextGeometry
+  const labelGeometry = new THREE.BoxGeometry(0.4, 0.1, 0.01);
+  const labelMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+  const label = new THREE.Mesh(labelGeometry, labelMaterial);
+  label.position.set(0, -height * 0.3, 0.05);
+  group.add(label);
+  
+  // Add a small indicator dot above the label
+  const dotGeometry = new THREE.CircleGeometry(0.05, 16);
+  const dot = new THREE.Mesh(dotGeometry, labelMaterial);
+  dot.position.set(0, -height * 0.25, 0.05);
+  group.add(dot);
 }
 
 interface WindowFrameProps {
@@ -372,3 +378,4 @@ function createWindowFrame(windowGroup: THREE.Group, props: WindowFrameProps): v
   rightFrame.position.x = windowWidth/2 + frameThickness/2;
   windowGroup.add(rightFrame);
 }
+
