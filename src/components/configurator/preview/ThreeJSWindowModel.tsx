@@ -96,6 +96,30 @@ export const ThreeJSWindowModel = ({
     };
   }, [width, height, rotationX, rotationY, viewMode, isAutoRotating, windowType]);
 
+  // Re-create the model when colors change
+  useEffect(() => {
+    if (sceneRefs.scene.current && textureRef.current && modelCreatedRef.current) {
+      try {
+        createWindowModel(
+          sceneRefs.scene.current,
+          windowModelRef,
+          {
+            width,
+            height,
+            baseColorObject,
+            outsideColorObject,
+            insideColorObject,
+            textureRef: { current: textureRef.current },
+            windowType
+          }
+        );
+        console.log("Window model recreated due to color change");
+      } catch (error) {
+        console.error("Error recreating window model after color change:", error);
+      }
+    }
+  }, [baseColorObject.id, outsideColorObject.id, insideColorObject.id]);
+
   return (
     <div 
       ref={mountRef} 
