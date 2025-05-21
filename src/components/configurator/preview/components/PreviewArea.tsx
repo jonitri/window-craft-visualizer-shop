@@ -58,7 +58,7 @@ export const PreviewArea = ({
     >
       {/* ThreeJS 360° Preview */}
       {productType === 'window' && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
           <ThreeJSWindowModel
             width={width}
             height={height}

@@ -82,6 +82,12 @@ export const ThreeJSWindowModel = ({
         
         // Start animation loop
         animate();
+      },
+      // onProgress callback (optional)
+      undefined,
+      // onError callback
+      (error) => {
+        console.error('Error loading texture:', error);
       }
     );
 
@@ -105,6 +111,12 @@ export const ThreeJSWindowModel = ({
       if (rendererRef.current && mountRef.current) {
         mountRef.current.removeChild(rendererRef.current.domElement);
       }
+      // Clear all references
+      sceneRef.current = null;
+      cameraRef.current = null;
+      rendererRef.current = null;
+      windowModelRef.current = null;
+      textureRef.current = null;
     };
   }, []);
 
@@ -176,6 +188,8 @@ export const ThreeJSWindowModel = ({
     // Add window model to scene
     sceneRef.current.add(windowGroup);
     windowModelRef.current = windowGroup;
+    
+    console.log("Window model created and added to scene");
   };
 
   // Animation loop
@@ -206,5 +220,5 @@ export const ThreeJSWindowModel = ({
     animationFrameRef.current = requestAnimationFrame(animate);
   };
 
-  return <div ref={mountRef} className="w-full h-full" />;
+  return <div ref={mountRef} className="w-full h-full" style={{ minHeight: "300px" }} />;
 };
