@@ -1,13 +1,13 @@
 
 import * as THREE from 'three';
-import { WindowModelProps } from './models/windowModelTypes';
 import { createSingleLeafWindow } from './models/singleLeafWindow';
 import { createDoubleLeafWindow } from './models/doubleLeafWindow';
 import { createTripleLeafWindow } from './models/tripleLeafWindow';
 import { createFixedWindow } from './models/fixedWindow';
 import { createWindowFrame } from './models/createWindowFrame';
+import type { WindowModelProps } from './models/windowModelTypes';
 
-export { WindowModelProps } from './models/windowModelTypes';
+export type { WindowModelProps } from './models/windowModelTypes';
 
 export function createWindowModel(
   scene: THREE.Scene,

@@ -10,3 +10,4 @@ export interface WindowModelProps {
   textureRef: React.MutableRefObject<THREE.Texture | null>;
   windowType?: 'single-leaf' | 'double-leaf' | 'triple-leaf' | 'fixed';
 }
+
