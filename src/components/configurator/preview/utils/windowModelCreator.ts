@@ -7,7 +7,7 @@ import { createFixedWindow } from './models/fixedWindow';
 import { createWindowFrame } from './models/createWindowFrame';
 import type { WindowModelProps } from './models/windowModelTypes';
 
-export type { WindowModelProps } from './models/windowModelTypes';
+export type { WindowModelProps };
 
 export function createWindowModel(
   scene: THREE.Scene,
