@@ -38,34 +38,39 @@ export function createDoubleLeafWindow(
   rightGlass.position.set(width/4, 0, 0);
   group.add(rightGlass);
   
-  // Create sashes for both leaves
+  // Create sashes for both leaves with proper color assignment
   const sashThickness = 0.05;
   
   // Colors
   const outsideColor = new THREE.Color(outsideColorObject.hex);
+  const insideColor = new THREE.Color(insideColorObject.hex);
+  const baseColor = new THREE.Color(baseColorObject.hex);
+  
   const outsideSashMaterial = new THREE.MeshStandardMaterial({
     color: outsideColor,
     roughness: 0.5,
     metalness: 0.2
   });
   
-  const insideColor = new THREE.Color(insideColorObject.hex);
   const insideSashMaterial = new THREE.MeshStandardMaterial({
     color: insideColor,
     roughness: 0.5,
     metalness: 0.2
   });
   
-  // Left leaf sashes - using outsideSashMaterial for front, insideSashMaterial for back
+  // Left leaf sashes
   createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.02, 'front', -width/4);
   createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.02, 'back', -width/4);
   
-  // Right leaf sashes - using outsideSashMaterial for front, insideSashMaterial for back
+  // Right leaf sashes
   createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.02, 'front', width/4);
   createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.02, 'back', width/4);
   
-  // Center divider (mullion)
-  const baseColor = new THREE.Color(baseColorObject.hex);
+  // Add frame depth/sides with base color for both leaves
+  addLeafFrameDepth(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, baseColor, -width/4);
+  addLeafFrameDepth(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, baseColor, width/4);
+  
+  // Center divider (mullion) with base color
   const dividerWidth = 0.08;
   const dividerGeometry = new THREE.BoxGeometry(dividerWidth, height * 0.9, 0.1);
   const dividerMaterial = new THREE.MeshStandardMaterial({ 
@@ -77,14 +82,45 @@ export function createDoubleLeafWindow(
   divider.position.set(0, 0, 0);
   group.add(divider);
   
-  // Add handles on both sides for more realism
-  // Outside handles
+  // Add handles with outside color
   addWindowHandle(group, width/4 - leafWidth/2 + 0.1, -leafHeight/4, 0.03, outsideColor);
   addWindowHandle(group, -width/4 + leafWidth/2 - 0.1, -leafHeight/4, 0.03, outsideColor);
   
-  // Add more realistic details
-  // Frame edge highlights
+  // Add realistic frame highlights
   addFrameHighlights(group, width, height, baseColor);
+}
+
+// Helper function to add frame depth for each leaf
+function addLeafFrameDepth(group: THREE.Group, width: number, height: number, thickness: number, baseColor: THREE.Color, offsetX: number) {
+  const depthMaterial = new THREE.MeshStandardMaterial({
+    color: baseColor,
+    roughness: 0.6,
+    metalness: 0.3
+  });
+  
+  const frameDepth = 0.04;
+  
+  // Top edge
+  const topEdgeGeometry = new THREE.BoxGeometry(width, thickness, frameDepth);
+  const topEdge = new THREE.Mesh(topEdgeGeometry, depthMaterial);
+  topEdge.position.set(offsetX, height/2 - thickness/2, 0);
+  group.add(topEdge);
+  
+  // Bottom edge
+  const bottomEdge = new THREE.Mesh(topEdgeGeometry, depthMaterial);
+  bottomEdge.position.set(offsetX, -height/2 + thickness/2, 0);
+  group.add(bottomEdge);
+  
+  // Left edge
+  const sideEdgeGeometry = new THREE.BoxGeometry(thickness, height - thickness * 2, frameDepth);
+  const leftEdge = new THREE.Mesh(sideEdgeGeometry, depthMaterial);
+  leftEdge.position.set(offsetX - width/2 + thickness/2, 0, 0);
+  group.add(leftEdge);
+  
+  // Right edge
+  const rightEdge = new THREE.Mesh(sideEdgeGeometry, depthMaterial);
+  rightEdge.position.set(offsetX + width/2 - thickness/2, 0, 0);
+  group.add(rightEdge);
 }
 
 // Helper function to add additional details to make the window more realistic
