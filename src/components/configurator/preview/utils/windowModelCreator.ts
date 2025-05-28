@@ -4,7 +4,6 @@ import { createSingleLeafWindow } from './models/singleLeafWindow';
 import { createDoubleLeafWindow } from './models/doubleLeafWindow';
 import { createTripleLeafWindow } from './models/tripleLeafWindow';
 import { createFixedWindow } from './models/fixedWindow';
-import { createWindowFrame } from './models/createWindowFrame';
 import type { WindowModelProps } from './models/windowModelTypes';
 
 export type { WindowModelProps };
@@ -48,6 +47,7 @@ export function createWindowModel(
   const windowHeight = windowWidth / aspectRatio;
   
   // Select the appropriate window model creation function based on type
+  // Each function now handles its own complete window including frame
   switch (windowType) {
     case 'double-leaf':
       createDoubleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject);
@@ -64,14 +64,7 @@ export function createWindowModel(
       break;
   }
   
-  // Create frame components (common for all window types)
-  createWindowFrame(windowGroup, {
-    windowWidth,
-    windowHeight,
-    baseColorObject,
-    outsideColorObject,
-    insideColorObject,
-  });
+  // NOTE: Removed createWindowFrame call - each window type now handles its own complete frame
   
   // Add window model to scene
   scene.add(windowGroup);
