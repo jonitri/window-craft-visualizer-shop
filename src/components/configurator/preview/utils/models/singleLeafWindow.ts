@@ -12,7 +12,7 @@ export function createSingleLeafWindow(
   outsideColorObject: ColorOption,
   insideColorObject: ColorOption
 ): void {
-  // Create glass panel
+  // Create glass panel with consistent transparency
   const geometry = new THREE.PlaneGeometry(width * 0.85, height * 0.85);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
@@ -23,6 +23,7 @@ export function createSingleLeafWindow(
     clearcoat: 1,
     clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
+    color: 0xffffff, // Always white/clear
   });
   
   const glassPanel = new THREE.Mesh(geometry, glassMaterial);
@@ -49,13 +50,6 @@ export function createSingleLeafWindow(
   // Inside sash frame (back face) - using inside color
   const insideSashMaterial = new THREE.MeshStandardMaterial({
     color: insideColor,
-    roughness: 0.5,
-    metalness: 0.2
-  });
-  
-  // Base color material for frame sides/depth
-  const baseSashMaterial = new THREE.MeshStandardMaterial({
-    color: baseColor,
     roughness: 0.5,
     metalness: 0.2
   });

@@ -12,7 +12,7 @@ export function createFixedWindow(
   outsideColorObject: ColorOption,
   insideColorObject: ColorOption
 ): void {
-  // Create a larger glass panel for fixed windows
+  // Create a larger glass panel for fixed windows with consistent transparency
   const geometry = new THREE.PlaneGeometry(width * 0.85, height * 0.85);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
@@ -23,6 +23,7 @@ export function createFixedWindow(
     clearcoat: 1,
     clearcoatRoughness: 0.05,
     side: THREE.DoubleSide,
+    color: 0xffffff, // Always white/clear
   });
   
   const glassPanel = new THREE.Mesh(geometry, glassMaterial);

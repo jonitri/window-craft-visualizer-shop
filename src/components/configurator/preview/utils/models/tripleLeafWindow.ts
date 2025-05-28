@@ -15,7 +15,7 @@ export function createTripleLeafWindow(
   const leafWidth = width * 0.28; // Each leaf is slightly less than a third of the total width
   const leafHeight = height * 0.85;
   
-  // Create glass for all three leaves
+  // Create glass for all three leaves with consistent transparency
   const glassGeometry = new THREE.PlaneGeometry(leafWidth, leafHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
@@ -26,6 +26,7 @@ export function createTripleLeafWindow(
     clearcoat: 1,
     clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
+    color: 0xffffff, // Always white/clear
   });
   
   // Left glass

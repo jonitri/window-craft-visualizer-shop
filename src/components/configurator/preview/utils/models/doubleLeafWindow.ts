@@ -15,7 +15,7 @@ export function createDoubleLeafWindow(
   const leafWidth = width * 0.425; // Each leaf is slightly less than half width
   const leafHeight = height * 0.85;
   
-  // Create glass for both leaves
+  // Create glass for both leaves with consistent transparency
   const glassGeometry = new THREE.PlaneGeometry(leafWidth, leafHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
@@ -26,6 +26,7 @@ export function createDoubleLeafWindow(
     clearcoat: 1,
     clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
+    color: 0xffffff, // Always white/clear
   });
   
   // Left glass
