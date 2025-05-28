@@ -15,18 +15,19 @@ export function createTripleLeafWindow(
   const leafWidth = width * 0.28; // Each leaf is slightly less than a third of the total width
   const leafHeight = height * 0.85;
   
-  // Create glass for all three leaves with consistent transparency
+  // Create glass for all three leaves with enhanced transparency
   const glassGeometry = new THREE.PlaneGeometry(leafWidth, leafHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.6,
-    transmission: 0.9,
-    roughness: 0.1,
-    metalness: 0.1,
+    opacity: 0.3, // More transparent
+    transmission: 1.0, // Maximum transmission
+    roughness: 0.05,
+    metalness: 0.0,
     clearcoat: 1,
-    clearcoatRoughness: 0.1,
+    clearcoatRoughness: 0.05,
     side: THREE.DoubleSide,
-    color: 0xffffff, // Always white/clear
+    color: 0xffffff,
+    ior: 1.5, // Index of refraction for glass
   });
   
   // Left glass
@@ -51,37 +52,37 @@ export function createTripleLeafWindow(
   const outsideColor = new THREE.Color(outsideColorObject.hex);
   const outsideSashMaterial = new THREE.MeshStandardMaterial({
     color: outsideColor,
-    roughness: 0.5,
-    metalness: 0.2
+    roughness: 0.4,
+    metalness: 0.3
   });
   
   const insideColor = new THREE.Color(insideColorObject.hex);
   const insideSashMaterial = new THREE.MeshStandardMaterial({
     color: insideColor,
-    roughness: 0.5,
-    metalness: 0.2
+    roughness: 0.4,
+    metalness: 0.3
   });
   
   // Left leaf sashes
-  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.02, 'front', -width/3);
-  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.02, 'back', -width/3);
+  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.03, 'front', -width/3);
+  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.03, 'back', -width/3);
   
   // Middle leaf sashes
-  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.02, 'front', 0);
-  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.02, 'back', 0);
+  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.03, 'front', 0);
+  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.03, 'back', 0);
   
   // Right leaf sashes
-  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.02, 'front', width/3);
-  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.02, 'back', width/3);
+  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, outsideSashMaterial, 0.03, 'front', width/3);
+  createWindowSash(group, leafWidth * 1.05, leafHeight * 1.05, sashThickness, insideSashMaterial, -0.03, 'back', width/3);
   
-  // Dividers (mullions)
+  // Dividers (mullions) with base color - more prominent
   const baseColor = new THREE.Color(baseColorObject.hex);
-  const dividerWidth = 0.08;
-  const dividerGeometry = new THREE.BoxGeometry(dividerWidth, height * 0.9, 0.1);
+  const dividerWidth = 0.12; // Increased width
+  const dividerGeometry = new THREE.BoxGeometry(dividerWidth, height * 0.95, 0.12);
   const dividerMaterial = new THREE.MeshStandardMaterial({ 
     color: baseColor,
     roughness: 0.5,
-    metalness: 0.3
+    metalness: 0.4
   });
   
   // Left divider
@@ -95,6 +96,6 @@ export function createTripleLeafWindow(
   group.add(rightDivider);
   
   // Add handles
-  addWindowHandle(group, -width/3 + leafWidth/2 - 0.1, -leafHeight/4, 0.03, outsideColor);
-  addWindowHandle(group, width/3 - leafWidth/2 + 0.1, -leafHeight/4, 0.03, outsideColor);
+  addWindowHandle(group, -width/3 + leafWidth/2 - 0.1, -leafHeight/4, 0.04, outsideColor);
+  addWindowHandle(group, width/3 - leafWidth/2 + 0.1, -leafHeight/4, 0.04, outsideColor);
 }
