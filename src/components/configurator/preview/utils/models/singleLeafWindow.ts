@@ -12,89 +12,121 @@ export function createSingleLeafWindow(
   outsideColorObject: ColorOption,
   insideColorObject: ColorOption
 ): void {
-  // Create glass panel with visible transparency
-  const geometry = new THREE.PlaneGeometry(width * 0.85, height * 0.85);
+  // Create realistic glass panel
+  const glassWidth = width * 0.7;
+  const glassHeight = height * 0.7;
+  const geometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
+  
+  // Create highly transparent glass with subtle reflection
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.6, // Increased opacity to make it more visible
-    transmission: 0.8, // Reduced transmission for better visibility
-    roughness: 0.1,
+    opacity: 0.15, // Very transparent
+    transmission: 0.95, // High transmission for realistic glass
+    roughness: 0.05,
     metalness: 0.0,
-    clearcoat: 0.5,
+    clearcoat: 1.0,
     clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
-    color: 0xe6f3ff, // Light blue tint to make glass visible
-    ior: 1.5,
+    color: 0xffffff, // Clear white
+    ior: 1.52, // Glass refractive index
+    thickness: 0.01,
   });
   
   const glassPanel = new THREE.Mesh(geometry, glassMaterial);
-  glassPanel.position.z = 0.01; // Slightly forward to ensure visibility
+  glassPanel.position.z = 0.005; // Slightly forward
   group.add(glassPanel);
   
-  // Create the window sash with proper color assignment
-  const sashWidth = width * 0.9;
-  const sashHeight = height * 0.9;
-  const sashThickness = 0.05;
+  // Create the window frame that surrounds the glass
+  const frameThickness = 0.08;
   
   // Colors
   const outsideColor = new THREE.Color(outsideColorObject.hex);
   const insideColor = new THREE.Color(insideColorObject.hex);
   const baseColor = new THREE.Color(baseColorObject.hex);
   
-  // Outside sash frame (front face) - using outside color
-  const outsideSashMaterial = new THREE.MeshStandardMaterial({
+  // Frame material
+  const frameMaterial = new THREE.MeshStandardMaterial({
     color: outsideColor,
-    roughness: 0.4,
-    metalness: 0.3
+    roughness: 0.3,
+    metalness: 0.1
   });
   
-  // Inside sash frame (back face) - using inside color
-  const insideSashMaterial = new THREE.MeshStandardMaterial({
-    color: insideColor,
-    roughness: 0.4,
-    metalness: 0.3
-  });
+  // Create outer frame border
+  createFrameBorder(group, width, height, frameThickness, frameMaterial);
   
-  // Create sash components with proper color assignment
-  createWindowSash(group, sashWidth, sashHeight, sashThickness, outsideSashMaterial, 0.03, 'front');
-  createWindowSash(group, sashWidth, sashHeight, sashThickness, insideSashMaterial, -0.03, 'back');
+  // Create inner frame that holds the glass
+  createInnerFrame(group, glassWidth, glassHeight, frameThickness * 0.6, frameMaterial);
   
-  // Add frame depth/sides with base color - more prominent
-  addFrameDepth(group, sashWidth, sashHeight, sashThickness, baseColor);
+  // Add frame depth with base color
+  addFrameDepth(group, width, height, frameThickness, baseColor);
   
-  // Add handle with outside color
-  addWindowHandle(group, sashWidth/2 - 0.1, -sashHeight/4, 0.04, outsideColor);
+  // Add handle
+  addWindowHandle(group, width/2 - 0.15, -height/4, 0.04, outsideColor);
 }
 
-// Helper function to add frame depth with base color - enhanced visibility
+// Create the outer frame border
+function createFrameBorder(group: THREE.Group, width: number, height: number, thickness: number, material: THREE.Material) {
+  // Top border
+  const topGeometry = new THREE.BoxGeometry(width, thickness, 0.06);
+  const topBorder = new THREE.Mesh(topGeometry, material);
+  topBorder.position.set(0, height/2 - thickness/2, 0.03);
+  group.add(topBorder);
+  
+  // Bottom border
+  const bottomBorder = new THREE.Mesh(topGeometry, material);
+  bottomBorder.position.set(0, -height/2 + thickness/2, 0.03);
+  group.add(bottomBorder);
+  
+  // Left border
+  const sideGeometry = new THREE.BoxGeometry(thickness, height - thickness * 2, 0.06);
+  const leftBorder = new THREE.Mesh(sideGeometry, material);
+  leftBorder.position.set(-width/2 + thickness/2, 0, 0.03);
+  group.add(leftBorder);
+  
+  // Right border
+  const rightBorder = new THREE.Mesh(sideGeometry, material);
+  rightBorder.position.set(width/2 - thickness/2, 0, 0.03);
+  group.add(rightBorder);
+}
+
+// Create the inner frame that directly surrounds the glass
+function createInnerFrame(group: THREE.Group, glassWidth: number, glassHeight: number, thickness: number, material: THREE.Material) {
+  // Top inner frame
+  const topGeometry = new THREE.BoxGeometry(glassWidth + thickness * 2, thickness, 0.04);
+  const topFrame = new THREE.Mesh(topGeometry, material);
+  topFrame.position.set(0, glassHeight/2 + thickness/2, 0.02);
+  group.add(topFrame);
+  
+  // Bottom inner frame
+  const bottomFrame = new THREE.Mesh(topGeometry, material);
+  bottomFrame.position.set(0, -glassHeight/2 - thickness/2, 0.02);
+  group.add(bottomFrame);
+  
+  // Left inner frame
+  const sideGeometry = new THREE.BoxGeometry(thickness, glassHeight, 0.04);
+  const leftFrame = new THREE.Mesh(sideGeometry, material);
+  leftFrame.position.set(-glassWidth/2 - thickness/2, 0, 0.02);
+  group.add(leftFrame);
+  
+  // Right inner frame
+  const rightFrame = new THREE.Mesh(sideGeometry, material);
+  rightFrame.position.set(glassWidth/2 + thickness/2, 0, 0.02);
+  group.add(rightFrame);
+}
+
+// Helper function to add frame depth with base color
 function addFrameDepth(group: THREE.Group, width: number, height: number, thickness: number, baseColor: THREE.Color) {
   const depthMaterial = new THREE.MeshStandardMaterial({
     color: baseColor,
     roughness: 0.5,
-    metalness: 0.4
+    metalness: 0.2
   });
   
-  const frameDepth = 0.08; // Increased depth for better visibility
+  const frameDepth = 0.1;
   
-  // Top edge
-  const topEdgeGeometry = new THREE.BoxGeometry(width + thickness, thickness * 1.5, frameDepth);
-  const topEdge = new THREE.Mesh(topEdgeGeometry, depthMaterial);
-  topEdge.position.set(0, height/2 + thickness/4, 0);
-  group.add(topEdge);
-  
-  // Bottom edge
-  const bottomEdge = new THREE.Mesh(topEdgeGeometry, depthMaterial);
-  bottomEdge.position.set(0, -height/2 - thickness/4, 0);
-  group.add(bottomEdge);
-  
-  // Left edge
-  const sideEdgeGeometry = new THREE.BoxGeometry(thickness * 1.5, height + thickness, frameDepth);
-  const leftEdge = new THREE.Mesh(sideEdgeGeometry, depthMaterial);
-  leftEdge.position.set(-width/2 - thickness/4, 0, 0);
-  group.add(leftEdge);
-  
-  // Right edge
-  const rightEdge = new THREE.Mesh(sideEdgeGeometry, depthMaterial);
-  rightEdge.position.set(width/2 + thickness/4, 0, 0);
-  group.add(rightEdge);
+  // Create frame depth structure
+  const frameGeometry = new THREE.BoxGeometry(width + 0.02, height + 0.02, frameDepth);
+  const frameDepthMesh = new THREE.Mesh(frameGeometry, depthMaterial);
+  frameDepthMesh.position.set(0, 0, -frameDepth/2);
+  group.add(frameDepthMesh);
 }
