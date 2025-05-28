@@ -15,34 +15,34 @@ export function createTripleLeafWindow(
   const leafWidth = width * 0.28; // Each leaf is slightly less than a third of the total width
   const leafHeight = height * 0.85;
   
-  // Create glass for all three leaves with enhanced transparency
+  // Create glass for all three leaves with visible transparency
   const glassGeometry = new THREE.PlaneGeometry(leafWidth, leafHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.3, // More transparent
-    transmission: 1.0, // Maximum transmission
-    roughness: 0.05,
+    opacity: 0.6, // Increased opacity to make it more visible
+    transmission: 0.8, // Reduced transmission for better visibility
+    roughness: 0.1,
     metalness: 0.0,
-    clearcoat: 1,
-    clearcoatRoughness: 0.05,
+    clearcoat: 0.5,
+    clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
-    color: 0xffffff,
-    ior: 1.5, // Index of refraction for glass
+    color: 0xe6f3ff, // Light blue tint to make glass visible
+    ior: 1.5,
   });
   
   // Left glass
   const leftGlass = new THREE.Mesh(glassGeometry, glassMaterial);
-  leftGlass.position.set(-width/3, 0, 0);
+  leftGlass.position.set(-width/3, 0, 0.01); // Slightly forward
   group.add(leftGlass);
   
   // Middle glass
   const middleGlass = new THREE.Mesh(glassGeometry, glassMaterial);
-  middleGlass.position.set(0, 0, 0);
+  middleGlass.position.set(0, 0, 0.01); // Slightly forward
   group.add(middleGlass);
   
   // Right glass
   const rightGlass = new THREE.Mesh(glassGeometry, glassMaterial);
-  rightGlass.position.set(width/3, 0, 0);
+  rightGlass.position.set(width/3, 0, 0.01); // Slightly forward
   group.add(rightGlass);
   
   // Create sashes for all three leaves

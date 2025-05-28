@@ -12,23 +12,23 @@ export function createSingleLeafWindow(
   outsideColorObject: ColorOption,
   insideColorObject: ColorOption
 ): void {
-  // Create glass panel with enhanced transparency
+  // Create glass panel with visible transparency
   const geometry = new THREE.PlaneGeometry(width * 0.85, height * 0.85);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.3, // More transparent
-    transmission: 1.0, // Maximum transmission
-    roughness: 0.05,
+    opacity: 0.6, // Increased opacity to make it more visible
+    transmission: 0.8, // Reduced transmission for better visibility
+    roughness: 0.1,
     metalness: 0.0,
-    clearcoat: 1,
-    clearcoatRoughness: 0.05,
+    clearcoat: 0.5,
+    clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
-    color: 0xffffff,
-    ior: 1.5, // Index of refraction for glass
+    color: 0xe6f3ff, // Light blue tint to make glass visible
+    ior: 1.5,
   });
   
   const glassPanel = new THREE.Mesh(geometry, glassMaterial);
-  glassPanel.position.z = 0;
+  glassPanel.position.z = 0.01; // Slightly forward to ensure visibility
   group.add(glassPanel);
   
   // Create the window sash with proper color assignment
