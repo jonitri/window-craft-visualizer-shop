@@ -15,24 +15,24 @@ export function createFixedWindow(
   const outsideColor = new THREE.Color(outsideColorObject.hex);
   const baseColor = new THREE.Color(baseColorObject.hex);
   
-  // Create main window frame structure first
+  // Create main window frame structure first (base color for depth/sides only)
   createFixedMainFrame(group, width, height, baseColor, outsideColor);
   
-  // Create glass panel that's clearly visible
+  // Create glass panel with fixed transparent material (never changes color)
   const glassWidth = width * 0.8;
   const glassHeight = height * 0.8;
   
   const glassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.25,
-    transmission: 0.85,
+    opacity: 0.15,
+    transmission: 0.95,
     roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
     clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
-    color: 0xE6F3FF,  // Light blue tint
+    color: 0xffffff, // Always white/clear - never changes
     ior: 1.52,
     thickness: 0.02,
   });
@@ -41,7 +41,7 @@ export function createFixedWindow(
   glassPanel.position.z = 0.01;
   group.add(glassPanel);
   
-  // Create inner frame around glass
+  // Create inner frame around glass (uses outside color for front face)
   createFixedInnerFrame(group, glassWidth, glassHeight, outsideColor);
   
   // Add "Fixed" label
@@ -51,10 +51,10 @@ export function createFixedWindow(
   label.position.set(0, -height * 0.3, 0.06);
   group.add(label);
   
-  console.log("Fixed window created with visible glass");
+  console.log("Fixed window created with transparent glass");
 }
 
-// Create main frame for fixed window
+// Create main frame for fixed window (base color for depth, outside color for front)
 function createFixedMainFrame(
   group: THREE.Group, 
   width: number, 
@@ -65,25 +65,27 @@ function createFixedMainFrame(
   const frameThickness = 0.1;
   const frameDepth = 0.12;
   
-  const frameMaterial = new THREE.MeshStandardMaterial({
+  // Frame depth material (base color for sides/depth)
+  const frameDepthMaterial = new THREE.MeshStandardMaterial({
     color: baseColor,
     roughness: 0.6,
     metalness: 0.1
   });
   
+  // Outside face material
   const outsideMaterial = new THREE.MeshStandardMaterial({
     color: outsideColor,
     roughness: 0.5,
     metalness: 0.1
   });
   
-  // Frame depth
+  // Frame depth (uses base color)
   const frameGeometry = new THREE.BoxGeometry(width + frameThickness, height + frameThickness, frameDepth);
-  const frameDepthMesh = new THREE.Mesh(frameGeometry, frameMaterial);
+  const frameDepthMesh = new THREE.Mesh(frameGeometry, frameDepthMaterial);
   frameDepthMesh.position.set(0, 0, -frameDepth/2);
   group.add(frameDepthMesh);
   
-  // Create outer frame borders
+  // Create outer frame borders (front face - uses outside color)
   createFixedFrameBorder(group, width, height, frameThickness, outsideMaterial);
 }
 
@@ -112,11 +114,10 @@ function createFixedFrameBorder(group: THREE.Group, width: number, height: numbe
   group.add(rightBorder);
 }
 
-// Create inner frame around glass for fixed window
 function createFixedInnerFrame(group: THREE.Group, glassWidth: number, glassHeight: number, color: THREE.Color) {
   const thickness = 0.05;
   const material = new THREE.MeshStandardMaterial({
-    color: color,
+    color: color, // Uses outside color, not base color
     roughness: 0.4,
     metalness: 0.2
   });
