@@ -30,8 +30,41 @@ export function createSingleLeafMainFrame(
     roughness: 0.3,
     metalness: 0.1
   });
+
+  // Glass material
+  const glassMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.15,
+    transmission: 0.85,
+    roughness: 0.0,
+    metalness: 0.0,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.0,
+    ior: 1.52,
+    thickness: 0.005
+  });
   
-  // Create outer frame perimeter (base color)
+  // Create frame structure with proper depth and color assignment
+  createFrameStructure(group, width, height, frameThickness, frameDepth, baseMaterial, outsideMaterial, insideMaterial);
+  
+  // Add glass pane in the center
+  createGlassPane(group, width, height, frameThickness, glassMaterial);
+  
+  console.log("Single leaf main frame created with proper 3D structure and color separation");
+}
+
+function createFrameStructure(
+  group: THREE.Group,
+  width: number,
+  height: number,
+  frameThickness: number,
+  frameDepth: number,
+  baseMaterial: THREE.Material,
+  outsideMaterial: THREE.Material,
+  insideMaterial: THREE.Material
+): void {
+  // Create outer frame perimeter (base color for sides)
   // Top frame
   const topFrameGeometry = new THREE.BoxGeometry(width, frameThickness, frameDepth);
   const topFrame = new THREE.Mesh(topFrameGeometry, baseMaterial);
@@ -53,18 +86,75 @@ export function createSingleLeafMainFrame(
   const rightFrame = new THREE.Mesh(sideFrameGeometry, baseMaterial);
   rightFrame.position.set(width/2 - frameThickness/2, 0, 0);
   group.add(rightFrame);
+
+  // Create front face panel (outside color)
+  createFrontPanel(group, width, height, frameThickness, frameDepth, outsideMaterial);
   
-  // Front face (outside material)
-  const frontFaceGeometry = new THREE.PlaneGeometry(width - frameThickness * 2, height - frameThickness * 2);
-  const frontFace = new THREE.Mesh(frontFaceGeometry, outsideMaterial);
-  frontFace.position.set(0, 0, frameDepth/2 + 0.001);
-  group.add(frontFace);
-  
-  // Back face with cutout (inside material)
-  // Create the back panel with a rectangular cutout
-  const backPanelShape = new THREE.Shape();
+  // Create back face panel (inside color)
+  createBackPanel(group, width, height, frameThickness, frameDepth, insideMaterial);
+}
+
+function createFrontPanel(
+  group: THREE.Group,
+  width: number,
+  height: number,
+  frameThickness: number,
+  frameDepth: number,
+  outsideMaterial: THREE.Material
+): void {
+  const panelThickness = 0.015;
   const panelWidth = width - frameThickness * 2;
   const panelHeight = height - frameThickness * 2;
+  
+  // Create the front panel shape with window opening
+  const frontPanelShape = new THREE.Shape();
+  
+  // Outer rectangle
+  frontPanelShape.moveTo(-panelWidth/2, -panelHeight/2);
+  frontPanelShape.lineTo(panelWidth/2, -panelHeight/2);
+  frontPanelShape.lineTo(panelWidth/2, panelHeight/2);
+  frontPanelShape.lineTo(-panelWidth/2, panelHeight/2);
+  frontPanelShape.lineTo(-panelWidth/2, -panelHeight/2);
+  
+  // Create window opening (rectangular cutout)
+  const openingWidth = panelWidth * 0.75;
+  const openingHeight = panelHeight * 0.75;
+  
+  const opening = new THREE.Path();
+  opening.moveTo(-openingWidth/2, -openingHeight/2);
+  opening.lineTo(openingWidth/2, -openingHeight/2);
+  opening.lineTo(openingWidth/2, openingHeight/2);
+  opening.lineTo(-openingWidth/2, openingHeight/2);
+  opening.lineTo(-openingWidth/2, -openingHeight/2);
+  
+  frontPanelShape.holes.push(opening);
+  
+  // Extrude the shape to create thickness
+  const extrudeSettings = {
+    depth: panelThickness,
+    bevelEnabled: false
+  };
+  
+  const frontPanelGeometry = new THREE.ExtrudeGeometry(frontPanelShape, extrudeSettings);
+  const frontPanel = new THREE.Mesh(frontPanelGeometry, outsideMaterial);
+  frontPanel.position.set(0, 0, frameDepth/2 + panelThickness/2);
+  group.add(frontPanel);
+}
+
+function createBackPanel(
+  group: THREE.Group,
+  width: number,
+  height: number,
+  frameThickness: number,
+  frameDepth: number,
+  insideMaterial: THREE.Material
+): void {
+  const panelThickness = 0.015;
+  const panelWidth = width - frameThickness * 2;
+  const panelHeight = height - frameThickness * 2;
+  
+  // Create the back panel shape with window opening
+  const backPanelShape = new THREE.Shape();
   
   // Outer rectangle
   backPanelShape.moveTo(-panelWidth/2, -panelHeight/2);
@@ -73,26 +163,47 @@ export function createSingleLeafMainFrame(
   backPanelShape.lineTo(-panelWidth/2, panelHeight/2);
   backPanelShape.lineTo(-panelWidth/2, -panelHeight/2);
   
-  // Create cutout hole (positioned where the arrow points in the image)
-  const cutoutWidth = panelWidth * 0.3; // 30% of panel width
-  const cutoutHeight = panelHeight * 0.4; // 40% of panel height
-  const cutoutX = -panelWidth * 0.15; // Position on the left side
-  const cutoutY = panelHeight * 0.1; // Slightly above center
+  // Create window opening (same size as front)
+  const openingWidth = panelWidth * 0.75;
+  const openingHeight = panelHeight * 0.75;
   
-  const cutoutHole = new THREE.Path();
-  cutoutHole.moveTo(cutoutX - cutoutWidth/2, cutoutY - cutoutHeight/2);
-  cutoutHole.lineTo(cutoutX + cutoutWidth/2, cutoutY - cutoutHeight/2);
-  cutoutHole.lineTo(cutoutX + cutoutWidth/2, cutoutY + cutoutHeight/2);
-  cutoutHole.lineTo(cutoutX - cutoutWidth/2, cutoutY + cutoutHeight/2);
-  cutoutHole.lineTo(cutoutX - cutoutWidth/2, cutoutY - cutoutHeight/2);
+  const opening = new THREE.Path();
+  opening.moveTo(-openingWidth/2, -openingHeight/2);
+  opening.lineTo(openingWidth/2, -openingHeight/2);
+  opening.lineTo(openingWidth/2, openingHeight/2);
+  opening.lineTo(-openingWidth/2, openingHeight/2);
+  opening.lineTo(-openingWidth/2, -openingHeight/2);
   
-  backPanelShape.holes.push(cutoutHole);
+  backPanelShape.holes.push(opening);
   
-  const backPanelGeometry = new THREE.ShapeGeometry(backPanelShape);
+  // Extrude the shape to create thickness
+  const extrudeSettings = {
+    depth: panelThickness,
+    bevelEnabled: false
+  };
+  
+  const backPanelGeometry = new THREE.ExtrudeGeometry(backPanelShape, extrudeSettings);
   const backPanel = new THREE.Mesh(backPanelGeometry, insideMaterial);
-  backPanel.position.set(0, 0, -frameDepth/2 - 0.001);
+  backPanel.position.set(0, 0, -frameDepth/2 - panelThickness/2);
   backPanel.rotation.y = Math.PI; // Flip to face inward
   group.add(backPanel);
+}
+
+function createGlassPane(
+  group: THREE.Group,
+  width: number,
+  height: number,
+  frameThickness: number,
+  glassMaterial: THREE.Material
+): void {
+  const panelWidth = width - frameThickness * 2;
+  const panelHeight = height - frameThickness * 2;
+  const glassWidth = panelWidth * 0.75;
+  const glassHeight = panelHeight * 0.75;
   
-  console.log("Single leaf main frame created with cutout in back panel");
+  const glassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
+  const glassPane = new THREE.Mesh(glassGeometry, glassMaterial);
+  glassPane.position.set(0, 0, 0);
+  glassPane.renderOrder = 1000; // Ensure proper transparency rendering
+  group.add(glassPane);
 }
