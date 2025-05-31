@@ -1,7 +1,11 @@
-
 import { useEffect, useState } from 'react';
 import { ColorOption } from '@/data/products';
-import './css3d-window.css';
+import './css/base.css';
+import './css/frame.css';
+import './css/sash.css';
+import './css/glass.css';
+import './css/animations.css';
+import './css/responsive.css';
 
 interface CSS3DWindowPreviewProps {
   width: number;

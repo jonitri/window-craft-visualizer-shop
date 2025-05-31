@@ -1,0 +1,41 @@
+
+/* Animation states and transitions */
+.window-3d.opening .left-sash {
+  transform: rotateY(-15deg);
+}
+
+.window-3d.opening .right-sash {
+  transform: rotateY(15deg);
+}
+
+.window-3d.opening .center-sash {
+  transform: rotateY(-10deg);
+}
+
+.window-3d.opening .handle-lever {
+  transform: rotateZ(-45deg);
+}
+
+.window-3d.open .left-sash {
+  transform: rotateY(-25deg);
+}
+
+.window-3d.open .right-sash {
+  transform: rotateY(25deg);
+}
+
+.window-3d.open .center-sash {
+  transform: rotateY(-20deg);
+}
+
+.window-3d.open .handle-lever {
+  transform: rotateZ(-90deg);
+}
+
+.window-3d.closed .window-sash {
+  transform: rotateY(0deg);
+}
+
+.window-3d.closed .handle-lever {
+  transform: rotateZ(0deg);
+}

@@ -1,0 +1,46 @@
+
+/* Glass panel and visual effects */
+.glass-panel {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+  transform-style: preserve-3d;
+}
+
+.glass-surface {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, 
+    rgba(255,255,255,0.1) 0%,
+    rgba(255,255,255,0.05) 50%,
+    rgba(255,255,255,0.1) 100%);
+  backdrop-filter: blur(1px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 2px;
+  transform: translateZ(0px);
+}
+
+.glass-reflection {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 30%;
+  height: 50%;
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.4) 0%,
+    rgba(255,255,255,0.1) 50%,
+    transparent 100%);
+  border-radius: 2px;
+  transform: translateZ(1px);
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}

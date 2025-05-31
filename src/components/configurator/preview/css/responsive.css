@@ -1,0 +1,13 @@
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .window-container {
+    transform: scale(0.8) rotateX(var(--rotation-x)) rotateY(var(--rotation-y));
+  }
+}
+
+@media (max-width: 480px) {
+  .window-container {
+    transform: scale(0.6) rotateX(var(--rotation-x)) rotateY(var(--rotation-y));
+  }
+}

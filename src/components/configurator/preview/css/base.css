@@ -1,0 +1,18 @@
+
+/* Base window structure and CSS variables */
+.css3d-window-preview {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.window-container {
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+  transform: rotateX(var(--rotation-x)) rotateY(var(--rotation-y));
+}
+
+.window-3d {
+  width: var(--window-width);
+  height: var(--window-height);
+  transform-style: preserve-3d;
+  position: relative;
+}
