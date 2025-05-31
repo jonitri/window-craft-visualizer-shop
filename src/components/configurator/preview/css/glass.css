@@ -1,21 +1,30 @@
 
+/* GLASS SLAB (FRONT, BACK, AND FOUR TINY EDGES) */
+.glass-container {
+  position: absolute;
+  top: var(--frame-thickness);
+  left: var(--frame-thickness);
+  width: calc(100% - 2 * var(--frame-thickness));
+  height: calc(100% - 2 * var(--frame-thickness));
+  transform-style: preserve-3d;
+}
+
 /* Glass panel and visual effects */
 .glass-panel {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   transform-style: preserve-3d;
   border-radius: 2px;
   overflow: hidden;
 }
 
+/* Glass front surface (slightly milky tint + blur) */
 .glass-surface {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  width: 100%; 
   height: 100%;
   background: linear-gradient(45deg, 
     rgba(255,255,255,0.15) 0%,
@@ -23,15 +32,87 @@
     rgba(255,255,255,0.12) 50%,
     rgba(255,255,255,0.06) 75%,
     rgba(255,255,255,0.15) 100%);
-  backdrop-filter: blur(0.5px);
-  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(1px);
   border-radius: 2px;
-  transform: translateZ(2px);
+  border: 1px solid rgba(255,255,255,0.25);
+  transform: translateZ(calc(var(--glass-thickness) / 2));
   box-shadow: 
     0 0 15px rgba(0,0,0,0.1),
     inset 0 0 10px rgba(255,255,255,0.1);
 }
 
+/* Glass back surface (even subtler) */
+.glass-surface::before {
+  content: '';
+  position: absolute;
+  width: 100%; 
+  height: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(0.5px);
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transform: translateZ(calc(-1 * var(--glass-thickness))) rotateY(180deg);
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.15);
+}
+
+/* Four thin edges of the glass pane (top, bottom, left, right) to show thickness */
+.glass-edge {
+  position: absolute;
+  background: rgba(240, 240, 255, 0.05);
+  border: 1px solid rgba(200, 200, 220, 0.2);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+  transform-origin: center center;
+}
+
+/* Top edge of glass thickness */
+.glass-edge.top {
+  width: 100%;
+  height: var(--glass-thickness);
+  top: 0; 
+  left: 0;
+  transform:
+    translateY(calc(-1 * var(--glass-thickness) / 2))
+    rotateX(90deg)
+    translateZ(0px);
+}
+
+/* Bottom edge of glass thickness */
+.glass-edge.bottom {
+  width: 100%;
+  height: var(--glass-thickness);
+  bottom: 0; 
+  left: 0;
+  transform:
+    translateY(calc(var(--glass-thickness) / 2))
+    rotateX(90deg)
+    translateZ(0px);
+}
+
+/* Left edge of glass thickness */
+.glass-edge.left {
+  width: var(--glass-thickness);
+  height: 100%;
+  top: 0; 
+  left: 0;
+  transform:
+    translateX(calc(-1 * var(--glass-thickness) / 2))
+    rotateY(90deg)
+    translateZ(0px);
+}
+
+/* Right edge of glass thickness */
+.glass-edge.right {
+  width: var(--glass-thickness);
+  height: 100%;
+  top: 0; 
+  right: 0;
+  transform:
+    translateX(calc(var(--glass-thickness) / 2))
+    rotateY(90deg)
+    translateZ(0px);
+}
+
+/* A faint animated highlight on the front of the glass */
 .glass-reflection {
   position: absolute;
   top: 15%;
@@ -44,7 +125,7 @@
     rgba(255,255,255,0.1) 70%,
     transparent 100%);
   border-radius: 3px;
-  transform: translateZ(3px);
+  transform: translateZ(calc(var(--glass-thickness) / 2 + 1px));
   animation: shimmer 6s ease-in-out infinite;
   filter: blur(0.5px);
 }
@@ -62,18 +143,18 @@
     rgba(255,255,255,0.2) 50%,
     transparent 100%);
   border-radius: 2px;
-  transform: translateZ(3px);
+  transform: translateZ(calc(var(--glass-thickness) / 2 + 2px));
   animation: shimmer 8s ease-in-out infinite reverse;
 }
 
 @keyframes shimmer {
   0%, 100% { 
     opacity: 0.4;
-    transform: translateZ(3px) scale(1);
+    transform: translateZ(calc(var(--glass-thickness) / 2 + 1px)) scale(1);
   }
   50% { 
     opacity: 0.7;
-    transform: translateZ(3px) scale(1.05);
+    transform: translateZ(calc(var(--glass-thickness) / 2 + 1px)) scale(1.05);
   }
 }
 

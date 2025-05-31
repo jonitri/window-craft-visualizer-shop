@@ -1,45 +1,58 @@
 
-/* Window frame structure and styling */
-.window-frame {
+/* Window frame structure with 6 faces and proper 3D thickness */
+
+/* THE 3D FRAME CONTAINERS */
+.frame-container {
+  position: absolute;
   width: 100%;
   height: 100%;
-  position: relative;
   transform-style: preserve-3d;
 }
 
-/* Frame Front Side (Inside Color) */
+/* —————————— 1) FRONT FACE (Interior Color) —————————— */
 .frame-front {
   position: absolute;
-  top: 0;
+  top: 0; 
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--inside-color), color-mix(in srgb, var(--inside-color) 85%, black));
-  border: 3px solid color-mix(in srgb, var(--inside-color) 70%, black);
-  border-radius: 6px;
-  transform: translateZ(25px);
-  box-shadow: 
-    0 0 30px rgba(0,0,0,0.4),
-    inset 0 0 15px rgba(255,255,255,0.1);
+
+  /* Push it out toward the viewer by half the total thickness */
+  transform: translateZ(var(--half-thickness));
+
+  /* Use a gradient to simulate a bit of shading on the "inside" face */
+  background: linear-gradient(
+    135deg,
+    var(--inside-color),
+    color-mix(in srgb, var(--inside-color) 85%, black)
+  );
+  border: 2px solid color-mix(in srgb, var(--inside-color) 70%, black);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Frame Back Side (Outside Color) */
+/* —————————— 2) BACK FACE (Exterior Color) —————————— */
 .frame-back {
   position: absolute;
-  top: 0;
+  top: 0; 
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--outside-color), color-mix(in srgb, var(--outside-color) 85%, black));
-  border: 3px solid color-mix(in srgb, var(--outside-color) 70%, black);
-  border-radius: 6px;
-  transform: translateZ(-25px) rotateY(180deg);
-  box-shadow: 
-    0 0 30px rgba(0,0,0,0.4),
-    inset 0 0 15px rgba(255,255,255,0.1);
+
+  /* Push it "away" from the viewer by half the thickness, then flip it 180° so it faces outward */
+  transform: translateZ(calc(-1 * var(--half-thickness))) rotateY(180deg);
+
+  background: linear-gradient(
+    135deg,
+    var(--outside-color),
+    color-mix(in srgb, var(--outside-color) 85%, black)
+  );
+  border: 2px solid color-mix(in srgb, var(--outside-color) 70%, black);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Frame Edges (Base Color) - Much thicker for realism */
+/* —————————— 3–6) FOUR SIDE FACES (TRUE FRAME THICKNESS) —————————— */
 .frame-edges {
   position: absolute;
   top: 0;
@@ -51,82 +64,133 @@
 
 .frame-edge {
   position: absolute;
-  background: linear-gradient(45deg, var(--base-color), color-mix(in srgb, var(--base-color) 75%, black));
-  border: 2px solid color-mix(in srgb, var(--base-color) 60%, black);
-  box-shadow: 
-    inset 0 0 15px rgba(0,0,0,0.3),
-    0 0 10px rgba(0,0,0,0.2);
-}
-
-.frame-edge.top {
-  top: -25px;
-  left: -25px;
-  right: -25px;
-  height: 25px;
-  transform: translateZ(0px);
-  background: linear-gradient(to bottom, var(--base-color), color-mix(in srgb, var(--base-color) 80%, black));
-}
-
-.frame-edge.bottom {
-  bottom: -25px;
-  left: -25px;
-  right: -25px;
-  height: 25px;
-  transform: translateZ(0px);
-  background: linear-gradient(to top, var(--base-color), color-mix(in srgb, var(--base-color) 80%, black));
-}
-
-.frame-edge.left {
-  top: 0;
-  left: -25px;
-  bottom: 0;
-  width: 25px;
-  transform: translateZ(0px);
-  background: linear-gradient(to right, var(--base-color), color-mix(in srgb, var(--base-color) 80%, black));
-}
-
-.frame-edge.right {
-  top: 0;
-  right: -25px;
-  bottom: 0;
-  width: 25px;
-  transform: translateZ(0px);
-  background: linear-gradient(to left, var(--base-color), color-mix(in srgb, var(--base-color) 80%, black));
-}
-
-/* Center dividers for multi-leaf windows */
-.frame-edge.center-vertical {
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 15px;
-  transform: translateX(-50%) translateZ(0px);
-  background: linear-gradient(to right, 
-    color-mix(in srgb, var(--base-color) 90%, black),
+  background: linear-gradient(
+    45deg,
     var(--base-color),
-    color-mix(in srgb, var(--base-color) 90%, black));
+    color-mix(in srgb, var(--base-color) 80%, black)
+  );
+  border: 1px solid color-mix(in srgb, var(--base-color) 60%, black);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+  transform-origin: center center;
+}
+
+/* TOP SIDE FACE: spans full width, thickness = frame thickness, rotated to lie "flat" on top */
+.frame-edge.top {
+  width: 100%;
+  height: var(--frame-thickness);
+  top: 0; 
+  left: 0;
+  transform:
+    translateY(calc(-1 * var(--half-thickness)))
+    translateZ(0px)
+    rotateX(90deg);
+}
+
+/* BOTTOM SIDE FACE: spans full width, at the bottom */
+.frame-edge.bottom {
+  width: 100%;
+  height: var(--frame-thickness);
+  bottom: 0; 
+  left: 0;
+  transform:
+    translateY(var(--half-thickness))
+    translateZ(0px)
+    rotateX(90deg);
+}
+
+/* LEFT SIDE FACE: vertical strip on the left side */
+.frame-edge.left {
+  width: var(--frame-thickness);
+  height: 100%;
+  top: 0; 
+  left: 0;
+  transform:
+    translateX(calc(-1 * var(--half-thickness)))
+    translateZ(0px)
+    rotateY(90deg);
+}
+
+/* RIGHT SIDE FACE: vertical strip on the right side */
+.frame-edge.right {
+  width: var(--frame-thickness);
+  height: 100%;
+  top: 0; 
+  right: 0;
+  transform:
+    translateX(var(--half-thickness))
+    translateZ(0px)
+    rotateY(90deg);
+}
+
+/* CENTER VERTICAL DIVIDERS (MULLIONS) */
+.frame-edge.center-vertical {
+  position: absolute;
+  top: 0; 
+  height: 100%;
+  width: var(--frame-thickness);
+  left: 50%;
+  background: linear-gradient(
+    45deg,
+    var(--base-color),
+    color-mix(in srgb, var(--base-color) 80%, black)
+  );
+  border: 1px solid color-mix(in srgb, var(--base-color) 60%, black);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+  transform:
+    translateX(calc(-1 * var(--half-thickness)))
+    translateZ(0px);
 }
 
 .frame-edge.center-left {
-  top: 0;
-  bottom: 0;
+  position: absolute;
+  top: 0; 
+  height: 100%;
+  width: calc(var(--frame-thickness) * 0.8);
   left: 33.33%;
-  width: 12px;
-  transform: translateX(-50%) translateZ(0px);
-  background: linear-gradient(to right, 
-    color-mix(in srgb, var(--base-color) 90%, black),
+  background: linear-gradient(
+    45deg,
     var(--base-color),
-    color-mix(in srgb, var(--base-color) 90%, black));
+    color-mix(in srgb, var(--base-color) 80%, black)
+  );
+  border: 1px solid color-mix(in srgb, var(--base-color) 60%, black);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+  transform:
+    translateX(calc(-1 * var(--half-thickness)))
+    translateZ(0px);
 }
 
 .frame-edge.center-right {
-  top: 0;
-  bottom: 0;
+  position: absolute;
+  top: 0; 
+  height: 100%;
+  width: calc(var(--frame-thickness) * 0.8);
   left: 66.66%;
-  width: 12px;
-  transform: translateX(-50%) translateZ(0px);
-  background: linear-gradient(to right, 
-    color-mix(in srgb, var(--base-color) 90%, black),
+  background: linear-gradient(
+    45deg,
     var(--base-color),
-    color-mix(in srgb, var(--base-color) 90%, black));
+    color-mix(in srgb, var(--base-color) 80%, black)
+  );
+  border: 1px solid color-mix(in srgb, var(--base-color) 60%, black);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+  transform:
+    translateX(calc(-1 * var(--half-thickness)))
+    translateZ(0px);
+}
+
+/* Add back faces to dividers for more 3D realism */
+.frame-edge.center-vertical::before,
+.frame-edge.center-left::before,
+.frame-edge.center-right::before {
+  content: "";
+  position: absolute;
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--base-color) 80%, black),
+    color-mix(in srgb, var(--base-color) 70%, black)
+  );
+  transform: translateZ(calc(-1 * var(--frame-thickness))) rotateY(180deg);
 }
