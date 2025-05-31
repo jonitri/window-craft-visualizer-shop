@@ -40,13 +40,15 @@ export function createSingleLeafWindow(
   
   addWindowSash(group, width, height, frameDepth, insideColorObject.hex);
 
-  // 4) Place a single Hoppe-style handle on the inside face (Z = -frameDepth/2)
-  //    Let's put it about 25 cm from the top and 15 cm from the right edge:
+  // 4) Place a single Hoppe-style handle with improved positioning:
+  //    - 10 cm from the top instead of 25 cm (closer to typical real-world placement)
+  //    - 15 cm from the right edge (good clearance from frame)
+  //    - Slightly larger scale for better visibility
   const handleX = width / 2 - 0.15;               // 15 cm from right
-  const handleY = height / 2 - 0.25;              // 25 cm down from top
+  const handleY = height / 2 - 0.10;              // 10 cm down from top (was 25 cm)
   const handleZ = -frameDepth / 2 - 0.001;        // flush on the inside face, just behind it
 
   addHoppeHandle(group, handleX, handleY, handleZ);
 
-  console.log("Single leaf window created with single-source approach - no overlapping geometry, consistent materials, and properly positioned handle");
+  console.log("Single leaf window created with improved handle positioning and refined component layers");
 }

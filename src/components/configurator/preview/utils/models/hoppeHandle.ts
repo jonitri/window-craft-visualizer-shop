@@ -1,3 +1,4 @@
+
 import * as THREE from 'three';
 
 export function addHoppeHandle(
@@ -56,9 +57,13 @@ export function addHoppeHandle(
   );
   handleGroup.add(noseMesh);
 
-  // (D) Now move entire handleGroup to the desired (x,y,z) in world space:
+  // (D) Apply improved scale for better proportions (20% larger)
+  const handleScale = 1.2; // Increased from 1.0 for better visibility
+  handleGroup.scale.set(handleScale, handleScale, handleScale);
+
+  // (E) Now move entire handleGroup to the desired (x,y,z) in world space:
   handleGroup.position.set(x, y, z);
   group.add(handleGroup);
 
-  console.log("Hoppe-style handle created with consistent positioning and proper assembly");
+  console.log("Hoppe-style handle created with improved scale and positioning for better realism");
 }

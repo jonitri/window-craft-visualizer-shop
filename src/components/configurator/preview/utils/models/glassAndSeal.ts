@@ -33,7 +33,7 @@ export function addGlass(
   group.add(glassMesh);
 }
 
-// Rubber seal around the glass (always sits at nearly the same Z as glass)
+// Rubber seal around the glass - positioned closer to glass for more realistic appearance
 export function addRubberSeal(
   group: THREE.Group,
   outerWidth: number,
@@ -54,13 +54,16 @@ export function addRubberSeal(
   const sealThick = 0.015;
   const sealDepth = 0.02;
 
+  // Position rubber seal to hug glass more closely (reduced Z offset)
+  const sealZ = thickness / 2 + 0.001; // Same Z as glass for tight fit
+
   // Top seal:
   const topSealGeo = new THREE.BoxGeometry(openingW + sealThick * 2, sealThick, sealDepth);
   const topSeal = new THREE.Mesh(topSealGeo, sealMat);
   topSeal.position.set(
     0,
     (openingH / 2) + sealThick / 2,
-    thickness / 2 + 0.002
+    sealZ
   );
   group.add(topSeal);
 
@@ -69,7 +72,7 @@ export function addRubberSeal(
   bottomSeal.position.set(
     0,
     - (openingH / 2) - sealThick / 2,
-    thickness / 2 + 0.002
+    sealZ
   );
   group.add(bottomSeal);
 
@@ -79,7 +82,7 @@ export function addRubberSeal(
   leftSeal.position.set(
     - (openingW / 2) - sealThick / 2,
     0,
-    thickness / 2 + 0.002
+    sealZ
   );
   group.add(leftSeal);
 
@@ -88,12 +91,12 @@ export function addRubberSeal(
   rightSeal.position.set(
     (openingW / 2) + sealThick / 2,
     0,
-    thickness / 2 + 0.002
+    sealZ
   );
   group.add(rightSeal);
 }
 
-// Thin sash (inner frame) around the glass, using the inside color
+// Thin sash (inner frame) with improved positioning - slightly more prominent
 export function addWindowSash(
   group: THREE.Group,
   outerWidth: number,
@@ -112,13 +115,16 @@ export function addWindowSash(
   const openingW = (outerWidth - thickness * 2) * 0.75;
   const openingH = (outerHeight - thickness * 2) * 0.75;
 
+  // Push sash slightly further forward for better definition
+  const sashZ = thickness / 2 + 0.015; // Increased from 0.01 to 0.015
+
   // Top sash bar:
   const topSashGeo = new THREE.BoxGeometry(openingW + sashThick * 2, sashThick, 0.06);
   const topSash = new THREE.Mesh(topSashGeo, sashMat);
   topSash.position.set(
     0,
     (openingH / 2) + sashThick / 2,
-    thickness / 2 + 0.01
+    sashZ
   );
   group.add(topSash);
 
@@ -127,7 +133,7 @@ export function addWindowSash(
   bottomSash.position.set(
     0,
     - (openingH / 2) - sashThick / 2,
-    thickness / 2 + 0.01
+    sashZ
   );
   group.add(bottomSash);
 
@@ -137,7 +143,7 @@ export function addWindowSash(
   leftSash.position.set(
     - (openingW / 2) - sashThick / 2,
     0,
-    thickness / 2 + 0.01
+    sashZ
   );
   group.add(leftSash);
 
@@ -146,7 +152,7 @@ export function addWindowSash(
   rightSash.position.set(
     (openingW / 2) + sashThick / 2,
     0,
-    thickness / 2 + 0.01
+    sashZ
   );
   group.add(rightSash);
 }
