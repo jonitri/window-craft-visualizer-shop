@@ -42,8 +42,13 @@ export function createSingleLeafWindow(
   // Create window sash (inner frame around glass) - uses inside color
   createSingleLeafWindowSash(group, glassWidth, glassHeight, insideColor);
   
-  // Add realistic window handle
-  addRealisticWindowHandle(group, width/2 - 0.15, -height/4, 0.05, baseColor);
+  // Add realistic window handle positioned on the inside face
+  const frameDepth = 0.08;
+  const handleX = width/2 - 0.25; // Position on right side of window
+  const handleY = -height/4; // Lower third of window
+  const handleZ = -frameDepth/2 - 0.02; // On inside face (negative Z)
   
-  console.log("Single leaf window created with proper color application and rubber seal");
+  addRealisticWindowHandle(group, handleX, handleY, handleZ, baseColor);
+  
+  console.log("Single leaf window created with inside view, properly positioned handle, and correct color application");
 }

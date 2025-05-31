@@ -64,7 +64,7 @@ function createFrameStructure(
   outsideMaterial: THREE.Material,
   insideMaterial: THREE.Material
 ): void {
-  // Create outer frame perimeter (base color for sides)
+  // Create side frames ONLY (base color for sides/edges)
   // Top frame
   const topFrameGeometry = new THREE.BoxGeometry(width, frameThickness, frameDepth);
   const topFrame = new THREE.Mesh(topFrameGeometry, baseMaterial);
@@ -77,7 +77,7 @@ function createFrameStructure(
   group.add(bottomFrame);
   
   // Left frame
-  const sideFrameGeometry = new THREE.BoxGeometry(frameThickness, height, frameDepth);
+  const sideFrameGeometry = new THREE.BoxGeometry(frameThickness, height - frameThickness * 2, frameDepth);
   const leftFrame = new THREE.Mesh(sideFrameGeometry, baseMaterial);
   leftFrame.position.set(-width/2 + frameThickness/2, 0, 0);
   group.add(leftFrame);
@@ -87,14 +87,14 @@ function createFrameStructure(
   rightFrame.position.set(width/2 - frameThickness/2, 0, 0);
   group.add(rightFrame);
 
-  // Create front face panel (outside color)
-  createFrontPanel(group, width, height, frameThickness, frameDepth, outsideMaterial);
+  // Create front face panel (outside color) - thin panel for outside face
+  createOutsidePanel(group, width, height, frameThickness, frameDepth, outsideMaterial);
   
-  // Create back face panel (inside color)
-  createBackPanel(group, width, height, frameThickness, frameDepth, insideMaterial);
+  // Create back face panel (inside color) - thin panel for inside face
+  createInsidePanel(group, width, height, frameThickness, frameDepth, insideMaterial);
 }
 
-function createFrontPanel(
+function createOutsidePanel(
   group: THREE.Group,
   width: number,
   height: number,
@@ -102,19 +102,19 @@ function createFrontPanel(
   frameDepth: number,
   outsideMaterial: THREE.Material
 ): void {
-  const panelThickness = 0.015;
+  const panelThickness = 0.005;
   const panelWidth = width - frameThickness * 2;
   const panelHeight = height - frameThickness * 2;
   
-  // Create the front panel shape with window opening
-  const frontPanelShape = new THREE.Shape();
+  // Create the outside panel shape with window opening
+  const outsidePanelShape = new THREE.Shape();
   
   // Outer rectangle
-  frontPanelShape.moveTo(-panelWidth/2, -panelHeight/2);
-  frontPanelShape.lineTo(panelWidth/2, -panelHeight/2);
-  frontPanelShape.lineTo(panelWidth/2, panelHeight/2);
-  frontPanelShape.lineTo(-panelWidth/2, panelHeight/2);
-  frontPanelShape.lineTo(-panelWidth/2, -panelHeight/2);
+  outsidePanelShape.moveTo(-panelWidth/2, -panelHeight/2);
+  outsidePanelShape.lineTo(panelWidth/2, -panelHeight/2);
+  outsidePanelShape.lineTo(panelWidth/2, panelHeight/2);
+  outsidePanelShape.lineTo(-panelWidth/2, panelHeight/2);
+  outsidePanelShape.lineTo(-panelWidth/2, -panelHeight/2);
   
   // Create window opening (rectangular cutout)
   const openingWidth = panelWidth * 0.75;
@@ -127,7 +127,7 @@ function createFrontPanel(
   opening.lineTo(-openingWidth/2, openingHeight/2);
   opening.lineTo(-openingWidth/2, -openingHeight/2);
   
-  frontPanelShape.holes.push(opening);
+  outsidePanelShape.holes.push(opening);
   
   // Extrude the shape to create thickness
   const extrudeSettings = {
@@ -135,13 +135,13 @@ function createFrontPanel(
     bevelEnabled: false
   };
   
-  const frontPanelGeometry = new THREE.ExtrudeGeometry(frontPanelShape, extrudeSettings);
-  const frontPanel = new THREE.Mesh(frontPanelGeometry, outsideMaterial);
-  frontPanel.position.set(0, 0, frameDepth/2 + panelThickness/2);
-  group.add(frontPanel);
+  const outsidePanelGeometry = new THREE.ExtrudeGeometry(outsidePanelShape, extrudeSettings);
+  const outsidePanel = new THREE.Mesh(outsidePanelGeometry, outsideMaterial);
+  outsidePanel.position.set(0, 0, frameDepth/2 + panelThickness/2);
+  group.add(outsidePanel);
 }
 
-function createBackPanel(
+function createInsidePanel(
   group: THREE.Group,
   width: number,
   height: number,
@@ -149,21 +149,21 @@ function createBackPanel(
   frameDepth: number,
   insideMaterial: THREE.Material
 ): void {
-  const panelThickness = 0.015;
+  const panelThickness = 0.005;
   const panelWidth = width - frameThickness * 2;
   const panelHeight = height - frameThickness * 2;
   
-  // Create the back panel shape with window opening
-  const backPanelShape = new THREE.Shape();
+  // Create the inside panel shape with window opening
+  const insidePanelShape = new THREE.Shape();
   
   // Outer rectangle
-  backPanelShape.moveTo(-panelWidth/2, -panelHeight/2);
-  backPanelShape.lineTo(panelWidth/2, -panelHeight/2);
-  backPanelShape.lineTo(panelWidth/2, panelHeight/2);
-  backPanelShape.lineTo(-panelWidth/2, panelHeight/2);
-  backPanelShape.lineTo(-panelWidth/2, -panelHeight/2);
+  insidePanelShape.moveTo(-panelWidth/2, -panelHeight/2);
+  insidePanelShape.lineTo(panelWidth/2, -panelHeight/2);
+  insidePanelShape.lineTo(panelWidth/2, panelHeight/2);
+  insidePanelShape.lineTo(-panelWidth/2, panelHeight/2);
+  insidePanelShape.lineTo(-panelWidth/2, -panelHeight/2);
   
-  // Create window opening (same size as front)
+  // Create window opening (same size as outside)
   const openingWidth = panelWidth * 0.75;
   const openingHeight = panelHeight * 0.75;
   
@@ -174,7 +174,7 @@ function createBackPanel(
   opening.lineTo(-openingWidth/2, openingHeight/2);
   opening.lineTo(-openingWidth/2, -openingHeight/2);
   
-  backPanelShape.holes.push(opening);
+  insidePanelShape.holes.push(opening);
   
   // Extrude the shape to create thickness
   const extrudeSettings = {
@@ -182,11 +182,10 @@ function createBackPanel(
     bevelEnabled: false
   };
   
-  const backPanelGeometry = new THREE.ExtrudeGeometry(backPanelShape, extrudeSettings);
-  const backPanel = new THREE.Mesh(backPanelGeometry, insideMaterial);
-  backPanel.position.set(0, 0, -frameDepth/2 - panelThickness/2);
-  backPanel.rotation.y = Math.PI; // Flip to face inward
-  group.add(backPanel);
+  const insidePanelGeometry = new THREE.ExtrudeGeometry(insidePanelShape, extrudeSettings);
+  const insidePanel = new THREE.Mesh(insidePanelGeometry, insideMaterial);
+  insidePanel.position.set(0, 0, -frameDepth/2 - panelThickness/2);
+  group.add(insidePanel);
 }
 
 function createGlassPane(

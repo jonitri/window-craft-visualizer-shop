@@ -54,7 +54,9 @@ export const ThreeJSPreview = ({
       0.1,
       1000
     );
-    camera.position.set(0, 0, 5);
+    // Position camera to show inside view by default (negative Z to look from inside)
+    camera.position.set(0, 0, -5);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -75,7 +77,7 @@ export const ThreeJSPreview = ({
     directionalLight.shadow.mapSize.height = 2048;
     scene.add(directionalLight);
 
-    console.log("Three.js scene initialized");
+    console.log("Three.js scene initialized with inside view camera");
 
     // Create initial model
     createModel();
