@@ -33,7 +33,7 @@ export function addGlass(
   group.add(glassMesh);
 }
 
-// Rubber seal around the glass - positioned closer to glass for more realistic appearance
+// Rubber seal around the glass - positioned for maximum realism and tight fit
 export function addRubberSeal(
   group: THREE.Group,
   outerWidth: number,
@@ -51,11 +51,11 @@ export function addRubberSeal(
   // Glass opening:
   const openingW = (outerWidth - thickness * 2) * 0.75;
   const openingH = (outerHeight - thickness * 2) * 0.75;
-  const sealThick = 0.015;
-  const sealDepth = 0.02;
+  const sealThick = 0.012; // reduced for more realistic proportions
+  const sealDepth = 0.018; // reduced for tighter fit
 
-  // Position rubber seal to hug glass more closely (reduced Z offset)
-  const sealZ = thickness / 2 + 0.001; // Same Z as glass for tight fit
+  // Position rubber seal to create tight fit around glass
+  const sealZ = thickness / 2 - 0.002; // Slightly recessed from glass for realistic layering
 
   // Top seal:
   const topSealGeo = new THREE.BoxGeometry(openingW + sealThick * 2, sealThick, sealDepth);
@@ -65,6 +65,7 @@ export function addRubberSeal(
     (openingH / 2) + sealThick / 2,
     sealZ
   );
+  topSeal.renderOrder = 2; // Above handle, below sash
   group.add(topSeal);
 
   // Bottom seal:
@@ -74,6 +75,7 @@ export function addRubberSeal(
     - (openingH / 2) - sealThick / 2,
     sealZ
   );
+  bottomSeal.renderOrder = 2;
   group.add(bottomSeal);
 
   // Left seal:
@@ -84,6 +86,7 @@ export function addRubberSeal(
     0,
     sealZ
   );
+  leftSeal.renderOrder = 2;
   group.add(leftSeal);
 
   // Right seal:
@@ -93,10 +96,11 @@ export function addRubberSeal(
     0,
     sealZ
   );
+  rightSeal.renderOrder = 2;
   group.add(rightSeal);
 }
 
-// Thin sash (inner frame) with improved positioning - slightly more prominent
+// Enhanced sash (inner frame) with improved thickness and positioning
 export function addWindowSash(
   group: THREE.Group,
   outerWidth: number,
@@ -110,22 +114,25 @@ export function addWindowSash(
     metalness: 0.2
   });
 
-  // Opening for glass inside that sash:
-  const sashThick = 0.04;
+  // Enhanced sash dimensions for better realism:
+  const sashThick = 0.045; // increased from 0.04 for more substantial appearance
+  const sashDepth = 0.025; // real Z-thickness to eliminate transparency issues
   const openingW = (outerWidth - thickness * 2) * 0.75;
   const openingH = (outerHeight - thickness * 2) * 0.75;
 
-  // Push sash slightly further forward for better definition
-  const sashZ = thickness / 2 + 0.015; // Increased from 0.01 to 0.015
+  // Calculate sash positioning for perfect layering:
+  const glassZ = thickness / 2 + 0.001; // glass position
+  const sashZ_center = glassZ - sashDepth / 2; // center sash just behind glass
 
   // Top sash bar:
-  const topSashGeo = new THREE.BoxGeometry(openingW + sashThick * 2, sashThick, 0.06);
+  const topSashGeo = new THREE.BoxGeometry(openingW + sashThick * 2, sashThick, sashDepth);
   const topSash = new THREE.Mesh(topSashGeo, sashMat);
   topSash.position.set(
     0,
     (openingH / 2) + sashThick / 2,
-    sashZ
+    sashZ_center
   );
+  topSash.renderOrder = 5; // Higher than handle and rubber seal
   group.add(topSash);
 
   // Bottom sash bar:
@@ -133,18 +140,20 @@ export function addWindowSash(
   bottomSash.position.set(
     0,
     - (openingH / 2) - sashThick / 2,
-    sashZ
+    sashZ_center
   );
+  bottomSash.renderOrder = 5;
   group.add(bottomSash);
 
   // Left sash bar:
-  const sideSashGeo = new THREE.BoxGeometry(sashThick, openingH, 0.06);
+  const sideSashGeo = new THREE.BoxGeometry(sashThick, openingH, sashDepth);
   const leftSash = new THREE.Mesh(sideSashGeo, sashMat);
   leftSash.position.set(
     - (openingW / 2) - sashThick / 2,
     0,
-    sashZ
+    sashZ_center
   );
+  leftSash.renderOrder = 5;
   group.add(leftSash);
 
   // Right sash bar:
@@ -152,7 +161,10 @@ export function addWindowSash(
   rightSash.position.set(
     (openingW / 2) + sashThick / 2,
     0,
-    sashZ
+    sashZ_center
   );
+  rightSash.renderOrder = 5;
   group.add(rightSash);
+
+  console.log("Enhanced window sash created with solid BoxGeometry and improved layering");
 }

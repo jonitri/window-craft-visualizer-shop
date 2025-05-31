@@ -31,7 +31,7 @@ export function createSingleLeafWindow(
     insideColorObject.hex
   );
 
-  // 3) Add glass, rubber seal, and sash (all at the same "front" Z plane = +frameDepth/2)
+  // 3) Add glass, rubber seal, and sash (all at carefully calculated Z positions)
   addGlass(group, width, height, frameDepth);
   
   if (rubberColorObject) {
@@ -40,15 +40,15 @@ export function createSingleLeafWindow(
   
   addWindowSash(group, width, height, frameDepth, insideColorObject.hex);
 
-  // 4) Place a single Hoppe-style handle with improved positioning:
-  //    - 10 cm from the top instead of 25 cm (closer to typical real-world placement)
-  //    - 15 cm from the right edge (good clearance from frame)
-  //    - Slightly larger scale for better visibility
-  const handleX = width / 2 - 0.15;               // 15 cm from right
-  const handleY = height / 2 - 0.10;              // 10 cm down from top (was 25 cm)
-  const handleZ = -frameDepth / 2 - 0.001;        // flush on the inside face, just behind it
+  // 4) Place a single Hoppe-style handle with optimized positioning:
+  //    - 8 cm from the top (more realistic for typical window heights)
+  //    - 12 cm from the right edge (better proportional spacing)
+  //    - Enhanced scale for improved visibility and realism
+  const handleX = width / 2 - 0.12;               // 12 cm from right (was 15 cm)
+  const handleY = height / 2 - 0.08;              // 8 cm down from top (was 10 cm)
+  const handleZ = -frameDepth / 2 - 0.003;        // slightly further behind for better layering
 
   addHoppeHandle(group, handleX, handleY, handleZ);
 
-  console.log("Single leaf window created with improved handle positioning and refined component layers");
+  console.log("Single leaf window created with optimized handle positioning and enhanced component layering");
 }

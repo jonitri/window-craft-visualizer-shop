@@ -6,9 +6,9 @@ export function addHoppeHandle(
   x: number,
   y: number,
   z: number,
-  plateHeight: number = 0.20,   // overall length of the vertical backplate
-  plateThickness: number = 0.02,// how thick that plate is front→back
-  plateDepth: number = 0.03     // how wide that plate is side→side
+  plateHeight: number = 0.22,   // increased from 0.20 for better proportions
+  plateThickness: number = 0.025,// slightly thicker for more substantial look
+  plateDepth: number = 0.035    // wider for better visual presence
 ) {
   const handleMat = new THREE.MeshStandardMaterial({
     color: 0x2b2b2b,
@@ -16,34 +16,34 @@ export function addHoppeHandle(
     metalness: 0.9
   });
   
-  // (A) Vertical backplate:
+  // (A) Vertical backplate with improved dimensions:
   const plateGeo = new THREE.BoxGeometry(plateThickness, plateHeight, plateDepth);
   plateGeo.translate(plateThickness / 2, 0, 0); 
   // Now its back face is at local x=0 to mount flush on the frame
   const plateMesh = new THREE.Mesh(plateGeo, handleMat);
-  // We'll position the entire group later. For now, keep at local origin.
   const handleGroup = new THREE.Group();
   handleGroup.add(plateMesh);
 
-  // (B) Horizontal lever:
-  const leverLength = 0.06;
-  const leverThick  = 0.015;
-  const leverDeep   = 0.02;
+  // (B) Horizontal lever with refined proportions:
+  const leverLength = 0.065; // slightly longer for better grip
+  const leverThick  = 0.018; // slightly thicker
+  const leverDeep   = 0.025; // proportional to new plate depth
   const leverGeo = new THREE.BoxGeometry(leverLength, leverThick, leverDeep);
   leverGeo.translate(leverLength / 2, 0, 0);
   const leverMesh = new THREE.Mesh(leverGeo, handleMat);
-  // Move it up so it meets top of plate:
+  
+  // Position at optimal height on plate:
   leverMesh.position.set(
     0,
-    (plateHeight / 2) - (leverThick / 2),
+    (plateHeight / 2) - (leverThick / 2) - 0.01, // slight offset from top
     0
   );
   // Fold it down 90° so it rests in "closed" position:
   leverMesh.rotation.z = -Math.PI / 2;
   handleGroup.add(leverMesh);
 
-  // (C) Small cylindrical nose:
-  const noseRad  = 0.007;
+  // (C) Enhanced cylindrical nose:
+  const noseRad  = 0.008; // slightly larger
   const noseDepth= leverDeep;
   const noseGeo  = new THREE.CylinderGeometry(noseRad, noseRad, noseDepth, 16);
   const noseMesh = new THREE.Mesh(noseGeo, handleMat);
@@ -52,18 +52,25 @@ export function addHoppeHandle(
   // Position at the lever tip:
   noseMesh.position.set(
     leverLength + noseRad,
-    (plateHeight / 2) - (leverThick / 2),
+    (plateHeight / 2) - (leverThick / 2) - 0.01,
     0
   );
   handleGroup.add(noseMesh);
 
-  // (D) Apply improved scale for better proportions (20% larger)
-  const handleScale = 1.2; // Increased from 1.0 for better visibility
+  // (D) Apply enhanced scale for optimal visibility (25% larger)
+  const handleScale = 1.25; // Increased from 1.2 for even better presence
   handleGroup.scale.set(handleScale, handleScale, handleScale);
 
-  // (E) Now move entire handleGroup to the desired (x,y,z) in world space:
+  // (E) Set lower render order to ensure proper layering behind sash/glass
+  handleGroup.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      child.renderOrder = 1; // Lower than sash (5) and glass (10)
+    }
+  });
+
+  // (F) Position the complete handle assembly:
   handleGroup.position.set(x, y, z);
   group.add(handleGroup);
 
-  console.log("Hoppe-style handle created with improved scale and positioning for better realism");
+  console.log("Enhanced Hoppe-style handle created with optimized proportions and improved layering");
 }
