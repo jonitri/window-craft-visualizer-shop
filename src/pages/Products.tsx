@@ -1,6 +1,7 @@
 
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
+import { Image } from '@/components/ui/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { windowProfiles, doorProfiles } from '@/data/products';
@@ -11,10 +12,10 @@ const Products = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-evolutionDrive-MD-terrace-door.jpg" 
+          <Image 
+            src="https://images.unsplash.com/photo-1560448075-bb485b067938?w=1920&h=1080&fit=crop" 
             alt="Salamander Products" 
-            className="w-full h-full object-cover"
+            className="w-full h-full"
           />
           <div className="absolute inset-0 bg-salamander-darkgray/60"></div>
         </div>
@@ -39,14 +40,10 @@ const Products = () => {
               {windowProfiles.map((profile) => (
                 <div key={profile.id} className="salamander-card">
                   <div className="h-60 overflow-hidden">
-                    <img 
+                    <Image 
                       src={profile.imageUrl} 
                       alt={profile.name} 
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder.svg';
-                      }}
+                      className="h-full w-full transition-transform duration-500 hover:scale-105"
                     />
                   </div>
                   <div className="p-6">
@@ -78,14 +75,10 @@ const Products = () => {
               {doorProfiles.map((profile) => (
                 <div key={profile.id} className="salamander-card">
                   <div className="h-60 overflow-hidden">
-                    <img 
+                    <Image 
                       src={profile.imageUrl} 
                       alt={profile.name} 
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder.svg';
-                      }}
+                      className="h-full w-full transition-transform duration-500 hover:scale-105"
                     />
                   </div>
                   <div className="p-6">
@@ -118,10 +111,10 @@ const Products = () => {
       <section className="container-custom section-padding">
         <div className="bg-gradient-to-r from-salamander-green to-salamander-lightgreen rounded-xl p-8 md:p-12 text-white text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
-            <img 
-              src="https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-evolutionDrive-HST-Villa-M.jpg" 
+            <Image 
+              src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&h=800&fit=crop" 
               alt="Salamander Windows" 
-              className="w-full h-full object-cover"
+              className="w-full h-full"
             />
           </div>
           <div className="relative z-10">

@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { Image } from "@/components/ui/image";
 import Layout from '@/components/layout/Layout';
 import { ArrowRight } from 'lucide-react';
 
@@ -10,10 +11,10 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-elegante-D.jpg" 
-            alt="Salamander Windows Hero" 
-            className="w-full h-full object-cover"
+          <Image 
+            src="https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1920&h=1080&fit=crop" 
+            alt="Modern Home Interior" 
+            className="w-full h-full"
           />
           <div className="absolute inset-0 bg-salamander-darkgray/60"></div>
         </div>
@@ -51,49 +52,49 @@ const Index = () => {
               description:
                 'Our windows and doors exceed industry standards for thermal insulation, helping reduce energy costs.',
               icon: '🌱',
-              image: 'https://salamander-windows.com/wp-content/uploads/2022/06/greenline-SL76-Front-United-Windows.jpg'
+              image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop'
             },
             {
               title: 'Durable & Long-lasting',
               description:
                 'Made with premium-grade PVC materials designed to withstand harsh weather conditions for decades.',
               icon: '🔒',
-              image: 'https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-bluEvolution-82-D-InnenRGB.jpg'
+              image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&h=400&fit=crop'
             },
             {
               title: 'Custom Solutions',
               description:
                 'Create unique designs tailored to your specific requirements using our interactive configurator.',
               icon: '✨',
-              image: 'https://salamander-windows.com/wp-content/uploads/2022/12/Salamander-Windows-Design.jpg'
+              image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop'
             },
             {
               title: 'Advanced Security',
               description:
                 'Multi-point locking systems and reinforced frames provide peace of mind for your home.',
               icon: '🛡️',
-              image: 'https://salamander-windows.com/wp-content/uploads/2022/06/3D-Detail-bluEvolution-82-MD-United-Windows.jpg'
+              image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop'
             },
             {
               title: 'Professional Installation',
               description:
                 'Our expert team ensures perfect fit and optimal performance through professional installation.',
               icon: '🔧',
-              image: 'https://salamander-windows.com/wp-content/uploads/2022/06/bluEvolution-82-United-Windows.jpg'
+              image: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=600&h=400&fit=crop'
             },
             {
               title: 'Comprehensive Warranty',
               description:
                 'Enjoy the confidence of our industry-leading warranty on all products and installations.',
               icon: '📝',
-              image: 'https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-greenline-exterior-view-Detail.jpg'
+              image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop'
             },
           ].map((feature, index) => (
             <div
               key={index}
               className="salamander-card relative group"
             >
-              <img 
+              <Image 
                 src={feature.image} 
                 alt={feature.title} 
                 className="salamander-image"
@@ -129,10 +130,10 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="salamander-card">
               <div className="relative h-80 overflow-hidden">
-                <img 
-                  src="https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-greenline-Facade.jpg" 
-                  alt="Salamander Windows" 
-                  className="h-full w-full object-cover"
+                <Image 
+                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop" 
+                  alt="Premium Windows" 
+                  className="h-full w-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/70 to-transparent flex items-end">
                   <div className="p-6 w-full">
@@ -154,10 +155,10 @@ const Index = () => {
 
             <div className="salamander-card">
               <div className="relative h-80 overflow-hidden">
-                <img 
-                  src="https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-evolutionDrive-HST.jpg" 
-                  alt="Salamander Doors" 
-                  className="h-full w-full object-cover"
+                <Image 
+                  src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop" 
+                  alt="Elegant Doors" 
+                  className="h-full w-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/70 to-transparent flex items-end">
                   <div className="p-6 w-full">
@@ -190,18 +191,27 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="container-custom section-padding">
-        <div className="bg-gradient-to-r from-salamander-green to-salamander-lightgreen rounded-xl p-8 md:p-12 text-white text-center">
-          <h2 className="heading-2 mb-4">Ready to Transform Your Home?</h2>
-          <p className="text-lg mb-6 max-w-2xl mx-auto text-white/90">
-            Start designing your perfect Salamander windows and doors today with our easy-to-use online configurator.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white text-salamander-green hover:bg-white/90" asChild size="lg">
-              <Link to="/configurator">Start Configuring</Link>
-            </Button>
-            <Button className="bg-white/10 backdrop-blur hover:bg-white/20 border border-white/20" asChild size="lg">
-              <Link to="/contact">Contact Us</Link>
-            </Button>
+        <div className="bg-gradient-to-r from-salamander-green to-salamander-lightgreen rounded-xl p-8 md:p-12 text-white text-center relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <Image 
+              src="https://images.unsplash.com/photo-1560448204-444dcb0fa3ec?w=1200&h=800&fit=crop" 
+              alt="Modern Home with Large Windows" 
+              className="w-full h-full"
+            />
+          </div>
+          <div className="relative z-10">
+            <h2 className="heading-2 mb-4">Ready to Transform Your Home?</h2>
+            <p className="text-lg mb-6 max-w-2xl mx-auto text-white/90">
+              Start designing your perfect Salamander windows and doors today with our easy-to-use online configurator.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="bg-white text-salamander-green hover:bg-white/90" asChild size="lg">
+                <Link to="/configurator">Start Configuring</Link>
+              </Button>
+              <Button className="bg-white/10 backdrop-blur hover:bg-white/20 border border-white/20" asChild size="lg">
+                <Link to="/contact">Contact Us</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
