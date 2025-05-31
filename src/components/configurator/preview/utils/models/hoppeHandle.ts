@@ -61,10 +61,10 @@ export function addHoppeHandle(
   const handleScale = 1.25; // Increased from 1.2 for even better presence
   handleGroup.scale.set(handleScale, handleScale, handleScale);
 
-  // (E) Set lower render order to ensure proper layering behind sash/glass
+  // (E) Set LOWER render order to ensure proper layering behind all panels
   handleGroup.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      child.renderOrder = 1; // Lower than sash (5) and glass (10)
+      child.renderOrder = 0; // Lowest priority - always renders first/behind everything
     }
   });
 
@@ -72,5 +72,5 @@ export function addHoppeHandle(
   handleGroup.position.set(x, y, z);
   group.add(handleGroup);
 
-  console.log("Enhanced Hoppe-style handle created with optimized proportions and improved layering");
+  console.log("Enhanced Hoppe-style handle created with lowest render order for proper layering");
 }
