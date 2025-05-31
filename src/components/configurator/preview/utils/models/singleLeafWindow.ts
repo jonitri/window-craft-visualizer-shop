@@ -1,54 +1,52 @@
 
 import * as THREE from 'three';
 import { ColorOption } from '@/data/products';
-import { addRealisticWindowHandle } from './windowHandles';
-import { 
-  createGlassMaterial, 
-  createSingleLeafGlassPanel, 
-  createSingleLeafRubberSeal, 
-  createSingleLeafWindowSash 
-} from './singleLeafGlass';
-import { createSingleLeafMainFrame } from './singleLeafFrame';
+import { createSingleBoxFrame } from './createSingleBoxFrame';
+import { addGlass, addRubberSeal, addWindowSash } from './glassAndSeal';
+import { addHoppeHandle } from './hoppeHandle';
 
 export function createSingleLeafWindow(
-  group: THREE.Group, 
-  width: number, 
-  height: number, 
+  group: THREE.Group,
+  width: number,
+  height: number,
   texture: THREE.Texture,
   baseColorObject: ColorOption,
   outsideColorObject: ColorOption,
   insideColorObject: ColorOption,
   rubberColorObject?: ColorOption
 ): void {
-  // Colors
-  const outsideColor = new THREE.Color(outsideColorObject.hex);
-  const insideColor = new THREE.Color(insideColorObject.hex);
-  const baseColor = new THREE.Color(baseColorObject.hex);
-  const rubberColor = rubberColorObject ? new THREE.Color(rubberColorObject.hex) : new THREE.Color('#000000');
+  // 1) Choose the values you want (all depths/thicknesses must match)
+  const frameThickness = 0.1; // 10 cm profile
+  const frameDepth     = 0.08; // 8 cm "in→out" extrusion
+
+  // 2) Build the frame (four thin boxes, all sharing the same 6-material array)
+  createSingleBoxFrame(
+    group,
+    width,
+    height,
+    frameThickness,
+    frameDepth,
+    baseColorObject.hex,
+    outsideColorObject.hex,
+    insideColorObject.hex
+  );
+
+  // 3) Add glass, rubber seal, and sash (all at the same "front" Z plane = +frameDepth/2)
+  addGlass(group, width, height, frameDepth);
   
-  // Create main window frame structure with proper material separation
-  createSingleLeafMainFrame(group, width, height, baseColor, outsideColor, insideColor);
+  if (rubberColorObject) {
+    addRubberSeal(group, width, height, frameDepth, rubberColorObject.hex);
+  }
   
-  // Create glass panel with realistic transparency (always transparent)
-  const glassWidth = width * 0.75;
-  const glassHeight = height * 0.75;
-  
-  const glassMaterial = createGlassMaterial();
-  createSingleLeafGlassPanel(group, width, height, glassMaterial);
-  
-  // Create rubber seal around glass
-  createSingleLeafRubberSeal(group, glassWidth, glassHeight, rubberColor);
-  
-  // Create window sash (inner frame around glass) - uses inside color
-  createSingleLeafWindowSash(group, glassWidth, glassHeight, insideColor);
-  
-  // Add realistic window handle positioned on the inside face with proper pivot and rotation
-  const frameDepth = 0.08;
-  const handleX = width/2 - 0.25; // Position on right side of window
-  const handleY = -height/4; // Lower third of window  
-  const handleZ = -frameDepth/2 - 0.02; // On inside face (negative Z)
-  
-  addRealisticWindowHandle(group, handleX, handleY, handleZ, baseColor);
-  
-  console.log("Single leaf window created with realistic handle and proper frame color separation");
+  addWindowSash(group, width, height, frameDepth, insideColorObject.hex);
+
+  // 4) Place a single Hoppe-style handle on the inside face (Z = -frameDepth/2)
+  //    Let's put it about 25 cm from the top and 15 cm from the right edge:
+  const handleX = width / 2 - 0.15;               // 15 cm from right
+  const handleY = height / 2 - 0.25;              // 25 cm down from top
+  const handleZ = -frameDepth / 2 - 0.001;        // flush on the inside face, just behind it
+
+  addHoppeHandle(group, handleX, handleY, handleZ);
+
+  console.log("Single leaf window created with single-source approach - no overlapping geometry, consistent materials, and properly positioned handle");
 }
