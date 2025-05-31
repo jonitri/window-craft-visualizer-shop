@@ -1,4 +1,3 @@
-
 import * as THREE from 'three';
 import { ColorOption } from '@/data/products';
 
@@ -9,7 +8,8 @@ export function createDoubleLeafWindow(
   texture: THREE.Texture,
   baseColorObject: ColorOption,
   outsideColorObject: ColorOption,
-  insideColorObject: ColorOption
+  insideColorObject: ColorOption,
+  rubberColorObject?: ColorOption
 ): void {
   const leafWidth = width * 0.45;
   const leafHeight = height * 0.7;
@@ -48,6 +48,7 @@ export function createDoubleLeafWindow(
   const outsideColor = new THREE.Color(outsideColorObject.hex);
   const insideColor = new THREE.Color(insideColorObject.hex);
   const baseColor = new THREE.Color(baseColorObject.hex);
+  const rubberColor = rubberColorObject ? new THREE.Color(rubberColorObject.hex) : new THREE.Color('#000000');
   
   // Create main frame with proper color separation
   createDoubleLeafMainFrame(group, width, height, baseColor, outsideColor, insideColor);
@@ -73,6 +74,10 @@ export function createDoubleLeafWindow(
   createGlassFrame(group, glassWidth, glassHeight, -width/4, insideSashMaterial);
   createGlassFrame(group, glassWidth, glassHeight, width/4, insideSashMaterial);
   
+  // Create rubber seals around glass
+  createDoubleLeafRubberSeal(group, glassWidth, glassHeight, -width/4, rubberColor);
+  createDoubleLeafRubberSeal(group, glassWidth, glassHeight, width/4, rubberColor);
+  
   // Center divider (mullion) with base color
   const dividerMaterial = new THREE.MeshStandardMaterial({ 
     color: baseColor,
@@ -88,6 +93,40 @@ export function createDoubleLeafWindow(
   // Add realistic handles
   addRealisticWindowHandle(group, -width/4 + glassWidth/2 + 0.05, -glassHeight/4, 0.08, baseColor);
   addRealisticWindowHandle(group, width/4 - glassWidth/2 - 0.05, -glassHeight/4, 0.08, baseColor);
+}
+
+// Create rubber seal around glass for double leaf window
+function createDoubleLeafRubberSeal(group: THREE.Group, glassWidth: number, glassHeight: number, offsetX: number, rubberColor: THREE.Color) {
+  const sealThickness = 0.015;
+  const sealDepth = 0.02;
+  
+  const sealMaterial = new THREE.MeshStandardMaterial({
+    color: rubberColor,
+    roughness: 0.8,
+    metalness: 0.0
+  });
+  
+  // Top seal
+  const topSealGeometry = new THREE.BoxGeometry(glassWidth + sealThickness * 2, sealThickness, sealDepth);
+  const topSeal = new THREE.Mesh(topSealGeometry, sealMaterial);
+  topSeal.position.set(offsetX, glassHeight/2 + sealThickness/2, 0.005);
+  group.add(topSeal);
+  
+  // Bottom seal
+  const bottomSeal = new THREE.Mesh(topSealGeometry, sealMaterial);
+  bottomSeal.position.set(offsetX, -glassHeight/2 - sealThickness/2, 0.005);
+  group.add(bottomSeal);
+  
+  // Left seal
+  const sideSealGeometry = new THREE.BoxGeometry(sealThickness, glassHeight, sealDepth);
+  const leftSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+  leftSeal.position.set(offsetX - glassWidth/2 - sealThickness/2, 0, 0.005);
+  group.add(leftSeal);
+  
+  // Right seal
+  const rightSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+  rightSeal.position.set(offsetX + glassWidth/2 + sealThickness/2, 0, 0.005);
+  group.add(rightSeal);
 }
 
 // Create main frame for double leaf window

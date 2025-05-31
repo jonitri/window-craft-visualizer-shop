@@ -7,7 +7,7 @@ export interface WindowModelProps {
   baseColorObject: ColorOption;
   outsideColorObject: ColorOption;
   insideColorObject: ColorOption;
+  rubberColorObject?: ColorOption;
   textureRef: React.MutableRefObject<THREE.Texture | null>;
   windowType?: 'single-leaf' | 'double-leaf' | 'triple-leaf' | 'fixed';
 }
-
