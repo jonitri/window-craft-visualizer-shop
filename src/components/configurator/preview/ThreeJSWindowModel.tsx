@@ -15,6 +15,7 @@ interface ThreeJSWindowModelProps {
   baseColorObject: ColorOption;
   outsideColorObject: ColorOption;
   insideColorObject: ColorOption;
+  rubberColorObject?: ColorOption;
   viewMode: 'front' | 'back';
   isAutoRotating: boolean;
   windowType?: 'single-leaf' | 'double-leaf' | 'triple-leaf' | 'fixed';
@@ -28,6 +29,7 @@ export const ThreeJSWindowModel = ({
   baseColorObject,
   outsideColorObject,
   insideColorObject,
+  rubberColorObject,
   viewMode,
   isAutoRotating,
   windowType = 'single-leaf'
@@ -59,17 +61,18 @@ export const ThreeJSWindowModel = ({
           baseColorObject,
           outsideColorObject,
           insideColorObject,
+          rubberColorObject,
           textureRef: { current: texture },
           windowType
         }
       );
       
       modelCreatedRef.current = true;
-      console.log(`${windowType} window model created successfully`);
+      console.log(`${windowType} window model created successfully with rubber seals`);
     } catch (error) {
       console.error("Error creating window model:", error);
     }
-  }, [width, height, baseColorObject, outsideColorObject, insideColorObject, windowType]);
+  }, [width, height, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject, windowType]);
   
   const textureRef = useTextureLoader(handleTextureLoaded);
   
@@ -109,6 +112,7 @@ export const ThreeJSWindowModel = ({
             baseColorObject,
             outsideColorObject,
             insideColorObject,
+            rubberColorObject,
             textureRef: { current: textureRef.current },
             windowType
           }
@@ -118,7 +122,7 @@ export const ThreeJSWindowModel = ({
         console.error("Error recreating window model after color change:", error);
       }
     }
-  }, [baseColorObject.id, outsideColorObject.id, insideColorObject.id]);
+  }, [baseColorObject.id, outsideColorObject.id, insideColorObject.id, rubberColorObject?.id]);
 
   return (
     <div 

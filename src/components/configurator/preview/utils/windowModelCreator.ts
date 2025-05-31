@@ -39,7 +39,7 @@ export function createWindowModel(
     });
   }
   
-  const { width, height, baseColorObject, outsideColorObject, insideColorObject, textureRef, windowType = 'single-leaf' } = props;
+  const { width, height, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject, textureRef, windowType = 'single-leaf' } = props;
   const windowGroup = new THREE.Group();
   
   const aspectRatio = width / height;
@@ -47,28 +47,26 @@ export function createWindowModel(
   const windowHeight = windowWidth / aspectRatio;
   
   // Select the appropriate window model creation function based on type
-  // Each function now handles its own complete window including frame
+  // Each function now handles its own complete window including frame and rubber seals
   switch (windowType) {
     case 'double-leaf':
-      createDoubleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject);
+      createDoubleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
       break;
     case 'triple-leaf':
-      createTripleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject);
+      createTripleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
       break;
     case 'fixed':
-      createFixedWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject);
+      createFixedWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
       break;
     case 'single-leaf':
     default:
-      createSingleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject);
+      createSingleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
       break;
   }
-  
-  // NOTE: Removed createWindowFrame call - each window type now handles its own complete frame
   
   // Add window model to scene
   scene.add(windowGroup);
   modelRef.current = windowGroup;
   
-  console.log(`${windowType} window model created and added to scene`);
+  console.log(`${windowType} window model created and added to scene with rubber seals`);
 }

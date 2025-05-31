@@ -1,4 +1,3 @@
-
 import * as THREE from 'three';
 import { ColorOption } from '@/data/products';
 
@@ -9,31 +8,33 @@ export function createSingleLeafWindow(
   texture: THREE.Texture,
   baseColorObject: ColorOption,
   outsideColorObject: ColorOption,
-  insideColorObject: ColorOption
+  insideColorObject: ColorOption,
+  rubberColorObject?: ColorOption
 ): void {
   // Colors
   const outsideColor = new THREE.Color(outsideColorObject.hex);
   const insideColor = new THREE.Color(insideColorObject.hex);
   const baseColor = new THREE.Color(baseColorObject.hex);
+  const rubberColor = rubberColorObject ? new THREE.Color(rubberColorObject.hex) : new THREE.Color('#000000');
   
   // Create main window frame structure
   createMainWindowFrame(group, width, height, baseColor, outsideColor, insideColor);
   
-  // Create glass panel with realistic transparency
+  // Create glass panel with realistic transparency (always transparent)
   const glassWidth = width * 0.75;
   const glassHeight = height * 0.75;
   
   const glassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.1,
+    opacity: 0.05, // Very low opacity to ensure transparency
     transmission: 0.98,
     roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
     clearcoatRoughness: 0.05,
     side: THREE.DoubleSide,
-    color: 0xffffff,
+    color: 0xffffff, // Pure white to avoid color tinting
     ior: 1.52,
     thickness: 0.01,
     envMapIntensity: 0.5,
@@ -43,13 +44,50 @@ export function createSingleLeafWindow(
   glassPanel.position.z = 0.01;
   group.add(glassPanel);
   
+  // Create rubber seal around glass
+  createRubberSeal(group, glassWidth, glassHeight, rubberColor);
+  
   // Create window sash (inner frame around glass) - uses inside color
   createWindowSash(group, glassWidth, glassHeight, insideColor);
   
   // Add realistic window handle
   addRealisticWindowHandle(group, width/2 - 0.15, -height/4, 0.05, baseColor);
   
-  console.log("Single leaf window created with proper color application");
+  console.log("Single leaf window created with proper color application and rubber seal");
+}
+
+// Create rubber seal around glass
+function createRubberSeal(group: THREE.Group, glassWidth: number, glassHeight: number, rubberColor: THREE.Color) {
+  const sealThickness = 0.015;
+  const sealDepth = 0.02;
+  
+  const sealMaterial = new THREE.MeshStandardMaterial({
+    color: rubberColor,
+    roughness: 0.8,
+    metalness: 0.0
+  });
+  
+  // Top seal
+  const topSealGeometry = new THREE.BoxGeometry(glassWidth + sealThickness * 2, sealThickness, sealDepth);
+  const topSeal = new THREE.Mesh(topSealGeometry, sealMaterial);
+  topSeal.position.set(0, glassHeight/2 + sealThickness/2, 0.005);
+  group.add(topSeal);
+  
+  // Bottom seal
+  const bottomSeal = new THREE.Mesh(topSealGeometry, sealMaterial);
+  bottomSeal.position.set(0, -glassHeight/2 - sealThickness/2, 0.005);
+  group.add(bottomSeal);
+  
+  // Left seal
+  const sideSealGeometry = new THREE.BoxGeometry(sealThickness, glassHeight, sealDepth);
+  const leftSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+  leftSeal.position.set(-glassWidth/2 - sealThickness/2, 0, 0.005);
+  group.add(leftSeal);
+  
+  // Right seal
+  const rightSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+  rightSeal.position.set(glassWidth/2 + sealThickness/2, 0, 0.005);
+  group.add(rightSeal);
 }
 
 // Create the main window frame structure with proper color separation
