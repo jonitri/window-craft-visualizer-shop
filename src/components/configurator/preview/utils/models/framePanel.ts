@@ -45,7 +45,7 @@ export function createMainFramePanel(
   const framePanelGeometry = new THREE.ExtrudeGeometry(framePanelShape, extrudeSettings);
   
   // Create materials array for extruded geometry
-  // ExtrudeGeometry typically has: front face, back face, and side faces
+  // ExtrudeGeometry has front face (outside) and back face (inside)
   const panelMaterials = [
     outsideMaterial, // Front face (outside)
     insideMaterial   // Back face (inside)
@@ -54,4 +54,6 @@ export function createMainFramePanel(
   const framePanel = new THREE.Mesh(framePanelGeometry, panelMaterials);
   framePanel.position.set(0, 0, -frameDepth/2);
   group.add(framePanel);
+  
+  console.log("Main frame panel created with proper front/back material assignment");
 }

@@ -16,8 +16,8 @@ export function createSingleLeafMainFrame(
   const frameThickness = 0.12;
   const frameDepth = 0.08;
   
-  // Create materials for different frame parts
-  const { baseMaterial, outsideMaterial, insideMaterial } = createFrameMaterials(
+  // Create materials with proper face separation
+  const { baseMaterial, outsideMaterial, insideMaterial, frameMaterialsArray } = createFrameMaterials(
     baseColor, 
     outsideColor, 
     insideColor
@@ -26,7 +26,7 @@ export function createSingleLeafMainFrame(
   // Glass material
   const glassMaterial = createGlassMaterial();
   
-  // Create frame structure with proper multi-material setup
+  // Create frame structure with proper multi-material setup for face separation
   createFrameStructure(group, width, height, frameThickness, frameDepth, baseMaterial, outsideMaterial, insideMaterial);
   
   // Create main frame panels with proper face materials
@@ -35,5 +35,5 @@ export function createSingleLeafMainFrame(
   // Add glass pane in the center
   createGlassPane(group, width, height, frameThickness, glassMaterial);
   
-  console.log("Single leaf main frame created with proper inside/outside color separation");
+  console.log("Single leaf main frame created with proper inside/outside color separation using material arrays");
 }
