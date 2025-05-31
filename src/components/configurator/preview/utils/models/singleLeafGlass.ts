@@ -1,3 +1,4 @@
+
 import * as THREE from 'three';
 
 // Create realistic glass material for single leaf window
@@ -18,7 +19,6 @@ export function createGlassMaterial(): THREE.MeshPhysicalMaterial {
     // Remove alphaTest and keep depthWrite true for proper sorting
     depthWrite: true,
     // Ensure it renders after opaque objects
-    transparent: true,
   });
 }
 
