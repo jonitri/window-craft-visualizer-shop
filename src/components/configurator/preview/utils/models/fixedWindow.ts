@@ -20,24 +20,27 @@ export function createFixedWindow(
   // Create main window frame structure
   createFixedMainFrame(group, width, height, baseColor, outsideColor, insideColor);
   
-  // Create glass panel with realistic transparency (always transparent)
+  // Create glass panel with improved transparency
   const glassWidth = width * 0.8;
   const glassHeight = height * 0.8;
   
   const glassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.05, // Very low opacity to ensure transparency
-    transmission: 0.98,
+    opacity: 0.1, // Increased slightly for better visibility of transparency
+    transmission: 1.0, // Maximum transmission for clear glass
     roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.05,
+    clearcoatRoughness: 0.0,
     side: THREE.DoubleSide,
     color: 0xffffff, // Pure white to avoid color tinting
-    ior: 1.52,
-    thickness: 0.01,
-    envMapIntensity: 0.5,
+    ior: 1.52, // Index of refraction for glass
+    thickness: 0.005, // Reduced thickness
+    envMapIntensity: 1.0,
+    // Force transparency rendering
+    alphaTest: 0,
+    depthWrite: false, // Important for transparent materials
   });
   
   const glassPanel = new THREE.Mesh(glassGeometry, glassMaterial);
