@@ -19,8 +19,8 @@ export function createDoubleLeafWindow(
   // Create realistic glass material with improved transparency
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.1, // Increased slightly for better visibility of transparency
-    transmission: 1.0, // Maximum transmission for clear glass
+    opacity: 0.05, // Very low opacity for clear glass
+    transmission: 0.95, // High transmission for clear glass
     roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
@@ -28,23 +28,24 @@ export function createDoubleLeafWindow(
     side: THREE.DoubleSide,
     color: 0xffffff, // Pure white to avoid color tinting
     ior: 1.52, // Index of refraction for glass
-    thickness: 0.005, // Reduced thickness
+    thickness: 0.003, // Very thin glass
     envMapIntensity: 1.0,
-    // Force transparency rendering
-    alphaTest: 0,
-    depthWrite: false, // Important for transparent materials
+    // Remove alphaTest and keep depthWrite true for proper sorting
+    depthWrite: true,
   });
   
   // Left glass panel
   const leftGlassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const leftGlass = new THREE.Mesh(leftGlassGeometry, glassMaterial);
   leftGlass.position.set(-width/4, 0, 0.005);
+  leftGlass.renderOrder = 1000;
   group.add(leftGlass);
   
   // Right glass panel
   const rightGlassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const rightGlass = new THREE.Mesh(rightGlassGeometry, glassMaterial);
   rightGlass.position.set(width/4, 0, 0.005);
+  rightGlass.renderOrder = 1000;
   group.add(rightGlass);
   
   // Colors

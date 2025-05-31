@@ -1,12 +1,11 @@
-
 import * as THREE from 'three';
 
 // Create realistic glass material
 export function createGlassMaterial(): THREE.MeshPhysicalMaterial {
   return new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.1, // Increased slightly for better visibility of transparency
-    transmission: 1.0, // Maximum transmission for clear glass
+    opacity: 0.05, // Very low opacity for clear glass
+    transmission: 0.95, // High transmission for clear glass
     roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
@@ -14,11 +13,12 @@ export function createGlassMaterial(): THREE.MeshPhysicalMaterial {
     side: THREE.DoubleSide,
     color: 0xffffff, // Pure white to avoid color tinting
     ior: 1.52, // Index of refraction for glass
-    thickness: 0.005, // Reduced thickness
+    thickness: 0.003, // Very thin glass
     envMapIntensity: 1.0,
-    // Force transparency rendering
-    alphaTest: 0,
-    depthWrite: false, // Important for transparent materials
+    // Remove alphaTest and keep depthWrite true for proper sorting
+    depthWrite: true,
+    // Ensure it renders after opaque objects
+    transparent: true,
   });
 }
 
@@ -38,18 +38,21 @@ export function createTripleLeafGlassPanels(
   const leftGlassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const leftGlass = new THREE.Mesh(leftGlassGeometry, glassMaterial);
   leftGlass.position.set(-width/3, 0, 0.005);
+  leftGlass.renderOrder = 1000;
   group.add(leftGlass);
   
   // Middle glass panel
   const middleGlassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const middleGlass = new THREE.Mesh(middleGlassGeometry, glassMaterial);
   middleGlass.position.set(0, 0, 0.005);
+  middleGlass.renderOrder = 1000;
   group.add(middleGlass);
   
   // Right glass panel
   const rightGlassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const rightGlass = new THREE.Mesh(rightGlassGeometry, glassMaterial);
   rightGlass.position.set(width/3, 0, 0.005);
+  rightGlass.renderOrder = 1000;
   group.add(rightGlass);
 }
 

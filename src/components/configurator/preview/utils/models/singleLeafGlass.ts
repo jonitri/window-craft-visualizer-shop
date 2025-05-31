@@ -1,12 +1,11 @@
-
 import * as THREE from 'three';
 
 // Create realistic glass material for single leaf window
 export function createGlassMaterial(): THREE.MeshPhysicalMaterial {
   return new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.1, // Increased slightly for better visibility of transparency
-    transmission: 1.0, // Maximum transmission for clear glass
+    opacity: 0.05, // Very low opacity for clear glass
+    transmission: 0.95, // High transmission for clear glass
     roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
@@ -14,11 +13,12 @@ export function createGlassMaterial(): THREE.MeshPhysicalMaterial {
     side: THREE.DoubleSide,
     color: 0xffffff, // Pure white to avoid color tinting
     ior: 1.52, // Index of refraction for glass
-    thickness: 0.005, // Reduced thickness
+    thickness: 0.003, // Very thin glass
     envMapIntensity: 1.0,
-    // Force transparency rendering
-    alphaTest: 0,
-    depthWrite: false, // Important for transparent materials
+    // Remove alphaTest and keep depthWrite true for proper sorting
+    depthWrite: true,
+    // Ensure it renders after opaque objects
+    transparent: true,
   });
 }
 
@@ -35,6 +35,10 @@ export function createSingleLeafGlassPanel(
   const glassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const glassPanel = new THREE.Mesh(glassGeometry, glassMaterial);
   glassPanel.position.z = 0.01;
+  
+  // Ensure proper rendering order for transparency
+  glassPanel.renderOrder = 1000;
+  
   group.add(glassPanel);
 }
 
