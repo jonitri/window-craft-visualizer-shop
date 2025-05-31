@@ -8,6 +8,7 @@
   transform-style: preserve-3d;
   transition: transform 0.6s ease-in-out;
   transform: rotateX(var(--rotation-x)) rotateY(var(--rotation-y));
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
 }
 
 .window-3d {
@@ -15,4 +16,22 @@
   height: var(--window-height);
   transform-style: preserve-3d;
   position: relative;
+  /* Add subtle ambient lighting effect */
+  filter: brightness(1.1) contrast(1.05);
+}
+
+/* Improved lighting for more realistic appearance */
+.window-3d::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  right: -30px;
+  bottom: -30px;
+  background: radial-gradient(ellipse at center top,
+    rgba(255,255,255,0.1) 0%,
+    rgba(255,255,255,0.05) 30%,
+    transparent 70%);
+  transform: translateZ(-50px);
+  pointer-events: none;
 }
