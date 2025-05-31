@@ -94,23 +94,36 @@ export const CSS3DWindowPreview = ({
   const renderSingleLeafWindow = () => (
     <div className={`window-3d single-leaf ${animationPhase}`}>
       <div className="window-frame">
-        <div className="frame-edge top"></div>
-        <div className="frame-edge bottom"></div>
-        <div className="frame-edge left"></div>
-        <div className="frame-edge right"></div>
+        {/* Main frame structure with front and back sides */}
+        <div className="frame-front"></div>
+        <div className="frame-back"></div>
+        <div className="frame-edges">
+          <div className="frame-edge top"></div>
+          <div className="frame-edge bottom"></div>
+          <div className="frame-edge left"></div>
+          <div className="frame-edge right"></div>
+        </div>
         
+        {/* Window sash with proper layering */}
         <div className="window-sash">
-          <div className="sash-frame">
-            <div className="glass-panel">
-              <div className="glass-surface"></div>
-              <div className="glass-reflection"></div>
-            </div>
+          <div className="sash-front"></div>
+          <div className="sash-back"></div>
+          
+          {/* Glass panel in the center */}
+          <div className="glass-panel">
+            <div className="glass-surface"></div>
+            <div className="glass-reflection"></div>
+          </div>
+          
+          {/* Rubber seals around glass */}
+          <div className="rubber-seals">
             <div className="rubber-seal top"></div>
             <div className="rubber-seal bottom"></div>
             <div className="rubber-seal left"></div>
             <div className="rubber-seal right"></div>
           </div>
           
+          {/* Window handle */}
           <div className="window-handle">
             <div className="handle-base"></div>
             <div className="handle-lever"></div>
@@ -123,18 +136,25 @@ export const CSS3DWindowPreview = ({
   const renderDoubleLeafWindow = () => (
     <div className={`window-3d double-leaf ${animationPhase}`}>
       <div className="window-frame">
-        <div className="frame-edge top"></div>
-        <div className="frame-edge bottom"></div>
-        <div className="frame-edge left"></div>
-        <div className="frame-edge right"></div>
-        <div className="frame-edge center-vertical"></div>
+        <div className="frame-front"></div>
+        <div className="frame-back"></div>
+        <div className="frame-edges">
+          <div className="frame-edge top"></div>
+          <div className="frame-edge bottom"></div>
+          <div className="frame-edge left"></div>
+          <div className="frame-edge right"></div>
+          <div className="frame-edge center-vertical"></div>
+        </div>
         
+        {/* Left sash */}
         <div className="window-sash left-sash">
-          <div className="sash-frame">
-            <div className="glass-panel">
-              <div className="glass-surface"></div>
-              <div className="glass-reflection"></div>
-            </div>
+          <div className="sash-front"></div>
+          <div className="sash-back"></div>
+          <div className="glass-panel">
+            <div className="glass-surface"></div>
+            <div className="glass-reflection"></div>
+          </div>
+          <div className="rubber-seals">
             <div className="rubber-seal top"></div>
             <div className="rubber-seal bottom"></div>
             <div className="rubber-seal left"></div>
@@ -146,12 +166,15 @@ export const CSS3DWindowPreview = ({
           </div>
         </div>
         
+        {/* Right sash */}
         <div className="window-sash right-sash">
-          <div className="sash-frame">
-            <div className="glass-panel">
-              <div className="glass-surface"></div>
-              <div className="glass-reflection"></div>
-            </div>
+          <div className="sash-front"></div>
+          <div className="sash-back"></div>
+          <div className="glass-panel">
+            <div className="glass-surface"></div>
+            <div className="glass-reflection"></div>
+          </div>
+          <div className="rubber-seals">
             <div className="rubber-seal top"></div>
             <div className="rubber-seal bottom"></div>
             <div className="rubber-seal left"></div>
@@ -165,20 +188,26 @@ export const CSS3DWindowPreview = ({
   const renderTripleLeafWindow = () => (
     <div className={`window-3d triple-leaf ${animationPhase}`}>
       <div className="window-frame">
-        <div className="frame-edge top"></div>
-        <div className="frame-edge bottom"></div>
-        <div className="frame-edge left"></div>
-        <div className="frame-edge right"></div>
-        <div className="frame-edge center-left"></div>
-        <div className="frame-edge center-right"></div>
+        <div className="frame-front"></div>
+        <div className="frame-back"></div>
+        <div className="frame-edges">
+          <div className="frame-edge top"></div>
+          <div className="frame-edge bottom"></div>
+          <div className="frame-edge left"></div>
+          <div className="frame-edge right"></div>
+          <div className="frame-edge center-left"></div>
+          <div className="frame-edge center-right"></div>
+        </div>
         
         {['left', 'center', 'right'].map((position, index) => (
           <div key={position} className={`window-sash ${position}-sash`}>
-            <div className="sash-frame">
-              <div className="glass-panel">
-                <div className="glass-surface"></div>
-                <div className="glass-reflection"></div>
-              </div>
+            <div className="sash-front"></div>
+            <div className="sash-back"></div>
+            <div className="glass-panel">
+              <div className="glass-surface"></div>
+              <div className="glass-reflection"></div>
+            </div>
+            <div className="rubber-seals">
               <div className="rubber-seal top"></div>
               <div className="rubber-seal bottom"></div>
               <div className="rubber-seal left"></div>
@@ -199,23 +228,28 @@ export const CSS3DWindowPreview = ({
   const renderFixedWindow = () => (
     <div className={`window-3d fixed ${animationPhase}`}>
       <div className="window-frame">
-        <div className="frame-edge top"></div>
-        <div className="frame-edge bottom"></div>
-        <div className="frame-edge left"></div>
-        <div className="frame-edge right"></div>
+        <div className="frame-front"></div>
+        <div className="frame-back"></div>
+        <div className="frame-edges">
+          <div className="frame-edge top"></div>
+          <div className="frame-edge bottom"></div>
+          <div className="frame-edge left"></div>
+          <div className="frame-edge right"></div>
+        </div>
         
         <div className="window-sash fixed-sash">
-          <div className="sash-frame">
-            <div className="glass-panel">
-              <div className="glass-surface"></div>
-              <div className="glass-reflection"></div>
-            </div>
+          <div className="sash-front"></div>
+          <div className="sash-back"></div>
+          <div className="glass-panel">
+            <div className="glass-surface"></div>
+            <div className="glass-reflection"></div>
+          </div>
+          <div className="rubber-seals">
             <div className="rubber-seal top"></div>
             <div className="rubber-seal bottom"></div>
             <div className="rubber-seal left"></div>
             <div className="rubber-seal right"></div>
           </div>
-          
           <div className="fixed-label">FIXED</div>
         </div>
       </div>
