@@ -13,36 +13,38 @@ export function createFixedWindow(
 ): void {
   // Colors
   const outsideColor = new THREE.Color(outsideColorObject.hex);
+  const insideColor = new THREE.Color(insideColorObject.hex);
   const baseColor = new THREE.Color(baseColorObject.hex);
   
-  // Create main window frame structure first (base color for depth/sides only)
-  createFixedMainFrame(group, width, height, baseColor, outsideColor);
+  // Create main window frame structure
+  createFixedMainFrame(group, width, height, baseColor, outsideColor, insideColor);
   
-  // Create glass panel with fixed transparent material (never changes color)
+  // Create glass panel with realistic transparency
   const glassWidth = width * 0.8;
   const glassHeight = height * 0.8;
   
   const glassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.15,
-    transmission: 0.95,
+    opacity: 0.1,
+    transmission: 0.98,
     roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
+    clearcoatRoughness: 0.05,
     side: THREE.DoubleSide,
-    color: 0xffffff, // Always white/clear - never changes
+    color: 0xffffff,
     ior: 1.52,
-    thickness: 0.02,
+    thickness: 0.01,
+    envMapIntensity: 0.5,
   });
   
   const glassPanel = new THREE.Mesh(glassGeometry, glassMaterial);
   glassPanel.position.z = 0.01;
   group.add(glassPanel);
   
-  // Create inner frame around glass (uses outside color for front face)
-  createFixedInnerFrame(group, glassWidth, glassHeight, outsideColor);
+  // Create inner frame around glass (uses inside color)
+  createFixedInnerFrame(group, glassWidth, glassHeight, insideColor);
   
   // Add "Fixed" label
   const labelGeometry = new THREE.BoxGeometry(0.3, 0.08, 0.02);
@@ -51,16 +53,17 @@ export function createFixedWindow(
   label.position.set(0, -height * 0.3, 0.06);
   group.add(label);
   
-  console.log("Fixed window created with transparent glass");
+  console.log("Fixed window created with proper color application");
 }
 
-// Create main frame for fixed window (base color for depth, outside color for front)
+// Create main frame for fixed window with proper color separation
 function createFixedMainFrame(
   group: THREE.Group, 
   width: number, 
   height: number, 
   baseColor: THREE.Color, 
-  outsideColor: THREE.Color
+  outsideColor: THREE.Color, 
+  insideColor: THREE.Color
 ) {
   const frameThickness = 0.1;
   const frameDepth = 0.12;
@@ -79,45 +82,70 @@ function createFixedMainFrame(
     metalness: 0.1
   });
   
+  // Inside face material
+  const insideMaterial = new THREE.MeshStandardMaterial({
+    color: insideColor,
+    roughness: 0.5,
+    metalness: 0.1
+  });
+  
   // Frame depth (uses base color)
   const frameGeometry = new THREE.BoxGeometry(width + frameThickness, height + frameThickness, frameDepth);
   const frameDepthMesh = new THREE.Mesh(frameGeometry, frameDepthMaterial);
   frameDepthMesh.position.set(0, 0, -frameDepth/2);
   group.add(frameDepthMesh);
   
-  // Create outer frame borders (front face - uses outside color)
-  createFixedFrameBorder(group, width, height, frameThickness, outsideMaterial);
+  // Create front face (outside color)
+  createFixedFrameFace(group, width, height, frameThickness, outsideMaterial, frameDepth/2 + 0.002, 'front');
+  
+  // Create back face (inside color)
+  createFixedFrameFace(group, width, height, frameThickness, insideMaterial, -frameDepth/2 - 0.002, 'back');
 }
 
-// Create outer frame border for fixed window
-function createFixedFrameBorder(group: THREE.Group, width: number, height: number, thickness: number, material: THREE.Material) {
-  // Top border
-  const topGeometry = new THREE.BoxGeometry(width + thickness, thickness, 0.08);
-  const topBorder = new THREE.Mesh(topGeometry, material);
-  topBorder.position.set(0, height/2 + thickness/2, 0.04);
-  group.add(topBorder);
+// Create frame face for fixed window
+function createFixedFrameFace(
+  group: THREE.Group, 
+  width: number, 
+  height: number, 
+  thickness: number, 
+  material: THREE.Material,
+  zPosition: number,
+  side: 'front' | 'back'
+) {
+  // Create outer frame shape
+  const outerShape = new THREE.Shape();
+  outerShape.moveTo(-(width + thickness)/2, -(height + thickness)/2);
+  outerShape.lineTo((width + thickness)/2, -(height + thickness)/2);
+  outerShape.lineTo((width + thickness)/2, (height + thickness)/2);
+  outerShape.lineTo(-(width + thickness)/2, (height + thickness)/2);
+  outerShape.lineTo(-(width + thickness)/2, -(height + thickness)/2);
   
-  // Bottom border
-  const bottomBorder = new THREE.Mesh(topGeometry, material);
-  bottomBorder.position.set(0, -height/2 - thickness/2, 0.04);
-  group.add(bottomBorder);
+  // Create inner cutout for glass
+  const innerWidth = width * 0.85;
+  const innerHeight = height * 0.85;
+  const holeShape = new THREE.Path();
+  holeShape.moveTo(-innerWidth/2, -innerHeight/2);
+  holeShape.lineTo(innerWidth/2, -innerHeight/2);
+  holeShape.lineTo(innerWidth/2, innerHeight/2);
+  holeShape.lineTo(-innerWidth/2, innerHeight/2);
+  holeShape.lineTo(-innerWidth/2, -innerHeight/2);
+  outerShape.holes.push(holeShape);
   
-  // Left border
-  const sideGeometry = new THREE.BoxGeometry(thickness, height, 0.08);
-  const leftBorder = new THREE.Mesh(sideGeometry, material);
-  leftBorder.position.set(-width/2 - thickness/2, 0, 0.04);
-  group.add(leftBorder);
+  const faceGeometry = new THREE.ShapeGeometry(outerShape);
+  const faceMesh = new THREE.Mesh(faceGeometry, material);
+  faceMesh.position.z = zPosition;
   
-  // Right border
-  const rightBorder = new THREE.Mesh(sideGeometry, material);
-  rightBorder.position.set(width/2 + thickness/2, 0, 0.04);
-  group.add(rightBorder);
+  if (side === 'back') {
+    faceMesh.rotation.y = Math.PI; // Flip back face
+  }
+  
+  group.add(faceMesh);
 }
 
 function createFixedInnerFrame(group: THREE.Group, glassWidth: number, glassHeight: number, color: THREE.Color) {
   const thickness = 0.05;
   const material = new THREE.MeshStandardMaterial({
-    color: color, // Uses outside color, not base color
+    color: color, // Uses inside color
     roughness: 0.4,
     metalness: 0.2
   });

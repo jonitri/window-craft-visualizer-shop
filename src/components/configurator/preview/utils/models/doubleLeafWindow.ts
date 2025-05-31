@@ -1,6 +1,6 @@
+
 import * as THREE from 'three';
 import { ColorOption } from '@/data/products';
-import { addWindowHandle } from './windowComponents';
 
 export function createDoubleLeafWindow(
   group: THREE.Group, 
@@ -16,19 +16,20 @@ export function createDoubleLeafWindow(
   const glassWidth = leafWidth * 0.8;
   const glassHeight = leafHeight * 0.85;
   
-  // Create fixed transparent glass material (never changes color)
+  // Create realistic glass material
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     transparent: true,
-    opacity: 0.15,
-    transmission: 0.95,
-    roughness: 0.05,
+    opacity: 0.1,
+    transmission: 0.98,
+    roughness: 0.0,
     metalness: 0.0,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
+    clearcoatRoughness: 0.05,
     side: THREE.DoubleSide,
-    color: 0xffffff, // Always white/clear
+    color: 0xffffff,
     ior: 1.52,
     thickness: 0.01,
+    envMapIntensity: 0.5,
   });
   
   // Left glass panel
@@ -45,71 +46,189 @@ export function createDoubleLeafWindow(
   
   // Colors
   const outsideColor = new THREE.Color(outsideColorObject.hex);
+  const insideColor = new THREE.Color(insideColorObject.hex);
   const baseColor = new THREE.Color(baseColorObject.hex);
   
-  // Sash material (front face - outside color)
-  const sashMaterial = new THREE.MeshStandardMaterial({
+  // Create main frame with proper color separation
+  createDoubleLeafMainFrame(group, width, height, baseColor, outsideColor, insideColor);
+  
+  // Create sash materials
+  const outsideSashMaterial = new THREE.MeshStandardMaterial({
     color: outsideColor,
     roughness: 0.3,
     metalness: 0.1
   });
   
-  // Create frames for both leaves (front face only)
-  createLeafFrame(group, leafWidth, leafHeight, -width/4, sashMaterial);
-  createLeafFrame(group, leafWidth, leafHeight, width/4, sashMaterial);
+  const insideSashMaterial = new THREE.MeshStandardMaterial({
+    color: insideColor,
+    roughness: 0.3,
+    metalness: 0.1
+  });
   
-  // Create inner frames around glass (front face)
-  createGlassFrame(group, glassWidth, glassHeight, -width/4, sashMaterial);
-  createGlassFrame(group, glassWidth, glassHeight, width/4, sashMaterial);
+  // Create frames for both leaves
+  createLeafFrame(group, leafWidth, leafHeight, -width/4, outsideSashMaterial, insideSashMaterial);
+  createLeafFrame(group, leafWidth, leafHeight, width/4, outsideSashMaterial, insideSashMaterial);
+  
+  // Create inner frames around glass
+  createGlassFrame(group, glassWidth, glassHeight, -width/4, insideSashMaterial);
+  createGlassFrame(group, glassWidth, glassHeight, width/4, insideSashMaterial);
   
   // Center divider (mullion) with base color
   const dividerMaterial = new THREE.MeshStandardMaterial({ 
-    color: baseColor, // This is part of the main frame structure
+    color: baseColor,
     roughness: 0.4,
     metalness: 0.2
   });
   
-  const dividerGeometry = new THREE.BoxGeometry(0.08, height * 0.9, 0.08);
+  const dividerGeometry = new THREE.BoxGeometry(0.08, height * 0.9, 0.15);
   const divider = new THREE.Mesh(dividerGeometry, dividerMaterial);
   divider.position.set(0, 0, 0);
   group.add(divider);
   
-  // Add main frame depth (uses base color for depth/sides)
-  addMainFrameDepth(group, width, height, baseColor);
+  // Add realistic handles
+  addRealisticWindowHandle(group, -width/4 + glassWidth/2 + 0.05, -glassHeight/4, 0.08, baseColor);
+  addRealisticWindowHandle(group, width/4 - glassWidth/2 - 0.05, -glassHeight/4, 0.08, baseColor);
+}
+
+// Create main frame for double leaf window
+function createDoubleLeafMainFrame(
+  group: THREE.Group, 
+  width: number, 
+  height: number, 
+  baseColor: THREE.Color, 
+  outsideColor: THREE.Color, 
+  insideColor: THREE.Color
+) {
+  const frameThickness = 0.12;
+  const frameDepth = 0.15;
   
-  // Add handles
-  addWindowHandle(group, -width/4 + glassWidth/2 + 0.05, -glassHeight/4, 0.03, outsideColor);
-  addWindowHandle(group, width/4 - glassWidth/2 - 0.05, -glassHeight/4, 0.03, outsideColor);
+  // Frame depth material (base color)
+  const frameDepthMaterial = new THREE.MeshStandardMaterial({
+    color: baseColor,
+    roughness: 0.6,
+    metalness: 0.1
+  });
+  
+  // Create main frame depth
+  const frameGeometry = new THREE.BoxGeometry(width + frameThickness, height + frameThickness, frameDepth);
+  const frameDepthMesh = new THREE.Mesh(frameGeometry, frameDepthMaterial);
+  frameDepthMesh.position.set(0, 0, -frameDepth/2);
+  group.add(frameDepthMesh);
+  
+  // Create front and back faces
+  const outsideMaterial = new THREE.MeshStandardMaterial({ color: outsideColor, roughness: 0.5, metalness: 0.1 });
+  const insideMaterial = new THREE.MeshStandardMaterial({ color: insideColor, roughness: 0.5, metalness: 0.1 });
+  
+  createDoubleFrameFace(group, width, height, frameThickness, outsideMaterial, frameDepth/2 + 0.002, 'front');
+  createDoubleFrameFace(group, width, height, frameThickness, insideMaterial, -frameDepth/2 - 0.002, 'back');
+}
+
+// Create frame face for double leaf
+function createDoubleFrameFace(
+  group: THREE.Group, 
+  width: number, 
+  height: number, 
+  thickness: number, 
+  material: THREE.Material,
+  zPosition: number,
+  side: 'front' | 'back'
+) {
+  // Create outer frame shape
+  const outerShape = new THREE.Shape();
+  outerShape.moveTo(-(width + thickness)/2, -(height + thickness)/2);
+  outerShape.lineTo((width + thickness)/2, -(height + thickness)/2);
+  outerShape.lineTo((width + thickness)/2, (height + thickness)/2);
+  outerShape.lineTo(-(width + thickness)/2, (height + thickness)/2);
+  outerShape.lineTo(-(width + thickness)/2, -(height + thickness)/2);
+  
+  // Create inner cutouts for glass (two rectangles)
+  const leafWidth = width * 0.45;
+  const leafHeight = height * 0.7;
+  
+  // Left cutout
+  const leftHole = new THREE.Path();
+  const leftX = -width/4;
+  const leftGlassW = leafWidth * 0.85;
+  const leftGlassH = leafHeight * 0.9;
+  leftHole.moveTo(leftX - leftGlassW/2, -leftGlassH/2);
+  leftHole.lineTo(leftX + leftGlassW/2, -leftGlassH/2);
+  leftHole.lineTo(leftX + leftGlassW/2, leftGlassH/2);
+  leftHole.lineTo(leftX - leftGlassW/2, leftGlassH/2);
+  leftHole.lineTo(leftX - leftGlassW/2, -leftGlassH/2);
+  outerShape.holes.push(leftHole);
+  
+  // Right cutout
+  const rightHole = new THREE.Path();
+  const rightX = width/4;
+  rightHole.moveTo(rightX - leftGlassW/2, -leftGlassH/2);
+  rightHole.lineTo(rightX + leftGlassW/2, -leftGlassH/2);
+  rightHole.lineTo(rightX + leftGlassW/2, leftGlassH/2);
+  rightHole.lineTo(rightX - leftGlassW/2, leftGlassH/2);
+  rightHole.lineTo(rightX - leftGlassW/2, -leftGlassH/2);
+  outerShape.holes.push(rightHole);
+  
+  const faceGeometry = new THREE.ShapeGeometry(outerShape);
+  const faceMesh = new THREE.Mesh(faceGeometry, material);
+  faceMesh.position.z = zPosition;
+  
+  if (side === 'back') {
+    faceMesh.rotation.y = Math.PI;
+  }
+  
+  group.add(faceMesh);
 }
 
 // Create frame for each leaf
-function createLeafFrame(group: THREE.Group, leafWidth: number, leafHeight: number, offsetX: number, material: THREE.Material) {
+function createLeafFrame(
+  group: THREE.Group, 
+  leafWidth: number, 
+  leafHeight: number, 
+  offsetX: number, 
+  outsideMaterial: THREE.Material,
+  insideMaterial: THREE.Material
+) {
   const frameThickness = 0.06;
   
-  // Top frame
-  const topGeometry = new THREE.BoxGeometry(leafWidth, frameThickness, 0.05);
-  const topFrame = new THREE.Mesh(topGeometry, material);
-  topFrame.position.set(offsetX, leafHeight/2 - frameThickness/2, 0.025);
-  group.add(topFrame);
+  // Front frames (outside color)
+  createLeafFrameBorders(group, leafWidth, leafHeight, offsetX, frameThickness, outsideMaterial, 0.025);
   
-  // Bottom frame
-  const bottomFrame = new THREE.Mesh(topGeometry, material);
-  bottomFrame.position.set(offsetX, -leafHeight/2 + frameThickness/2, 0.025);
-  group.add(bottomFrame);
-  
-  // Left frame
-  const sideGeometry = new THREE.BoxGeometry(frameThickness, leafHeight - frameThickness * 2, 0.05);
-  const leftFrame = new THREE.Mesh(sideGeometry, material);
-  leftFrame.position.set(offsetX - leafWidth/2 + frameThickness/2, 0, 0.025);
-  group.add(leftFrame);
-  
-  // Right frame
-  const rightFrame = new THREE.Mesh(sideGeometry, material);
-  rightFrame.position.set(offsetX + leafWidth/2 - frameThickness/2, 0, 0.025);
-  group.add(rightFrame);
+  // Back frames (inside color)  
+  createLeafFrameBorders(group, leafWidth, leafHeight, offsetX, frameThickness, insideMaterial, -0.025);
 }
 
-// Create inner frame around glass
+function createLeafFrameBorders(
+  group: THREE.Group,
+  leafWidth: number,
+  leafHeight: number,
+  offsetX: number,
+  thickness: number,
+  material: THREE.Material,
+  zPos: number
+) {
+  // Top border
+  const topGeometry = new THREE.BoxGeometry(leafWidth, thickness, 0.05);
+  const topBorder = new THREE.Mesh(topGeometry, material);
+  topBorder.position.set(offsetX, leafHeight/2 - thickness/2, zPos);
+  group.add(topBorder);
+  
+  // Bottom border
+  const bottomBorder = new THREE.Mesh(topGeometry, material);
+  bottomBorder.position.set(offsetX, -leafHeight/2 + thickness/2, zPos);
+  group.add(bottomBorder);
+  
+  // Left border
+  const sideGeometry = new THREE.BoxGeometry(thickness, leafHeight - thickness * 2, 0.05);
+  const leftBorder = new THREE.Mesh(sideGeometry, material);
+  leftBorder.position.set(offsetX - leafWidth/2 + thickness/2, 0, zPos);
+  group.add(leftBorder);
+  
+  // Right border
+  const rightBorder = new THREE.Mesh(sideGeometry, material);
+  rightBorder.position.set(offsetX + leafWidth/2 - thickness/2, 0, zPos);
+  group.add(rightBorder);
+}
+
+// Create inner frame around glass (inside color)
 function createGlassFrame(group: THREE.Group, glassWidth: number, glassHeight: number, offsetX: number, material: THREE.Material) {
   const frameThickness = 0.04;
   
@@ -136,17 +255,30 @@ function createGlassFrame(group: THREE.Group, glassWidth: number, glassHeight: n
   group.add(rightFrame);
 }
 
-// Add main frame depth
-function addMainFrameDepth(group: THREE.Group, width: number, height: number, baseColor: THREE.Color) {
-  const depthMaterial = new THREE.MeshStandardMaterial({
-    color: baseColor, // Base color for frame depth/sides
-    roughness: 0.5,
-    metalness: 0.2
+// Add realistic window handle
+function addRealisticWindowHandle(group: THREE.Group, x: number, y: number, z: number, color: THREE.Color) {
+  const handleMaterial = new THREE.MeshStandardMaterial({
+    color: 0x888888,
+    roughness: 0.3,
+    metalness: 0.8
   });
   
-  const frameDepth = 0.1;
-  const frameGeometry = new THREE.BoxGeometry(width + 0.02, height + 0.02, frameDepth);
-  const frameDepthMesh = new THREE.Mesh(frameGeometry, depthMaterial);
-  frameDepthMesh.position.set(0, 0, -frameDepth/2);
-  group.add(frameDepthMesh);
+  // Handle base plate
+  const baseGeometry = new THREE.BoxGeometry(0.1, 0.05, 0.02);
+  const handleBase = new THREE.Mesh(baseGeometry, handleMaterial);
+  handleBase.position.set(x, y, z);
+  group.add(handleBase);
+  
+  // Handle lever
+  const leverGeometry = new THREE.BoxGeometry(0.12, 0.015, 0.015);
+  const handleLever = new THREE.Mesh(leverGeometry, handleMaterial);
+  handleLever.position.set(x + 0.06, y, z + 0.025);
+  group.add(handleLever);
+  
+  // Handle grip
+  const gripGeometry = new THREE.CylinderGeometry(0.01, 0.01, 0.06, 8);
+  gripGeometry.rotateZ(Math.PI / 2);
+  const handleGrip = new THREE.Mesh(gripGeometry, handleMaterial);
+  handleGrip.position.set(x + 0.09, y, z + 0.025);
+  group.add(handleGrip);
 }
