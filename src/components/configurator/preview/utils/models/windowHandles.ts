@@ -1,39 +1,56 @@
 
 import * as THREE from 'three';
 
-// Add realistic window handle - positioned and sized for inside view
+// Add realistic window handle - positioned and sized for inside view with proper pivot and rotation
 export function addRealisticWindowHandle(group: THREE.Group, x: number, y: number, z: number, color: THREE.Color) {
   const handleMaterial = new THREE.MeshStandardMaterial({
-    color: 0x666666, // Darker grey for better visibility
+    color: 0x333333, // Dark metallic color for better realism
     roughness: 0.3,
     metalness: 0.8
   });
   
-  // Scale factor for larger, more visible handle
-  const scale = 2.5;
+  // Handle dimensions - more realistic proportions
+  const handleLength = 0.15; // How far it sticks out
+  const handleWidth = 0.05;  // Thickness front-to-back  
+  const handleHeight = 0.02; // Thickness top-to-bottom
   
-  // Handle base plate - larger and more visible
-  const baseGeometry = new THREE.BoxGeometry(0.08 * scale, 0.04 * scale, 0.015 * scale);
+  // Create handle base plate - where it attaches to frame
+  const baseGeometry = new THREE.BoxGeometry(0.08, 0.04, 0.015);
   const handleBase = new THREE.Mesh(baseGeometry, handleMaterial);
-  // Position on inside face (negative Z)
   handleBase.position.set(x, y, z);
   group.add(handleBase);
   
-  // Handle lever - scaled up and properly oriented
-  const leverGeometry = new THREE.BoxGeometry(0.1 * scale, 0.012 * scale, 0.012 * scale);
+  // Create main handle lever with proper geometry
+  const leverGeometry = new THREE.BoxGeometry(handleLength, handleHeight, handleWidth);
+  
+  // Translate geometry so pivot point is at the back face (where it connects to base)
+  leverGeometry.translate(handleLength / 2, 0, 0);
+  
   const handleLever = new THREE.Mesh(leverGeometry, handleMaterial);
-  // Position lever extending from base, rotated downward for closed position
-  handleLever.position.set(x, y - 0.04 * scale, z - 0.005 * scale);
-  handleLever.rotation.z = -Math.PI / 6; // Slight downward angle for closed handle
+  
+  // Position the lever so its pivot sits against the base
+  handleLever.position.set(x + 0.04, y, z - 0.005);
+  
+  // Rotate the handle downward to closed position (90 degrees down)
+  handleLever.rotation.z = -Math.PI / 2;
+  
+  // Scale up the handle to make it more visible and realistic
+  handleLever.scale.set(1.3, 1.3, 1.3);
+  
   group.add(handleLever);
   
-  // Handle grip - larger and more prominent
-  const gripGeometry = new THREE.CylinderGeometry(0.008 * scale, 0.008 * scale, 0.05 * scale, 8);
+  // Add handle grip at the end for extra realism
+  const gripGeometry = new THREE.CylinderGeometry(0.008, 0.008, 0.03, 8);
   const handleGrip = new THREE.Mesh(gripGeometry, handleMaterial);
-  // Position at end of lever, rotated to align with lever
+  
+  // Position grip at the end of the rotated lever
+  const leverEndX = x + 0.04;
+  const leverEndY = y - (handleLength * 1.3); // Account for scaling and rotation
+  const leverEndZ = z - 0.005;
+  
+  handleGrip.position.set(leverEndX, leverEndY, leverEndZ);
   gripGeometry.rotateZ(Math.PI / 2);
-  handleGrip.position.set(x, y - 0.065 * scale, z - 0.005 * scale);
   group.add(handleGrip);
   
-  console.log("Realistic window handle added with proper scaling and inside positioning");
+  console.log("Realistic window handle added with proper pivot, rotation, and metallic appearance");
 }

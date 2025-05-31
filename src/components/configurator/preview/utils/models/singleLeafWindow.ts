@@ -26,7 +26,7 @@ export function createSingleLeafWindow(
   const baseColor = new THREE.Color(baseColorObject.hex);
   const rubberColor = rubberColorObject ? new THREE.Color(rubberColorObject.hex) : new THREE.Color('#000000');
   
-  // Create main window frame structure
+  // Create main window frame structure with proper material separation
   createSingleLeafMainFrame(group, width, height, baseColor, outsideColor, insideColor);
   
   // Create glass panel with realistic transparency (always transparent)
@@ -42,13 +42,13 @@ export function createSingleLeafWindow(
   // Create window sash (inner frame around glass) - uses inside color
   createSingleLeafWindowSash(group, glassWidth, glassHeight, insideColor);
   
-  // Add realistic window handle positioned on the inside face
+  // Add realistic window handle positioned on the inside face with proper pivot and rotation
   const frameDepth = 0.08;
   const handleX = width/2 - 0.25; // Position on right side of window
-  const handleY = -height/4; // Lower third of window
+  const handleY = -height/4; // Lower third of window  
   const handleZ = -frameDepth/2 - 0.02; // On inside face (negative Z)
   
   addRealisticWindowHandle(group, handleX, handleY, handleZ, baseColor);
   
-  console.log("Single leaf window created with inside view, properly positioned handle, and correct color application");
+  console.log("Single leaf window created with realistic handle and proper frame color separation");
 }
