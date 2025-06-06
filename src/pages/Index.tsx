@@ -54,8 +54,8 @@ const Index = () => {
             <div className="relative group">
               <div className="relative overflow-hidden rounded-xl">
                 <Image 
-                  src="https://images.unsplash.com/photo-1560448204-444dcb0fa3ec?w=1200&h=800&fit=crop"
-                  alt="Modern Contemporary Building with Premium Windows"
+                  src="/lovable-uploads/883765f6-26d4-4928-a4e1-d14babcf15aa.png"
+                  alt="Modern Salamander Windows in Contemporary Building"
                   className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/80 via-transparent to-transparent" />
@@ -130,8 +130,8 @@ const Index = () => {
             {/* Professional Installation */}
             <div className="relative group overflow-hidden rounded-xl">
               <Image 
-                src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=1200&h=800&fit=crop"
-                alt="Professional Window Installation Team"
+                src="/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png"
+                alt="Professional Salamander Window Installation"
                 className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/90 to-transparent" />
@@ -149,8 +149,8 @@ const Index = () => {
             {/* Long-term Warranty */}
             <div className="relative group overflow-hidden rounded-xl">
               <Image 
-                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=800&fit=crop"
-                alt="Modern Home with Large Premium Windows"
+                src="/lovable-uploads/505a4c89-23e0-4113-ad03-b153f0863770.png"
+                alt="Salamander Windows Long-term Performance"
                 className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/90 to-transparent" />
