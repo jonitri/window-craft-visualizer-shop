@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
@@ -11,8 +12,8 @@ const Index = () => {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/lovable-uploads/fba68147-76b8-4e55-90ae-80af2cc7ee25.png" 
-            alt="Modern Home with Salamander Windows" 
+            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop" 
+            alt="Modern Home with Large Windows" 
             className="w-full h-full"
           />
           <div className="absolute inset-0 bg-salamander-darkgray/60"></div>
@@ -53,8 +54,8 @@ const Index = () => {
             <div className="relative group">
               <div className="relative overflow-hidden rounded-xl">
                 <Image 
-                  src="/lovable-uploads/883765f6-26d4-4928-a4e1-d14babcf15aa.png"
-                  alt="Modern Salamander Windows in Contemporary Building"
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+                  alt="Modern Concrete Building with Large Windows"
                   className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/80 via-transparent to-transparent" />
@@ -129,8 +130,8 @@ const Index = () => {
             {/* Professional Installation */}
             <div className="relative group overflow-hidden rounded-xl">
               <Image 
-                src="/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png"
-                alt="Professional Salamander Window Installation"
+                src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&h=600&fit=crop"
+                alt="Modern Window Installation Detail"
                 className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/90 to-transparent" />
@@ -148,8 +149,8 @@ const Index = () => {
             {/* Long-term Warranty */}
             <div className="relative group overflow-hidden rounded-xl">
               <Image 
-                src="/lovable-uploads/505a4c89-23e0-4113-ad03-b153f0863770.png"
-                alt="Salamander Windows Long-term Performance"
+                src="https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop"
+                alt="Modern Building with Premium Windows"
                 className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/90 to-transparent" />
@@ -190,8 +191,8 @@ const Index = () => {
             <div className="salamander-card">
               <div className="relative h-80 overflow-hidden">
                 <Image 
-                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop" 
-                  alt="Premium Windows" 
+                  src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop" 
+                  alt="Premium Modern Windows" 
                   className="h-full w-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/70 to-transparent flex items-end">
@@ -215,8 +216,8 @@ const Index = () => {
             <div className="salamander-card">
               <div className="relative h-80 overflow-hidden">
                 <Image 
-                  src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop" 
-                  alt="Elegant Doors" 
+                  src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&h=600&fit=crop" 
+                  alt="Modern Entrance Doors" 
                   className="h-full w-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/70 to-transparent flex items-end">
@@ -253,8 +254,8 @@ const Index = () => {
         <div className="bg-gradient-to-r from-salamander-green to-salamander-lightgreen rounded-xl p-8 md:p-12 text-white text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <Image 
-              src="https://images.unsplash.com/photo-1560448204-444dcb0fa3ec?w=1200&h=800&fit=crop" 
-              alt="Modern Home with Large Windows" 
+              src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&h=800&fit=crop" 
+              alt="Modern Home with Panoramic Windows" 
               className="w-full h-full"
             />
           </div>
