@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 import Layout from '@/components/layout/Layout';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Settings, Award, Users, Clock } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -36,84 +36,144 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="container-custom section-padding">
-        <div className="text-center mb-16">
-          <h2 className="heading-2 mb-4 text-salamander-darkgray">Why Choose Salamander Windows?</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            We deliver superior quality PVC products that stand the test of time, while providing outstanding value.
-          </p>
-        </div>
+      {/* Why Choose Salamander - Redesigned Section */}
+      <section className="bg-white section-padding">
+        <div className="container-custom">
+          {/* Section Header */}
+          <div className="text-center mb-20">
+            <h2 className="heading-2 mb-6 text-salamander-darkgray">Why Choose Salamander Windows?</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Experience the perfect blend of German engineering excellence and modern design. 
+              Our premium PVC window systems deliver unmatched performance, durability, and energy efficiency.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              title: 'Energy Efficient',
-              description:
-                'Our windows and doors exceed industry standards for thermal insulation, helping reduce energy costs.',
-              icon: '🌱',
-              image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop'
-            },
-            {
-              title: 'Durable & Long-lasting',
-              description:
-                'Made with premium-grade PVC materials designed to withstand harsh weather conditions for decades.',
-              icon: '🔒',
-              image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&h=400&fit=crop'
-            },
-            {
-              title: 'Custom Solutions',
-              description:
-                'Create unique designs tailored to your specific requirements using our interactive configurator.',
-              icon: '✨',
-              image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop'
-            },
-            {
-              title: 'Advanced Security',
-              description:
-                'Multi-point locking systems and reinforced frames provide peace of mind for your home.',
-              icon: '🛡️',
-              image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop'
-            },
-            {
-              title: 'Professional Installation',
-              description:
-                'Our expert team ensures perfect fit and optimal performance through professional installation.',
-              icon: '🔧',
-              image: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=600&h=400&fit=crop'
-            },
-            {
-              title: 'Comprehensive Warranty',
-              description:
-                'Enjoy the confidence of our industry-leading warranty on all products and installations.',
-              icon: '📝',
-              image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop'
-            },
-          ].map((feature, index) => (
-            <div
-              key={index}
-              className="salamander-card relative group"
-            >
-              <Image 
-                src={feature.image} 
-                alt={feature.title} 
-                className="salamander-image"
-              />
-              <div className="salamander-overlay">
-                <div className="p-6 w-full bg-salamander-darkgray/80 backdrop-blur-sm">
-                  <h3 className="text-xl font-bold mb-2 text-white flex items-center">
-                    <span className="mr-2">{feature.icon}</span>
-                    {feature.title}
-                  </h3>
-                  <p className="text-white/80">{feature.description}</p>
+          {/* Main Feature Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-20">
+            {/* Left Column - Large Feature */}
+            <div className="relative group">
+              <div className="relative overflow-hidden rounded-xl">
+                <Image 
+                  src="/lovable-uploads/883765f6-26d4-4928-a4e1-d14babcf15aa.png"
+                  alt="Modern Salamander Windows in Contemporary Building"
+                  className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/80 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-8">
+                  <h3 className="text-2xl font-bold text-white mb-4">Architectural Excellence</h3>
+                  <p className="text-white/90 leading-relaxed">
+                    Our windows seamlessly integrate with modern architectural designs, 
+                    providing clean lines and maximum natural light while maintaining superior performance.
+                  </p>
                 </div>
               </div>
-              <div className="p-6 bg-white">
-                <h3 className="text-xl font-bold mb-2 text-salamander-darkgray">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+            </div>
+
+            {/* Right Column - Benefits List */}
+            <div className="space-y-8">
+              <div className="flex items-start space-x-4">
+                <div className="bg-salamander-green/10 p-3 rounded-lg flex-shrink-0">
+                  <Zap className="h-6 w-6 text-salamander-green" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-salamander-darkgray mb-2">Energy Efficiency</h4>
+                  <p className="text-muted-foreground">
+                    Advanced thermal insulation technology reduces energy costs by up to 40%, 
+                    keeping your home comfortable year-round.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-salamander-green/10 p-3 rounded-lg flex-shrink-0">
+                  <Shield className="h-6 w-6 text-salamander-green" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-salamander-darkgray mb-2">Ultimate Security</h4>
+                  <p className="text-muted-foreground">
+                    Multi-point locking systems and reinforced frames provide maximum security 
+                    without compromising on style or functionality.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-salamander-green/10 p-3 rounded-lg flex-shrink-0">
+                  <Settings className="h-6 w-6 text-salamander-green" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-salamander-darkgray mb-2">Custom Solutions</h4>
+                  <p className="text-muted-foreground">
+                    Tailored to your exact specifications with our advanced configurator, 
+                    ensuring perfect fit and personalized design.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-salamander-green/10 p-3 rounded-lg flex-shrink-0">
+                  <Award className="h-6 w-6 text-salamander-green" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-salamander-darkgray mb-2">Premium Quality</h4>
+                  <p className="text-muted-foreground">
+                    German-engineered PVC profiles designed to last decades with minimal maintenance 
+                    and exceptional weather resistance.
+                  </p>
+                </div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Secondary Features Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            {/* Professional Installation */}
+            <div className="relative group overflow-hidden rounded-xl">
+              <Image 
+                src="/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png"
+                alt="Professional Salamander Window Installation"
+                className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/90 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div className="flex items-center mb-3">
+                  <Users className="h-5 w-5 text-salamander-green mr-2" />
+                  <h4 className="text-lg font-semibold text-white">Expert Installation</h4>
+                </div>
+                <p className="text-white/90 text-sm">
+                  Our certified professionals ensure perfect installation with precision and care.
+                </p>
+              </div>
+            </div>
+
+            {/* Long-term Warranty */}
+            <div className="relative group overflow-hidden rounded-xl">
+              <Image 
+                src="/lovable-uploads/505a4c89-23e0-4113-ad03-b153f0863770.png"
+                alt="Salamander Windows Long-term Performance"
+                className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-salamander-darkgray/90 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div className="flex items-center mb-3">
+                  <Clock className="h-5 w-5 text-salamander-green mr-2" />
+                  <h4 className="text-lg font-semibold text-white">25-Year Warranty</h4>
+                </div>
+                <p className="text-white/90 text-sm">
+                  Industry-leading warranty coverage for complete peace of mind and protection.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="text-center">
+            <Button className="bg-salamander-green hover:bg-salamander-green/90 text-white" asChild size="lg">
+              <Link to="/configurator" className="inline-flex items-center">
+                Discover Your Perfect Window <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
