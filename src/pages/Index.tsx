@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
@@ -12,8 +11,8 @@ const Index = () => {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1920&h=1080&fit=crop" 
-            alt="Modern Home Interior" 
+            src="/lovable-uploads/fba68147-76b8-4e55-90ae-80af2cc7ee25.png" 
+            alt="Modern Home with Salamander Windows" 
             className="w-full h-full"
           />
           <div className="absolute inset-0 bg-salamander-darkgray/60"></div>
