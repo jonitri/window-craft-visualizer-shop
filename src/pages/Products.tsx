@@ -1,10 +1,10 @@
-
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Image } from '@/components/ui/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { windowProfiles, doorProfiles } from '@/data/products';
+import ProductImageGallery from '@/components/products/ProductImageGallery';
 
 const Products = () => {
   return (
@@ -39,13 +39,20 @@ const Products = () => {
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {windowProfiles.map((profile) => (
                 <div key={profile.id} className="salamander-card">
-                  <div className="h-60 overflow-hidden">
-                    <Image 
-                      src={profile.imageUrl} 
-                      alt={profile.name} 
-                      className="h-full w-full transition-transform duration-500 hover:scale-105"
+                  {profile.images && profile.images.length > 1 ? (
+                    <ProductImageGallery 
+                      images={profile.images} 
+                      productName={profile.name} 
                     />
-                  </div>
+                  ) : (
+                    <div className="h-60 overflow-hidden">
+                      <Image 
+                        src={profile.imageUrl} 
+                        alt={profile.name} 
+                        className="h-full w-full transition-transform duration-500 hover:scale-105"
+                      />
+                    </div>
+                  )}
                   <div className="p-6">
                     <h3 className="text-xl font-bold mb-2 text-salamander-darkgray">{profile.name}</h3>
                     <p className="text-muted-foreground mb-4">{profile.description}</p>
@@ -74,13 +81,20 @@ const Products = () => {
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {doorProfiles.map((profile) => (
                 <div key={profile.id} className="salamander-card">
-                  <div className="h-60 overflow-hidden">
-                    <Image 
-                      src={profile.imageUrl} 
-                      alt={profile.name} 
-                      className="h-full w-full transition-transform duration-500 hover:scale-105"
+                  {profile.images && profile.images.length > 1 ? (
+                    <ProductImageGallery 
+                      images={profile.images} 
+                      productName={profile.name} 
                     />
-                  </div>
+                  ) : (
+                    <div className="h-60 overflow-hidden">
+                      <Image 
+                        src={profile.imageUrl} 
+                        alt={profile.name} 
+                        className="h-full w-full transition-transform duration-500 hover:scale-105"
+                      />
+                    </div>
+                  )}
                   <div className="p-6">
                     <h3 className="text-xl font-bold mb-2 text-salamander-darkgray">{profile.name}</h3>
                     <p className="text-muted-foreground mb-4">{profile.description}</p>

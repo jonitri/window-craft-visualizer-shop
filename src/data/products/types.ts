@@ -1,7 +1,14 @@
-
-// Define all shared types for product data
-
 export interface Profile {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  imageUrl: string;
+  images?: string[];
+  basePrice: number;
+}
+
+export interface WindowType {
   id: string;
   name: string;
   description: string;
@@ -14,16 +21,35 @@ export interface GlazingOption {
   id: string;
   name: string;
   description: string;
-  features: string[];
-  imageUrl: string;
-  priceModifier: number;
+  uValue: number;
+  priceMultiplier: number;
 }
 
 export interface ColorOption {
   id: string;
   name: string;
   hex: string;
-  imageUrl: string;
-  category: 'base' | 'outside' | 'inside' | 'rubber';
-  priceModifier: number;
+  category: 'standard' | 'premium' | 'special';
+  priceMultiplier: number;
+}
+
+export interface Configuration {
+  productType: 'window' | 'door';
+  profile: Profile;
+  windowType?: WindowType;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+  glazing: GlazingOption;
+  exteriorColor: ColorOption;
+  interiorColor: ColorOption;
+  openingDirection?: string;
+  quantity: number;
+}
+
+export interface CartItem extends Configuration {
+  id: string;
+  totalPrice: number;
+  createdAt: Date;
 }

@@ -1,4 +1,3 @@
-
 import { Profile } from './types';
 
 // Window profiles
@@ -13,7 +12,13 @@ export const windowProfiles: Profile[] = [
       'Eco-friendly production',
       'Energy-efficient design'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/greenline-Detail-United-Windows.jpg',
+    imageUrl: '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
+    images: [
+      '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
+      '/lovable-uploads/505a4c89-23e0-4113-ad03-b153f0863770.png',
+      '/lovable-uploads/883765f6-26d4-4928-a4e1-d14babcf15aa.png',
+      '/lovable-uploads/fba68147-76b8-4e55-90ae-80af2cc7ee25.png'
+    ],
     basePrice: 250
   },
   {
@@ -95,7 +100,13 @@ export const doorProfiles: Profile[] = [
       'Eco-friendly production',
       'Energy-efficient design'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/greenline-Detail-United-Windows.jpg',
+    imageUrl: '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
+    images: [
+      '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
+      '/lovable-uploads/505a4c89-23e0-4113-ad03-b153f0863770.png',
+      '/lovable-uploads/883765f6-26d4-4928-a4e1-d14babcf15aa.png',
+      '/lovable-uploads/fba68147-76b8-4e55-90ae-80af2cc7ee25.png'
+    ],
     basePrice: 350
   },
   {
