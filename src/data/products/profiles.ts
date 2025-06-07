@@ -29,19 +29,23 @@ export const windowProfiles: Profile[] = [
   },
   {
     id: 'bluEvolution-92',
-    name: 'bluEvolution 82',
+    name: 'bluEvolution 92',
     description: 'Premium window system with outstanding insulation properties for maximum energy efficiency.',
     features: [
-      '82mm profile depth',
+      '92mm profile depth',
       'Triple glazing capability',
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: '/lovable-uploads/6f98209f-69f9-4a62-a9a0-3c714ad860f3.png',
+    imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
     images: [
-      '/lovable-uploads/6f98209f-69f9-4a62-a9a0-3c714ad860f3.png',
-      '/lovable-uploads/d0967bfb-7e88-421b-a53e-450292aba61a.png',
-      '/lovable-uploads/21a16064-99c1-4867-b937-a0c1bbcfec76.png'
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/2540x2540/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/672x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/328x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/5080x5080/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/1344x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/656x0/filters:quality(90)'
     ],
     basePrice: 350
   },
@@ -115,7 +119,7 @@ export const doorProfiles: Profile[] = [
     images: [
       '/lovable-uploads/9251d6ee-801d-4c7e-a63c-f40a315b2366.png',
       '/lovable-uploads/c3f5718f-3f42-43f4-af8e-5638d87c3de9.png',
-      '/lovable-uploads/d3148200-17a1-4156-9545-dc09fda85e4.png',
+      '/lovable-uploads/d3148200-17a1-4156-9545-9dc09fda85e4.png',
       '/lovable-uploads/5dc9cf40-442a-47e8-bf43-4b449d214e58.png',
       '/lovable-uploads/51b07477-453d-480b-8a5b-c2a0428d3891.png',
       '/lovable-uploads/7305db7d-bb8f-449b-b1e4-7505647384f5.png',
@@ -128,19 +132,23 @@ export const doorProfiles: Profile[] = [
   },
   {
     id: 'bluEvolution-92',
-    name: 'bluEvolution 82',
+    name: 'bluEvolution 92',
     description: 'Premium door system with outstanding insulation properties for maximum energy efficiency.',
     features: [
-      '82mm profile depth',
+      '92mm profile depth',
       'Triple glazing capability',
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: '/lovable-uploads/6f98209f-69f9-4a62-a9a0-3c714ad860f3.png',
+    imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
     images: [
-      '/lovable-uploads/6f98209f-69f9-4a62-a9a0-3c714ad860f3.png',
-      '/lovable-uploads/d0967bfb-7e88-421b-a53e-450292aba61a.png',
-      '/lovable-uploads/21a16064-99c1-4867-b937-a0c1bbcfec76.png'
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/2540x2540/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/672x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/328x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/5080x5080/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/1344x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/656x0/filters:quality(90)'
     ],
     basePrice: 450
   },
