@@ -1,3 +1,4 @@
+
 export interface Profile {
   id: string;
   name: string;
@@ -21,6 +22,8 @@ export interface GlazingOption {
   id: string;
   name: string;
   description: string;
+  features?: string[];
+  imageUrl?: string;
   uValue: number;
   priceMultiplier: number;
 }
@@ -29,7 +32,8 @@ export interface ColorOption {
   id: string;
   name: string;
   hex: string;
-  category: 'standard' | 'premium' | 'special';
+  imageUrl?: string;
+  category: 'standard' | 'premium' | 'special' | 'base' | 'outside' | 'inside' | 'rubber';
   priceMultiplier: number;
 }
 

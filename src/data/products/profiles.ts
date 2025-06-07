@@ -1,4 +1,3 @@
-
 import { Profile } from './types';
 
 // Window profiles
@@ -38,7 +37,13 @@ export const windowProfiles: Profile[] = [
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-bluEvolution-facade.jpg',
+    imageUrl: '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
+    images: [
+      '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
+      '/lovable-uploads/53f6e6ea-34ab-46aa-9deb-4d1079bd9ad0.png',
+      '/lovable-uploads/f3521126-3021-4c2f-8a81-ec08560d0b24.png',
+      '/lovable-uploads/68423385-6034-4cee-b811-4d181f4ffada.png'
+    ],
     basePrice: 350
   },
   {
@@ -132,7 +137,13 @@ export const doorProfiles: Profile[] = [
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-bluEvolution-facade.jpg',
+    imageUrl: '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
+    images: [
+      '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
+      '/lovable-uploads/53f6e6ea-34ab-46aa-9deb-4d1079bd9ad0.png',
+      '/lovable-uploads/f3521126-3021-4c2f-8a81-ec08560d0b24.png',
+      '/lovable-uploads/68423385-6034-4cee-b811-4d181f4ffada.png'
+    ],
     basePrice: 450
   },
   {

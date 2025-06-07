@@ -14,7 +14,8 @@ export const glazingOptions: GlazingOption[] = [
       'U-value: 1.1 W/m²K'
     ],
     imageUrl: '/placeholder.svg',
-    priceModifier: 0 // Base price
+    uValue: 1.1,
+    priceMultiplier: 0 // Base price
   },
   {
     id: 'glz-triple',
@@ -27,7 +28,8 @@ export const glazingOptions: GlazingOption[] = [
       'U-value: 0.7 W/m²K'
     ],
     imageUrl: '/placeholder.svg',
-    priceModifier: 100
+    uValue: 0.7,
+    priceMultiplier: 100
   },
   {
     id: 'glz-quad',
@@ -40,6 +42,7 @@ export const glazingOptions: GlazingOption[] = [
       'U-value: 0.5 W/m²K'
     ],
     imageUrl: '/placeholder.svg',
-    priceModifier: 200
+    uValue: 0.5,
+    priceMultiplier: 200
   }
 ];
