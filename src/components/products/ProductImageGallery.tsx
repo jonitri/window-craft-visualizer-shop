@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -15,18 +15,41 @@ interface ProductImageGalleryProps {
 }
 
 const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const isVideo = (url: string) => {
+    return url.includes('.mp4') || url.includes('.webm') || url.includes('.ogg');
+  };
+
   return (
     <div className="relative">
-      <Carousel className="w-full">
+      <Carousel className="w-full" onSelect={(index) => setActiveIndex(index || 0)}>
         <CarouselContent>
-          {images.map((imageUrl, index) => (
+          {images.map((mediaUrl, index) => (
             <CarouselItem key={index}>
-              <div className="h-60 overflow-hidden">
-                <Image 
-                  src={imageUrl} 
-                  alt={`${productName} - Image ${index + 1}`} 
-                  className="h-full w-full transition-transform duration-500 hover:scale-105"
-                />
+              <div className="h-60 overflow-hidden bg-gray-100 rounded-lg">
+                {isVideo(mediaUrl) ? (
+                  <video 
+                    src={mediaUrl}
+                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                    controls
+                    muted
+                    preload="metadata"
+                    onError={(e) => {
+                      console.log(`Video failed to load: ${mediaUrl}`);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  >
+                    <source src={mediaUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <Image 
+                    src={mediaUrl} 
+                    alt={`${productName} - Media ${index + 1}`} 
+                    className="h-full w-full transition-transform duration-500 hover:scale-105"
+                  />
+                )}
               </div>
             </CarouselItem>
           ))}
@@ -35,12 +58,14 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
         <CarouselNext className="right-2" />
       </Carousel>
       
-      {/* Image indicator dots */}
+      {/* Media indicator dots */}
       <div className="flex justify-center mt-4 space-x-2">
-        {images.map((_, index) => (
+        {images.map((mediaUrl, index) => (
           <div 
             key={index}
-            className="w-2 h-2 rounded-full bg-gray-300"
+            className={`w-2 h-2 rounded-full transition-colors ${
+              index === activeIndex ? 'bg-salamander-green' : 'bg-gray-300'
+            }`}
           />
         ))}
       </div>
