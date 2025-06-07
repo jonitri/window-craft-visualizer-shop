@@ -1,3 +1,4 @@
+
 import { Profile } from './types';
 
 // Window profiles
@@ -37,12 +38,12 @@ export const windowProfiles: Profile[] = [
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
+    imageUrl: '/lovable-uploads/bluevolution-92-main.jpg',
     images: [
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/x30bbe99f6/be82_4k__16_9_slide_neu.gif',
-      'https://a.storyblok.com/f/308729/cce36dd135/3_bluevolution82_straight.gif',
-      'https://a.storyblok.com/f/308729/83ff12ff16/4_bluevolution82_free.gif'
+      '/lovable-uploads/bluevolution-92-main.jpg',
+      '/lovable-uploads/bluevolution-92-slide.gif',
+      '/lovable-uploads/bluevolution-92-straight.gif',
+      '/lovable-uploads/bluevolution-92-free.gif'
     ],
     basePrice: 350
   },
@@ -56,7 +57,7 @@ export const windowProfiles: Profile[] = [
       'Barrier-free threshold',
       'Excellent thermal insulation'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/evolutionDrive-HST-detail-United-Windows.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-hst.jpg',
     basePrice: 400
   },
   {
@@ -69,7 +70,7 @@ export const windowProfiles: Profile[] = [
       'Smooth sliding operation',
       'Customizable configurations'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-evolutionDrive-HST-Villa-M.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-plus.jpg',
     basePrice: 450
   },
   {
@@ -82,7 +83,7 @@ export const windowProfiles: Profile[] = [
       'Contemporary design',
       'Excellent weather resistance'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-Fassade-mit-evolutionDrive-SF.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-sf.jpg',
     basePrice: 500
   },
   {
@@ -95,7 +96,7 @@ export const windowProfiles: Profile[] = [
       'Economical choice',
       'Various opening options'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Front-Door.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-60.jpg',
     basePrice: 300
   }
 ];
@@ -137,12 +138,12 @@ export const doorProfiles: Profile[] = [
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
+    imageUrl: '/lovable-uploads/bluevolution-92-main.jpg',
     images: [
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/x30bbe99f6/be82_4k__16_9_slide_neu.gif',
-      'https://a.storyblok.com/f/308729/cce36dd135/3_bluevolution82_straight.gif',
-      'https://a.storyblok.com/f/308729/83ff12ff16/4_bluevolution82_free.gif'
+      '/lovable-uploads/bluevolution-92-main.jpg',
+      '/lovable-uploads/bluevolution-92-slide.gif',
+      '/lovable-uploads/bluevolution-92-straight.gif',
+      '/lovable-uploads/bluevolution-92-free.gif'
     ],
     basePrice: 450
   },
@@ -156,7 +157,7 @@ export const doorProfiles: Profile[] = [
       'Barrier-free threshold',
       'Excellent thermal insulation'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/evolutionDrive-HST-detail-United-Windows.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-hst.jpg',
     basePrice: 600
   },
   {
@@ -169,7 +170,7 @@ export const doorProfiles: Profile[] = [
       'Smooth sliding operation',
       'Customizable configurations'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2023/03/Salamander-Windows-evolutionDrive-HST-Villa-M.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-plus.jpg',
     basePrice: 650
   },
   {
@@ -182,7 +183,7 @@ export const doorProfiles: Profile[] = [
       'Contemporary design',
       'Excellent weather resistance'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Salamander-Windows-Fassade-mit-evolutionDrive-SF.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-sf.jpg',
     basePrice: 700
   },
   {
@@ -195,7 +196,7 @@ export const doorProfiles: Profile[] = [
       'Economical choice',
       'Various opening options'
     ],
-    imageUrl: 'https://salamander-windows.com/wp-content/uploads/2022/06/Front-Door.jpg',
+    imageUrl: '/lovable-uploads/evolution-drive-60.jpg',
     basePrice: 450
   }
 ];
