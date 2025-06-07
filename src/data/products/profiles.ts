@@ -1,3 +1,4 @@
+
 import { Profile } from './types';
 
 // Window profiles
@@ -12,12 +13,18 @@ export const windowProfiles: Profile[] = [
       'Eco-friendly production',
       'Energy-efficient design'
     ],
-    imageUrl: '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
+    imageUrl: '/lovable-uploads/9251d6ee-801d-4c7e-a63c-f40a315b2366.png',
     images: [
-      '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
-      '/lovable-uploads/505a4c89-23e0-4113-ad03-b153f0863770.png',
-      '/lovable-uploads/883765f6-26d4-4928-a4e1-d14babcf15aa.png',
-      '/lovable-uploads/fba68147-76b8-4e55-90ae-80af2cc7ee25.png'
+      '/lovable-uploads/9251d6ee-801d-4c7e-a63c-f40a315b2366.png',
+      '/lovable-uploads/c3f5718f-3f42-43f4-af8e-5638d87c3de9.png',
+      '/lovable-uploads/d3148200-17a1-4156-9545-9dc09fda85e4.png',
+      '/lovable-uploads/5dc9cf40-442a-47e8-bf43-4b449d214e58.png',
+      '/lovable-uploads/51b07477-453d-480b-8a5b-c2a0428d3891.png',
+      '/lovable-uploads/7305db7d-bb8f-449b-b1e4-7505647384f5.png',
+      '/lovable-uploads/151335ed-04e7-48e6-9077-f01474b3bcaf.png',
+      '/lovable-uploads/eda5a50e-17ce-4c58-802d-198bacec1500.png',
+      '/lovable-uploads/83bff046-9e09-4512-9843-0ab79f8d24c9.png',
+      '/lovable-uploads/fcb42c92-2828-482d-adaf-a4480faad48f.png'
     ],
     basePrice: 250
   },
@@ -100,12 +107,18 @@ export const doorProfiles: Profile[] = [
       'Eco-friendly production',
       'Energy-efficient design'
     ],
-    imageUrl: '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
+    imageUrl: '/lovable-uploads/9251d6ee-801d-4c7e-a63c-f40a315b2366.png',
     images: [
-      '/lovable-uploads/34ca4ce9-f34e-497b-8f27-538240aa4f7e.png',
-      '/lovable-uploads/505a4c89-23e0-4113-ad03-b153f0863770.png',
-      '/lovable-uploads/883765f6-26d4-4928-a4e1-d14babcf15aa.png',
-      '/lovable-uploads/fba68147-76b8-4e55-90ae-80af2cc7ee25.png'
+      '/lovable-uploads/9251d6ee-801d-4c7e-a63c-f40a315b2366.png',
+      '/lovable-uploads/c3f5718f-3f42-43f4-af8e-5638d87c3de9.png',
+      '/lovable-uploads/d3148200-17a1-4156-9545-9dc09fda85e4.png',
+      '/lovable-uploads/5dc9cf40-442a-47e8-bf43-4b449d214e58.png',
+      '/lovable-uploads/51b07477-453d-480b-8a5b-c2a0428d3891.png',
+      '/lovable-uploads/7305db7d-bb8f-449b-b1e4-7505647384f5.png',
+      '/lovable-uploads/151335ed-04e7-48e6-9077-f01474b3bcaf.png',
+      '/lovable-uploads/eda5a50e-17ce-4c58-802d-198bacec1500.png',
+      '/lovable-uploads/83bff046-9e09-4512-9843-0ab79f8d24c9.png',
+      '/lovable-uploads/fcb42c92-2828-482d-adaf-a4480faad48f.png'
     ],
     basePrice: 350
   },
