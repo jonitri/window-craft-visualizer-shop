@@ -1,4 +1,3 @@
-
 import { useSearchParams } from 'react-router-dom';
 import { useProductType } from './configurator/useProductType';
 import { useWindowConfiguration } from './configurator/useWindowConfiguration';
@@ -79,7 +78,7 @@ export function useProductConfiguration() {
   // Calculate the price based on all configurations
   const calculatedPrice = usePriceCalculation(
     productTypeHook.profileObject?.basePrice || 0,
-    appearanceHook.glazingObject?.priceModifier || 0,
+    appearanceHook.glazingObject?.priceMultiplier || 0,
     appearanceHook.totalColorModifier,
     dimensionsHook.width,
     dimensionsHook.height,

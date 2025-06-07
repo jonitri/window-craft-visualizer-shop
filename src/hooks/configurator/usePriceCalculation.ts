@@ -4,7 +4,7 @@ import { calculatePrice } from '@/data/products';
 
 export function usePriceCalculation(
   profileBasePrice: number,
-  glazingModifier: number,
+  glazingMultiplier: number,
   colorModifier: number,
   width: number,
   height: number,
@@ -22,7 +22,7 @@ export function usePriceCalculation(
     
     const price = calculatePrice(
       profileBasePrice * leafMultiplier,
-      glazingModifier,
+      glazingMultiplier,
       colorModifier,
       width,
       height
@@ -31,7 +31,7 @@ export function usePriceCalculation(
     setCalculatedPrice(price);
   }, [
     profileBasePrice,
-    glazingModifier,
+    glazingMultiplier,
     colorModifier,
     width,
     height,

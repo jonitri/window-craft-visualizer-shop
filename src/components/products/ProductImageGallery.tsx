@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Image } from '@/components/ui/image';
+import type { CarouselApi } from '@/components/ui/carousel';
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -16,6 +17,17 @@ interface ProductImageGalleryProps {
 
 const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    api.on("select", () => {
+      setActiveIndex(api.selectedScrollSnap());
+    });
+  }, [api]);
 
   const isVideo = (url: string) => {
     return url.includes('.mp4') || url.includes('.webm') || url.includes('.ogg');
@@ -23,7 +35,7 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
 
   return (
     <div className="relative">
-      <Carousel className="w-full" onSelect={(index) => setActiveIndex(index || 0)}>
+      <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
           {images.map((mediaUrl, index) => (
             <CarouselItem key={index}>
@@ -35,9 +47,17 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
                     controls
                     muted
                     preload="metadata"
+                    poster=""
                     onError={(e) => {
                       console.log(`Video failed to load: ${mediaUrl}`);
-                      e.currentTarget.style.display = 'none';
+                      // Instead of hiding, show a placeholder
+                      const target = e.currentTarget;
+                      target.style.display = 'none';
+                      // Create a fallback image element
+                      const fallback = document.createElement('div');
+                      fallback.className = 'h-full w-full bg-gray-200 flex items-center justify-center text-gray-500';
+                      fallback.textContent = 'Video unavailable';
+                      target.parentNode?.appendChild(fallback);
                     }}
                   >
                     <source src={mediaUrl} type="video/mp4" />
