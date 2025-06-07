@@ -1,4 +1,3 @@
-
 export interface Profile {
   id: string;
   name: string;
@@ -34,7 +33,7 @@ export interface ColorOption {
   hex: string;
   imageUrl?: string;
   category: 'standard' | 'premium' | 'special' | 'base' | 'outside' | 'inside' | 'rubber';
-  priceMultiplier: number;
+  priceModifier: number;
 }
 
 export interface Configuration {

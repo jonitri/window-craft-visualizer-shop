@@ -42,7 +42,7 @@ export const GlazingSelector = ({
               <div className="font-medium mb-1">{glazing.name}</div>
               <div className="text-xs text-muted-foreground mb-2">{glazing.description}</div>
               <div className="text-xs mt-auto">
-                {glazing.priceModifier > 0 ? `+$${glazing.priceModifier}` : 'Included'}
+                {glazing.priceMultiplier > 0 ? `+$${glazing.priceMultiplier}` : 'Included'}
               </div>
             </Label>
           ))}

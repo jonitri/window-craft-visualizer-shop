@@ -37,12 +37,15 @@ export const windowProfiles: Profile[] = [
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
+    imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
     images: [
-      '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
-      '/lovable-uploads/53f6e6ea-34ab-46aa-9deb-4d1079bd9ad0.png',
-      '/lovable-uploads/f3521126-3021-4c2f-8a81-ec08560d0b24.png',
-      '/lovable-uploads/68423385-6034-4cee-b811-4d181f4ffada.png'
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/2540x2540/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/672x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/328x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/5080x5080/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/1344x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/656x0/filters:quality(90)'
     ],
     basePrice: 350
   },
@@ -137,12 +140,15 @@ export const doorProfiles: Profile[] = [
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
+    imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
     images: [
-      '/lovable-uploads/c9bd0ede-60bc-49eb-a87d-6574907b5272.png',
-      '/lovable-uploads/53f6e6ea-34ab-46aa-9deb-4d1079bd9ad0.png',
-      '/lovable-uploads/f3521126-3021-4c2f-8a81-ec08560d0b24.png',
-      '/lovable-uploads/68423385-6034-4cee-b811-4d181f4ffada.png'
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/2540x2540/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/672x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/328x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/5080x5080/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/1344x0/filters:quality(90)',
+      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/656x0/filters:quality(90)'
     ],
     basePrice: 450
   },
