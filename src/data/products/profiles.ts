@@ -40,12 +40,6 @@ export const windowProfiles: Profile[] = [
     imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
     images: [
       'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/2540x2540/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/672x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/328x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/5080x5080/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/1344x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/656x0/filters:quality(90)',
       'https://a.storyblok.com/f/308729/x30bbe99f6/be82_4k__16_9_slide_neu.mp4',
       'https://a.storyblok.com/f/308729/cce36dd135/3_bluevolution82_straight.mp4',
       'https://a.storyblok.com/f/308729/83ff12ff16/4_bluevolution82_free.mp4'
@@ -146,12 +140,6 @@ export const doorProfiles: Profile[] = [
     imageUrl: 'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
     images: [
       'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/0x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/2540x2540/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/672x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/328x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/5080x5080/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/1344x0/filters:quality(90)',
-      'https://a.storyblok.com/f/308729/cdf84dc63d/adobestock_94104978.jpeg/m/fit-in/656x0/filters:quality(90)',
       'https://a.storyblok.com/f/308729/x30bbe99f6/be82_4k__16_9_slide_neu.mp4',
       'https://a.storyblok.com/f/308729/cce36dd135/3_bluevolution82_straight.mp4',
       'https://a.storyblok.com/f/308729/83ff12ff16/4_bluevolution82_free.mp4'
