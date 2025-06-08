@@ -1,113 +1,61 @@
 
 import * as THREE from 'three';
-import { ColorOption } from '@/data/products';
-import { createSingleBoxFrame } from './createSingleBoxFrame';
-import { addGlass, addRubberSeal, addWindowSash } from './glassAndSeal';
-import { addHoppeHandle } from './hoppeHandle';
+import { createProfileBasedWindow } from './profileBasedWindow';
 
 export function createSingleLeafWindow(
-  group: THREE.Group,
-  width: number,
-  height: number,
+  windowGroup: THREE.Group,
+  windowWidth: number,
+  windowHeight: number,
   texture: THREE.Texture,
-  baseColorObject: ColorOption,
-  outsideColorObject: ColorOption,
-  insideColorObject: ColorOption,
-  rubberColorObject?: ColorOption
+  baseColorObject: any,
+  outsideColorObject: any,
+  insideColorObject: any,
+  rubberColorObject: any
 ): void {
-  // 1) Frame parameters - all depths/thicknesses must be consistent
-  const frameThickness = 0.1; // 10 cm profile
-  const frameDepth     = 0.08; // 8 cm "in→out" extrusion
-
-  // 2) Build the main frame structure with proper color materials
-  createSingleBoxFrame(
-    group,
-    width,
-    height,
-    frameThickness,
-    frameDepth,
-    baseColorObject.hex,
-    outsideColorObject.hex,
-    insideColorObject.hex
+  console.log("Creating single leaf window with profile-based frame");
+  
+  // Use the profile-based window model
+  createProfileBasedWindow(
+    windowGroup,
+    windowWidth,
+    windowHeight,
+    texture,
+    baseColorObject,
+    outsideColorObject,
+    insideColorObject,
+    rubberColorObject
   );
+  
+  // Add window handle for single leaf
+  addWindowHandle(windowGroup, windowWidth * 0.35, 0, 0.08, new THREE.Color(baseColorObject.hex));
+  
+  console.log("Single leaf window with profile-based frame completed");
+}
 
-  // 3) Calculate Z positions for proper layering
-  const frameBack = -frameDepth / 2;       // Back of frame
-  const frameCenter = 0;                   // Center of frame depth
-  const frameFront = frameDepth / 2;       // Front of frame
-  
-  // 4) Add glass at the center position
-  const openingWidth = width - frameThickness * 2;
-  const openingHeight = height - frameThickness * 2;
-  const glassWidth = openingWidth * 0.8;
-  const glassHeight = openingHeight * 0.8;
-  
-  const glassMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.05,
-    transmission: 0.95,
-    roughness: 0.0,
-    metalness: 0.0,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.0,
-    side: THREE.DoubleSide,
-    ior: 1.52,
-    thickness: 0.003,
-    depthWrite: true
+// Add a window handle to the frame
+function addWindowHandle(
+  group: THREE.Group,
+  x: number,
+  y: number,
+  z: number,
+  color: THREE.Color
+): void {
+  const handleMaterial = new THREE.MeshStandardMaterial({
+    color: color,
+    roughness: 0.3,
+    metalness: 0.7
   });
   
-  const glassGeometry = new THREE.PlaneGeometry(glassWidth, glassHeight);
-  const glassMesh = new THREE.Mesh(glassGeometry, glassMaterial);
-  glassMesh.position.set(0, 0, frameCenter);
-  glassMesh.renderOrder = 1000;
-  group.add(glassMesh);
-
-  // 5) Add rubber seal around glass (if specified)
-  if (rubberColorObject) {
-    addRubberSeal(group, width, height, frameDepth, rubberColorObject.hex);
-  }
+  // Handle base
+  const handleBaseGeometry = new THREE.BoxGeometry(0.08, 0.03, 0.03);
+  const handleBase = new THREE.Mesh(handleBaseGeometry, handleMaterial);
+  handleBase.position.set(x, y, z);
+  group.add(handleBase);
   
-  // 6) Add window sash (inner frame) using inside color
-  addWindowSash(group, width, height, frameDepth, insideColorObject.hex);
-
-  // 7) Create inside surface panel (visible from outside looking in)
-  const insidePanelGeo = new THREE.PlaneGeometry(openingWidth, openingHeight);
-  const insidePanelMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(insideColorObject.hex),
-    roughness: 0.4,
-    metalness: 0.1,
-    side: THREE.FrontSide
-  });
-  const insidePanelMesh = new THREE.Mesh(insidePanelGeo, insidePanelMat);
-  insidePanelMesh.position.set(0, 0, frameBack - 0.001);
-  insidePanelMesh.renderOrder = 1;
-  group.add(insidePanelMesh);
-
-  // 8) Create outside surface panel (visible from inside looking out)
-  const outsidePanelGeo = new THREE.PlaneGeometry(openingWidth, openingHeight);
-  const outsidePanelMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(outsideColorObject.hex),
-    roughness: 0.4,
-    metalness: 0.1,
-    side: THREE.BackSide
-  });
-  const outsidePanelMesh = new THREE.Mesh(outsidePanelGeo, outsidePanelMat);
-  outsidePanelMesh.position.set(0, 0, frameFront + 0.001);
-  outsidePanelMesh.renderOrder = 2;
-  group.add(outsidePanelMesh);
-
-  // 9) Position handle properly behind the sash
-  const sashDepth = 0.025;
-  const sashFrontZ = frameDepth / 2 + 0.001;
-  const sashBackZ = sashFrontZ - sashDepth;
-  const handleZ = sashBackZ - 0.002;
-
-  // Optimized handle positioning
-  const handleX = width / 2 - 0.12;    // 12 cm from right edge
-  const handleY = height / 2 - 0.08;   // 8 cm from top
-
-  addHoppeHandle(group, handleX, handleY, handleZ);
-
-  console.log("Single leaf window created with proper inside/outside color separation and layering");
+  // Handle lever
+  const handleGeometry = new THREE.CylinderGeometry(0.015, 0.015, 0.1, 8);
+  handleGeometry.rotateX(Math.PI / 2);
+  const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+  handle.position.set(x, y, z + 0.04);
+  group.add(handle);
 }

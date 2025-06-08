@@ -1,8 +1,9 @@
 
 import * as THREE from 'three';
 import { createProfileBasedFrame, createFrameGlass } from './profileBasedFrame';
+import type { WindowModelProps } from './windowModelTypes';
 
-export function createFixedWindow(
+export function createProfileBasedWindow(
   windowGroup: THREE.Group,
   windowWidth: number,
   windowHeight: number,
@@ -12,11 +13,11 @@ export function createFixedWindow(
   insideColorObject: any,
   rubberColorObject: any
 ): void {
-  console.log("Creating fixed window with profile-based frame");
+  console.log("Creating profile-based window with realistic frame cross-section");
   
   const frameDepth = 0.12;
   
-  // Create the main frame using profile extrusion
+  // Create the main frame using the profile extrusion
   createProfileBasedFrame(
     windowGroup,
     windowWidth,
@@ -27,17 +28,17 @@ export function createFixedWindow(
     insideColorObject.hex
   );
   
-  // Add single large glass pane
+  // Add glass panes
   createFrameGlass(windowGroup, windowWidth, windowHeight, 0.15);
   
-  // Add rubber seals around the perimeter
-  createFixedWindowSeals(windowGroup, windowWidth, windowHeight, rubberColorObject.hex);
+  // Add rubber seals around the frame
+  createRubberSeals(windowGroup, windowWidth, windowHeight, rubberColorObject.hex);
   
-  console.log("Fixed window with profile-based frame completed");
+  console.log("Profile-based window completed with extruded frame sections");
 }
 
-// Create rubber seals for fixed window
-function createFixedWindowSeals(
+// Create rubber seals based on the technical drawing
+function createRubberSeals(
   group: THREE.Group,
   width: number,
   height: number,
