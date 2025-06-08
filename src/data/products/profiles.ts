@@ -1,4 +1,3 @@
-
 import { Profile } from './types';
 
 // Window profiles
@@ -29,21 +28,21 @@ export const windowProfiles: Profile[] = [
     basePrice: 250
   },
   {
-    id: 'bluEvolution-92',
-    name: 'bluEvolution 92',
+    id: 'bluEvolution-82',
+    name: 'bluEvolution 82',
     description: 'Premium window system with outstanding insulation properties for maximum energy efficiency.',
     features: [
-      '92mm profile depth',
+      '82mm profile depth',
       'Triple glazing capability',
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: '/lovable-uploads/bluevolution-92-main.jpg',
+    imageUrl: '/lovable-uploads/5d8b80fd-df96-49e1-a148-46734e370f4e.png',
     images: [
-      '/lovable-uploads/bluevolution-92-main.jpg',
-      '/lovable-uploads/bluevolution-92-slide.gif',
-      '/lovable-uploads/bluevolution-92-straight.gif',
-      '/lovable-uploads/bluevolution-92-free.gif'
+      '/lovable-uploads/5d8b80fd-df96-49e1-a148-46734e370f4e.png',
+      '/lovable-uploads/16f7d624-2f9a-48a3-9834-e31badd59bfc.png',
+      '/lovable-uploads/b8d78d1e-8ac5-4738-bb78-bda631d017b5.png',
+      '/lovable-uploads/3629c3f7-3c18-40dd-84a1-e0e374069655.png'
     ],
     basePrice: 350
   },
@@ -129,21 +128,21 @@ export const doorProfiles: Profile[] = [
     basePrice: 350
   },
   {
-    id: 'bluEvolution-92',
-    name: 'bluEvolution 92',
+    id: 'bluEvolution-82',
+    name: 'bluEvolution 82',
     description: 'Premium door system with outstanding insulation properties for maximum energy efficiency.',
     features: [
-      '92mm profile depth',
+      '82mm profile depth',
       'Triple glazing capability',
       '3 gasket sealing system',
       'U-value: 0.7 W/m²K'
     ],
-    imageUrl: '/lovable-uploads/bluevolution-92-main.jpg',
+    imageUrl: '/lovable-uploads/5d8b80fd-df96-49e1-a148-46734e370f4e.png',
     images: [
-      '/lovable-uploads/bluevolution-92-main.jpg',
-      '/lovable-uploads/bluevolution-92-slide.gif',
-      '/lovable-uploads/bluevolution-92-straight.gif',
-      '/lovable-uploads/bluevolution-92-free.gif'
+      '/lovable-uploads/5d8b80fd-df96-49e1-a148-46734e370f4e.png',
+      '/lovable-uploads/16f7d624-2f9a-48a3-9834-e31badd59bfc.png',
+      '/lovable-uploads/b8d78d1e-8ac5-4738-bb78-bda631d017b5.png',
+      '/lovable-uploads/3629c3f7-3c18-40dd-84a1-e0e374069655.png'
     ],
     basePrice: 450
   },
