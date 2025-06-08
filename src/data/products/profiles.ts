@@ -56,7 +56,12 @@ export const windowProfiles: Profile[] = [
       'Barrier-free threshold',
       'Excellent thermal insulation'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-hst.jpg',
+    imageUrl: '/lovable-uploads/295b8594-7d6b-427c-81e8-29f9940f4a32.png',
+    images: [
+      '/lovable-uploads/295b8594-7d6b-427c-81e8-29f9940f4a32.png',
+      '/lovable-uploads/8d069315-4345-4601-8dee-4fa617b5994d.png',
+      '/lovable-uploads/7ee73d5f-4f1c-403a-b1ba-80e25ffe8a73.png'
+    ],
     basePrice: 400
   },
   {
@@ -156,7 +161,12 @@ export const doorProfiles: Profile[] = [
       'Barrier-free threshold',
       'Excellent thermal insulation'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-hst.jpg',
+    imageUrl: '/lovable-uploads/295b8594-7d6b-427c-81e8-29f9940f4a32.png',
+    images: [
+      '/lovable-uploads/295b8594-7d6b-427c-81e8-29f9940f4a32.png',
+      '/lovable-uploads/8d069315-4345-4601-8dee-4fa617b5994d.png',
+      '/lovable-uploads/7ee73d5f-4f1c-403a-b1ba-80e25ffe8a73.png'
+    ],
     basePrice: 600
   },
   {
