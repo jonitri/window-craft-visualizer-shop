@@ -74,7 +74,10 @@ export const windowProfiles: Profile[] = [
       'Smooth sliding operation',
       'Customizable configurations'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-plus.jpg',
+    imageUrl: '/lovable-uploads/0d1000d6-db7e-42f4-9131-67ba2061cd0a.png',
+    images: [
+      '/lovable-uploads/0d1000d6-db7e-42f4-9131-67ba2061cd0a.png'
+    ],
     basePrice: 450
   },
   {
@@ -179,7 +182,10 @@ export const doorProfiles: Profile[] = [
       'Smooth sliding operation',
       'Customizable configurations'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-plus.jpg',
+    imageUrl: '/lovable-uploads/0d1000d6-db7e-42f4-9131-67ba2061cd0a.png',
+    images: [
+      '/lovable-uploads/0d1000d6-db7e-42f4-9131-67ba2061cd0a.png'
+    ],
     basePrice: 650
   },
   {
