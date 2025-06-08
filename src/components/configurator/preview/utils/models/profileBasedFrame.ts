@@ -1,8 +1,8 @@
 
 import * as THREE from 'three';
-import { assembleFrameFromProfiles } from './singleFrameProfile';
+import { assembleAdvancedFrame } from './advancedFrameProfile';
 
-// Create a realistic window frame using individual assembled profiles
+// Create a realistic window frame using the advanced technical profile
 export function createProfileBasedFrame(
   group: THREE.Group,
   width: number,
@@ -12,10 +12,10 @@ export function createProfileBasedFrame(
   outsideColorHex: string,
   insideColorHex: string
 ): void {
-  console.log("Creating profile-based frame using assembled individual profiles");
+  console.log("Creating profile-based frame using advanced technical profile");
   
-  // Use the new assembly method
-  assembleFrameFromProfiles(
+  // Use the new advanced assembly method
+  assembleAdvancedFrame(
     group,
     width,
     height,
@@ -24,7 +24,7 @@ export function createProfileBasedFrame(
     insideColorHex
   );
   
-  console.log("Profile-based frame created using individual profile assembly");
+  console.log("Profile-based frame created with realistic multi-chamber structure");
 }
 
 // Create glass panes to fit within the frame
