@@ -90,7 +90,10 @@ export const windowProfiles: Profile[] = [
       'Contemporary design',
       'Excellent weather resistance'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-sf.jpg',
+    imageUrl: '/lovable-uploads/6a1d3757-04e4-4fae-9313-01126c196fb4.png',
+    images: [
+      '/lovable-uploads/6a1d3757-04e4-4fae-9313-01126c196fb4.png'
+    ],
     basePrice: 500
   },
   {
@@ -103,7 +106,10 @@ export const windowProfiles: Profile[] = [
       'Economical choice',
       'Various opening options'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-60.jpg',
+    imageUrl: '/lovable-uploads/fed20759-8f60-4f0f-87eb-8752353328ec.png',
+    images: [
+      '/lovable-uploads/fed20759-8f60-4f0f-87eb-8752353328ec.png'
+    ],
     basePrice: 300
   }
 ];
@@ -198,7 +204,10 @@ export const doorProfiles: Profile[] = [
       'Contemporary design',
       'Excellent weather resistance'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-sf.jpg',
+    imageUrl: '/lovable-uploads/6a1d3757-04e4-4fae-9313-01126c196fb4.png',
+    images: [
+      '/lovable-uploads/6a1d3757-04e4-4fae-9313-01126c196fb4.png'
+    ],
     basePrice: 700
   },
   {
@@ -211,7 +220,10 @@ export const doorProfiles: Profile[] = [
       'Economical choice',
       'Various opening options'
     ],
-    imageUrl: '/lovable-uploads/evolution-drive-60.jpg',
+    imageUrl: '/lovable-uploads/fed20759-8f60-4f0f-87eb-8752353328ec.png',
+    images: [
+      '/lovable-uploads/fed20759-8f60-4f0f-87eb-8752353328ec.png'
+    ],
     basePrice: 450
   }
 ];
