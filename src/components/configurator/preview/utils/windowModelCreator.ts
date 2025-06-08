@@ -4,6 +4,7 @@ import { createSingleLeafWindow } from './models/singleLeafWindow';
 import { createDoubleLeafWindow } from './models/doubleLeafWindow';
 import { createTripleLeafWindow } from './models/tripleLeafWindow';
 import { createFixedWindow } from './models/fixedWindow';
+import { addDebugVisualization, logObjectHierarchy } from './debugVisualization';
 import type { WindowModelProps } from './models/windowModelTypes';
 
 export type { WindowModelProps };
@@ -13,7 +14,8 @@ export function createWindowModel(
   modelRef: React.MutableRefObject<THREE.Group | null>,
   props: WindowModelProps
 ): void {
-  console.log("Creating window model", props);
+  console.log("=== Creating window model with technical accuracy ===", props);
+  
   if (!scene) {
     console.error("Scene is not available");
     return;
@@ -41,13 +43,17 @@ export function createWindowModel(
   
   const { width, height, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject, textureRef, windowType = 'single-leaf' } = props;
   const windowGroup = new THREE.Group();
+  windowGroup.name = `${windowType}-window-group`;
   
+  // Calculate proper aspect ratio and scale
   const aspectRatio = width / height;
-  const windowWidth = 2;
-  const windowHeight = windowWidth / aspectRatio;
+  const baseSize = 2.0; // Base size in Three.js units
+  const windowWidth = baseSize;
+  const windowHeight = baseSize / aspectRatio;
   
-  // Select the appropriate window model creation function based on type
-  // Each function now handles its own complete window including frame and rubber seals
+  console.log(`Creating ${windowType} window: ${windowWidth.toFixed(3)} x ${windowHeight.toFixed(3)} (aspect: ${aspectRatio.toFixed(3)})`);
+  
+  // Select the appropriate window model creation function
   switch (windowType) {
     case 'double-leaf':
       createDoubleLeafWindow(windowGroup, windowWidth, windowHeight, textureRef.current, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
@@ -68,5 +74,11 @@ export function createWindowModel(
   scene.add(windowGroup);
   modelRef.current = windowGroup;
   
-  console.log(`${windowType} window model created and added to scene with rubber seals`);
+  // Add debug visualization in development
+  if (process.env.NODE_ENV === 'development') {
+    addDebugVisualization(scene, windowGroup);
+    logObjectHierarchy(windowGroup);
+  }
+  
+  console.log(`=== ${windowType} window model created successfully ===`);
 }
