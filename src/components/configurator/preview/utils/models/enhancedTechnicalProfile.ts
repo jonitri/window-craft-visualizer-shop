@@ -106,11 +106,11 @@ export function createEnhancedProfileMaterials(
     color: new THREE.Color(baseColorHex),
     roughness: 0.25,
     metalness: 0.05,
-    envMapIntensity: 0.4,
-    bumpScale: 0.02
+    envMapIntensity: 0.4
   });
   
-  const outsideMaterial = new THREE.MeshStandardMaterial({
+  // Use MeshPhysicalMaterial for outside material to support clearcoat
+  const outsideMaterial = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(outsideColorHex),
     roughness: 0.2,
     metalness: 0.03,
