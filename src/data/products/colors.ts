@@ -1,4 +1,5 @@
 
+
 import { ColorOption } from './types';
 
 // Base color options (main frame color) - simplified to 4 basic options
@@ -7,7 +8,7 @@ export const baseColorOptions: ColorOption[] = [
     id: 'col-white',
     name: 'White',
     hex: '#FFFFFF',
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0UwRTBFMCIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPgo=',
     category: 'base',
     priceModifier: 0 // Base price
   },
@@ -15,7 +16,7 @@ export const baseColorOptions: ColorOption[] = [
     id: 'col-anthracite',
     name: 'Anthracite',
     hex: '#2F2F2F',
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMyRjJGMkYiLz4KPC9zdmc+Cg==',
     category: 'base',
     priceModifier: 50
   },
@@ -23,7 +24,7 @@ export const baseColorOptions: ColorOption[] = [
     id: 'col-walnut',
     name: 'Walnut',
     hex: '#5C4033',
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM1QzQwMzMiLz4KPC9zdmc+Cg==',
     category: 'base',
     priceModifier: 100
   },
@@ -31,7 +32,7 @@ export const baseColorOptions: ColorOption[] = [
     id: 'col-golden-oak',
     name: 'Golden Oak',
     hex: '#D4A76A',
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNENEE3NkEiLz4KPC9zdmc+Cg==',
     category: 'base',
     priceModifier: 100
   }
