@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ColorOption } from '@/data/products';
 import { WindowType, OpeningDirection } from '@/data/windowTypes';
 import { PreviewControls } from './PreviewControls';
-import { CSS3DWindowPreview } from './CSS3DWindowPreview';
+import { Simple3DPreview } from './Simple3DPreview';
 import { ProductInfo } from './ProductInfo';
 
 interface ProductPreviewProps {
@@ -52,7 +52,7 @@ export const ProductPreview = ({
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>Product Preview - CSS 3D Animation</CardTitle>
+        <CardTitle>Product Preview - 3D Model</CardTitle>
       </CardHeader>
       <CardContent>
         <PreviewControls
@@ -65,7 +65,7 @@ export const ProductPreview = ({
           onToggleAutoRotation={onToggleAutoRotation}
         />
         
-        <CSS3DWindowPreview
+        <Simple3DPreview
           width={width}
           height={height}
           selectedWindowType={selectedWindowType}
