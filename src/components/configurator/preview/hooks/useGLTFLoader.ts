@@ -67,7 +67,8 @@ export const useGLTFLoader = ({ modelUrl, scene }: UseGLTFLoaderProps) => {
       },
       (error) => {
         console.error("Error loading GLTF model:", error);
-        setError(`Failed to load 3D model: ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        setError(`Failed to load 3D model: ${errorMessage}`);
         setIsLoading(false);
       }
     );
