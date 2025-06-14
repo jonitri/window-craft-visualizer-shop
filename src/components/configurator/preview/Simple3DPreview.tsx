@@ -40,6 +40,7 @@ export const Simple3DPreview = ({
   
   const [isLoading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Initializing 3D Preview...');
+  const [error, setError] = useState<string | null>(null);
 
   // Initialize Three.js scene
   useEffect(() => {
@@ -97,8 +98,9 @@ export const Simple3DPreview = ({
   useEffect(() => {
     if (!sceneRef.current) return;
 
-    console.log("Loading 3D model");
+    console.log("Loading 3D model from OneDrive");
     setLoadingText('Loading 3D model...');
+    setError(null);
 
     // Clear existing model
     if (modelRef.current) {
@@ -107,23 +109,33 @@ export const Simple3DPreview = ({
     }
 
     const loader = new GLTFLoader();
-    const modelUrl = "https://1drv.ms/u/c/55aa21a38a5a57e0/EYRrc3FqCrBLsVxOICJhMaMBnhS8h3WPRHQrRxjA_F3nQg?e=lGOYis&download=1";
+    // Convert OneDrive sharing link to direct download link
+    const oneDriveUrl = "https://1drv.ms/u/c/55aa21a38a5a57e0/EYRrc3FqCrBLsVxOICJhMaMBnhS8h3WPRHQrRxjA_F3nQg?e=lGOYis";
+    const directDownloadUrl = oneDriveUrl + "&download=1";
+
+    console.log("Attempting to load model from:", directDownloadUrl);
 
     loader.load(
-      modelUrl,
+      directDownloadUrl,
       (gltf) => {
-        console.log("3D model loaded successfully");
+        console.log("3D model loaded successfully", gltf);
         const model = gltf.scene;
         
         // Scale and center the model
         const box = new THREE.Box3().setFromObject(model);
         const size = box.getSize(new THREE.Vector3());
         const maxDimension = Math.max(size.x, size.y, size.z);
-        const scale = 2 / maxDimension;
         
+        // Scale to fit nicely in the view
+        const scale = 3 / maxDimension;
         model.scale.setScalar(scale);
+        
+        // Center the model
         const center = box.getCenter(new THREE.Vector3());
         model.position.sub(center.multiplyScalar(scale));
+        
+        // Apply colors to the model materials
+        applyColorsToModel(model, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
         
         // Enable shadows
         model.traverse((child) => {
@@ -136,29 +148,71 @@ export const Simple3DPreview = ({
         sceneRef.current!.add(model);
         modelRef.current = model;
         setIsLoading(false);
-        console.log("Model added to scene");
+        setError(null);
+        console.log("Model added to scene successfully");
       },
       (progress) => {
-        const percent = Math.round((progress.loaded / progress.total) * 100);
-        setLoadingText(`Loading model: ${percent}%`);
+        if (progress.total > 0) {
+          const percent = Math.round((progress.loaded / progress.total) * 100);
+          setLoadingText(`Loading model: ${percent}%`);
+          console.log(`Loading progress: ${percent}%`);
+        }
       },
       (error) => {
-        console.error("Failed to load model, creating fallback:", error);
+        console.error("Failed to load GLTF model:", error);
+        setError("Failed to load 3D model. Creating fallback...");
         createFallbackModel();
       }
     );
-  }, [selectedWindowType]);
+  }, [selectedWindowType, baseColorObject.id, outsideColorObject.id, insideColorObject.id, rubberColorObject.id]);
+
+  // Apply colors to the loaded model
+  const applyColorsToModel = (
+    model: THREE.Group,
+    baseColor: ColorOption,
+    outsideColor: ColorOption,
+    insideColor: ColorOption,
+    rubberColor: ColorOption
+  ) => {
+    console.log("Applying colors to 3D model");
+    
+    model.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.material) {
+        const name = child.name.toLowerCase();
+        const materialName = child.material instanceof THREE.Material ? child.material.name?.toLowerCase() : '';
+        
+        // Apply colors based on object or material names
+        if (name.includes('frame') || materialName.includes('frame')) {
+          if (child.material instanceof THREE.MeshStandardMaterial) {
+            child.material.color.setHex(parseInt(baseColor.hex.replace('#', '0x')));
+          }
+        } else if (name.includes('outside') || materialName.includes('outside')) {
+          if (child.material instanceof THREE.MeshStandardMaterial) {
+            child.material.color.setHex(parseInt(outsideColor.hex.replace('#', '0x')));
+          }
+        } else if (name.includes('inside') || materialName.includes('inside')) {
+          if (child.material instanceof THREE.MeshStandardMaterial) {
+            child.material.color.setHex(parseInt(insideColor.hex.replace('#', '0x')));
+          }
+        } else if (name.includes('rubber') || name.includes('seal') || materialName.includes('rubber')) {
+          if (child.material instanceof THREE.MeshStandardMaterial) {
+            child.material.color.setHex(parseInt(rubberColor.hex.replace('#', '0x')));
+          }
+        }
+      }
+    });
+  };
 
   // Create fallback model if GLTF fails
   const createFallbackModel = () => {
     if (!sceneRef.current) return;
 
     console.log("Creating fallback window model");
-    setLoadingText('Creating window model...');
+    setLoadingText('Creating fallback model...');
 
     const windowGroup = new THREE.Group();
     
-    // Create simple window frame
+    // Create window frame
     const frameGeometry = new THREE.BoxGeometry(2, 2.5, 0.1);
     const frameMaterial = new THREE.MeshStandardMaterial({ 
       color: new THREE.Color(baseColorObject.hex) 
@@ -254,6 +308,11 @@ export const Simple3DPreview = ({
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
             <div className="text-sm">{loadingText}</div>
           </div>
+        </div>
+      )}
+      {error && (
+        <div className="absolute top-2 left-2 right-2 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded text-sm">
+          {error}
         </div>
       )}
     </div>
