@@ -36,7 +36,7 @@ export const ThreeJSPreview = ({
   // Initialize Three.js scene
   const { mountRef, sceneRef, cameraRef, rendererRef } = useThreeJSScene();
 
-  // Manage window model
+  // Manage window model (now supports external .glb loading)
   const { windowModelRef } = useWindowModel({
     scene: sceneRef.current,
     width,
@@ -67,5 +67,12 @@ export const ThreeJSPreview = ({
     renderer: rendererRef.current
   });
 
-  return <ThreeJSCanvas ref={mountRef} />;
+  return (
+    <div className="relative">
+      <ThreeJSCanvas ref={mountRef} />
+      <div className="absolute top-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+        Loading 3D Model...
+      </div>
+    </div>
+  );
 };
