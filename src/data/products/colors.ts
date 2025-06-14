@@ -1,36 +1,37 @@
+
 import { ColorOption } from './types';
 
-// Base color options (main frame color)
+// Base color options (main frame color) - simplified to 4 basic options
 export const baseColorOptions: ColorOption[] = [
   {
     id: 'col-white',
     name: 'White',
     hex: '#FFFFFF',
-    imageUrl: '/lovable-uploads/d7ff0ec9-7d65-4eb6-8888-e69898a021b1.png',
+    imageUrl: '/placeholder.svg',
     category: 'base',
     priceModifier: 0 // Base price
   },
   {
-    id: 'col-golden-oak',
-    name: 'Golden Oak',
-    hex: '#D4A76A',
-    imageUrl: '/lovable-uploads/483c3723-2717-402e-9ad2-21b22e32ace8.png',
+    id: 'col-anthracite',
+    name: 'Anthracite',
+    hex: '#2F2F2F',
+    imageUrl: '/placeholder.svg',
     category: 'base',
-    priceModifier: 100
+    priceModifier: 50
   },
   {
     id: 'col-walnut',
     name: 'Walnut',
     hex: '#5C4033',
-    imageUrl: '/lovable-uploads/49d544d5-4ed6-4fd9-a1dc-8f9fbf4b5444.png',
+    imageUrl: '/placeholder.svg',
     category: 'base',
     priceModifier: 100
   },
   {
-    id: 'col-black',
-    name: 'Anthracite Gray',
-    hex: '#1D1D1D',
-    imageUrl: '/lovable-uploads/1f38d908-afb7-4cb7-8c3b-06c627e7d303.png',
+    id: 'col-golden-oak',
+    name: 'Golden Oak',
+    hex: '#D4A76A',
+    imageUrl: '/placeholder.svg',
     category: 'base',
     priceModifier: 100
   }
