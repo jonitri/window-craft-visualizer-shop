@@ -359,6 +359,47 @@ export const outsideColorOptions: ColorOption[] = [
     imageUrl: '/lovable-uploads/08049544-488e-4d1b-adb0-32ebdbddea29.png',
     category: 'outside',
     priceModifier: 100
+  },
+  // Fifth batch additions (final)
+  {
+    id: 'col-out-charcoal-metallic',
+    name: 'Charcoal Metallic',
+    hex: '#36454F',
+    imageUrl: '/lovable-uploads/5c2ace64-d790-45b8-b54f-5d9750279d4d.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-titanium-gray',
+    name: 'Titanium Gray',
+    hex: '#878681',
+    imageUrl: '/lovable-uploads/7fd1c83c-56df-4041-bbde-ff096e781cc5.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-matte-silver',
+    name: 'Matte Silver',
+    hex: '#BCC6CC',
+    imageUrl: '/lovable-uploads/63e25fa1-9d40-4a55-8360-104dc7becb96.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-iron-gray',
+    name: 'Iron Gray',
+    hex: '#3C3C3C',
+    imageUrl: '/lovable-uploads/7d67186f-1623-4540-8098-e1a1926be4a4.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-earth-brown',
+    name: 'Earth Brown',
+    hex: '#8B7355',
+    imageUrl: '/lovable-uploads/f85cbf8a-445a-4e2d-987d-bbb3c0a35080.png',
+    category: 'outside',
+    priceModifier: 70
   }
 ];
 
