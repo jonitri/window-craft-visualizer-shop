@@ -1,4 +1,3 @@
-
 import { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -37,6 +36,7 @@ export const Simple3DPreview = ({
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const textureLoaderRef = useRef<THREE.TextureLoader | null>(null);
   
   const [isLoading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Initializing 3D Preview...');
@@ -72,6 +72,9 @@ export const Simple3DPreview = ({
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
+    // Initialize texture loader
+    textureLoaderRef.current = new THREE.TextureLoader();
+
     // Add lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
@@ -94,12 +97,12 @@ export const Simple3DPreview = ({
     };
   }, []);
 
-  // Load 3D model
+  // Load 3D model with textures
   useEffect(() => {
-    if (!sceneRef.current) return;
+    if (!sceneRef.current || !textureLoaderRef.current) return;
 
-    console.log("Creating dual-color window model");
-    setLoadingText('Creating window model...');
+    console.log("Creating textured dual-color window model");
+    setLoadingText('Loading textures and creating window model...');
     setError(null);
 
     // Clear existing model
@@ -108,38 +111,82 @@ export const Simple3DPreview = ({
       modelRef.current = null;
     }
 
-    createDualColorWindowModel();
+    createTexturedWindowModel();
   }, [selectedWindowType, baseColorObject.id, outsideColorObject.id, insideColorObject.id, rubberColorObject.id]);
 
-  // Create enhanced window model with dual-color functionality
-  const createDualColorWindowModel = () => {
+  // Create textured materials from color options
+  const createTexturedMaterial = (colorObject: ColorOption, fallbackColor: string): THREE.MeshStandardMaterial => {
+    const material = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(colorObject.hex),
+      roughness: 0.7,
+      metalness: 0.1
+    });
+
+    // If the color object has an imageUrl, load it as texture
+    if (colorObject.imageUrl && textureLoaderRef.current) {
+      console.log("Loading texture for", colorObject.name, "from", colorObject.imageUrl);
+      
+      textureLoaderRef.current.load(
+        colorObject.imageUrl,
+        (texture) => {
+          console.log("Texture loaded successfully for", colorObject.name);
+          
+          // Configure texture settings for realistic appearance
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.set(4, 4); // Repeat texture for better detail
+          texture.magFilter = THREE.LinearFilter;
+          texture.minFilter = THREE.LinearMipmapLinearFilter;
+          
+          // Apply the texture as both color map and normal map for depth
+          material.map = texture;
+          
+          // Create a subtle normal map effect from the same texture
+          const normalTexture = texture.clone();
+          normalTexture.needsUpdate = true;
+          material.normalMap = normalTexture;
+          material.normalScale = new THREE.Vector2(0.3, 0.3);
+          
+          // Enhance material properties for textured appearance
+          material.roughness = 0.8;
+          material.metalness = 0.05;
+          material.needsUpdate = true;
+          
+          console.log("Material updated with texture for", colorObject.name);
+        },
+        (progress) => {
+          console.log("Loading texture progress:", progress.loaded / progress.total * 100 + '%');
+        },
+        (error) => {
+          console.warn("Failed to load texture for", colorObject.name, error);
+          // Keep the base color material as fallback
+        }
+      );
+    }
+
+    return material;
+  };
+
+  // Create enhanced window model with textured dual-color functionality
+  const createTexturedWindowModel = () => {
     if (!sceneRef.current) return;
 
-    console.log("Creating dual-color window model with outside/inside halves");
+    console.log("Creating textured dual-color window model");
     const windowGroup = new THREE.Group();
     
-    // Create main window frame with dual colors
+    // Create textured materials for different parts
+    const baseMaterial = createTexturedMaterial(baseColorObject, baseColorObject.hex);
+    const outsideMaterial = createTexturedMaterial(outsideColorObject, outsideColorObject.hex);
+    const insideMaterial = createTexturedMaterial(insideColorObject, insideColorObject.hex);
+    const rubberMaterial = createTexturedMaterial(rubberColorObject, rubberColorObject.hex);
+    
+    // Special settings for rubber material
+    rubberMaterial.roughness = 0.9;
+    rubberMaterial.metalness = 0.0;
+
+    // Create main window frame with textured dual colors
     const frameGeometry = new THREE.BoxGeometry(2.2, 2.7, 0.15);
     
-    // Create materials for different parts
-    const baseMaterial = new THREE.MeshStandardMaterial({ 
-      color: new THREE.Color(baseColorObject.hex),
-      roughness: 0.3,
-      metalness: 0.1
-    });
-    
-    const outsideMaterial = new THREE.MeshStandardMaterial({ 
-      color: new THREE.Color(outsideColorObject.hex),
-      roughness: 0.3,
-      metalness: 0.1
-    });
-    
-    const insideMaterial = new THREE.MeshStandardMaterial({ 
-      color: new THREE.Color(insideColorObject.hex),
-      roughness: 0.3,
-      metalness: 0.1
-    });
-
     // Create frame with different materials for each face
     // Face order: +X, -X, +Y, -Y, +Z (outside), -Z (inside)
     const frameMaterials = [
@@ -154,7 +201,7 @@ export const Simple3DPreview = ({
     const outerFrame = new THREE.Mesh(frameGeometry, frameMaterials);
     windowGroup.add(outerFrame);
 
-    // Create inner frame (sash) with dual colors
+    // Create inner frame (sash) with textured dual colors
     const innerFrameGeometry = new THREE.BoxGeometry(1.9, 2.4, 0.1);
     const innerFrameMaterials = [
       baseMaterial,    // Right side
@@ -182,44 +229,37 @@ export const Simple3DPreview = ({
     glass.position.z = 0.08;
     windowGroup.add(glass);
 
-    // Add window handle with base color
+    // Add window handle with textured base color
     const handleGeometry = new THREE.BoxGeometry(0.15, 0.05, 0.03);
-    const handleMaterial = new THREE.MeshStandardMaterial({ 
-      color: new THREE.Color(baseColorObject.hex).multiplyScalar(0.7),
-      roughness: 0.2,
-      metalness: 0.8
-    });
+    const handleMaterial = createTexturedMaterial(baseColorObject, baseColorObject.hex);
+    handleMaterial.color.multiplyScalar(0.7); // Darker for handle
+    handleMaterial.metalness = 0.8;
     const handle = new THREE.Mesh(handleGeometry, handleMaterial);
     handle.position.set(0.8, 0, 0.12);
     windowGroup.add(handle);
 
-    // Add rubber seals with rubber color
-    const sealMaterial = new THREE.MeshStandardMaterial({ 
-      color: new THREE.Color(rubberColorObject.hex),
-      roughness: 0.8
-    });
-    
+    // Add textured rubber seals
     // Create seal geometries
     const horizontalSealGeometry = new THREE.BoxGeometry(2.0, 0.05, 0.02);
     const verticalSealGeometry = new THREE.BoxGeometry(0.05, 2.3, 0.02);
     
     // Top seal
-    const topSeal = new THREE.Mesh(horizontalSealGeometry, sealMaterial);
+    const topSeal = new THREE.Mesh(horizontalSealGeometry, rubberMaterial);
     topSeal.position.set(0, 1.15, 0.02);
     windowGroup.add(topSeal);
     
     // Bottom seal
-    const bottomSeal = new THREE.Mesh(horizontalSealGeometry, sealMaterial);
+    const bottomSeal = new THREE.Mesh(horizontalSealGeometry, rubberMaterial);
     bottomSeal.position.set(0, -1.15, 0.02);
     windowGroup.add(bottomSeal);
     
     // Left seal
-    const leftSeal = new THREE.Mesh(verticalSealGeometry, sealMaterial);
+    const leftSeal = new THREE.Mesh(verticalSealGeometry, rubberMaterial);
     leftSeal.position.set(-0.97, 0, 0.02);
     windowGroup.add(leftSeal);
     
     // Right seal
-    const rightSeal = new THREE.Mesh(verticalSealGeometry, sealMaterial);
+    const rightSeal = new THREE.Mesh(verticalSealGeometry, rubberMaterial);
     rightSeal.position.set(0.97, 0, 0.02);
     windowGroup.add(rightSeal);
 
@@ -242,10 +282,10 @@ export const Simple3DPreview = ({
     sceneRef.current.add(windowGroup);
     modelRef.current = windowGroup;
     setIsLoading(false);
-    console.log("Dual-color window model created successfully");
+    console.log("Textured dual-color window model created successfully");
   };
 
-  // Helper function to create window divisions
+  // Helper function to create textured window divisions
   const createWindowDivision = (
     group: THREE.Group, 
     xPosition: number, 
