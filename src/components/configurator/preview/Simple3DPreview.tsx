@@ -94,11 +94,11 @@ export const Simple3DPreview = ({
     };
   }, []);
 
-  // Load 3D model
+  // Load 3D model with improved error handling
   useEffect(() => {
     if (!sceneRef.current) return;
 
-    console.log("Loading 3D model from OneDrive");
+    console.log("Attempting to load 3D model");
     setLoadingText('Loading 3D model...');
     setError(null);
 
@@ -108,134 +108,109 @@ export const Simple3DPreview = ({
       modelRef.current = null;
     }
 
-    const loader = new GLTFLoader();
-    // Convert OneDrive sharing link to direct download link
-    const oneDriveUrl = "https://1drv.ms/u/c/55aa21a38a5a57e0/EYRrc3FqCrBLsVxOICJhMaMBnhS8h3WPRHQrRxjA_F3nQg?e=lGOYis";
-    const directDownloadUrl = oneDriveUrl + "&download=1";
-
-    console.log("Attempting to load model from:", directDownloadUrl);
-
-    loader.load(
-      directDownloadUrl,
-      (gltf) => {
-        console.log("3D model loaded successfully", gltf);
-        const model = gltf.scene;
-        
-        // Scale and center the model
-        const box = new THREE.Box3().setFromObject(model);
-        const size = box.getSize(new THREE.Vector3());
-        const maxDimension = Math.max(size.x, size.y, size.z);
-        
-        // Scale to fit nicely in the view
-        const scale = 3 / maxDimension;
-        model.scale.setScalar(scale);
-        
-        // Center the model
-        const center = box.getCenter(new THREE.Vector3());
-        model.position.sub(center.multiplyScalar(scale));
-        
-        // Apply colors to the model materials
-        applyColorsToModel(model, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
-        
-        // Enable shadows
-        model.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-        
-        sceneRef.current!.add(model);
-        modelRef.current = model;
-        setIsLoading(false);
-        setError(null);
-        console.log("Model added to scene successfully");
-      },
-      (progress) => {
-        if (progress.total > 0) {
-          const percent = Math.round((progress.loaded / progress.total) * 100);
-          setLoadingText(`Loading model: ${percent}%`);
-          console.log(`Loading progress: ${percent}%`);
-        }
-      },
-      (error) => {
-        console.error("Failed to load GLTF model:", error);
-        setError("Failed to load 3D model. Creating fallback...");
-        createFallbackModel();
-      }
-    );
+    // For now, we'll create an enhanced fallback model since the OneDrive link doesn't work
+    // The user will need to either:
+    // 1. Host the .glb file in the public folder
+    // 2. Use a proper CDN link
+    // 3. Convert the OneDrive link to a proper direct download URL
+    
+    console.log("Creating enhanced window model (OneDrive links don't work for direct loading)");
+    setLoadingText('Creating detailed window model...');
+    createEnhancedWindowModel();
   }, [selectedWindowType, baseColorObject.id, outsideColorObject.id, insideColorObject.id, rubberColorObject.id]);
 
-  // Apply colors to the loaded model
-  const applyColorsToModel = (
-    model: THREE.Group,
-    baseColor: ColorOption,
-    outsideColor: ColorOption,
-    insideColor: ColorOption,
-    rubberColor: ColorOption
-  ) => {
-    console.log("Applying colors to 3D model");
-    
-    model.traverse((child) => {
-      if (child instanceof THREE.Mesh && child.material) {
-        const name = child.name.toLowerCase();
-        const materialName = child.material instanceof THREE.Material ? child.material.name?.toLowerCase() : '';
-        
-        // Apply colors based on object or material names
-        if (name.includes('frame') || materialName.includes('frame')) {
-          if (child.material instanceof THREE.MeshStandardMaterial) {
-            child.material.color.setHex(parseInt(baseColor.hex.replace('#', '0x')));
-          }
-        } else if (name.includes('outside') || materialName.includes('outside')) {
-          if (child.material instanceof THREE.MeshStandardMaterial) {
-            child.material.color.setHex(parseInt(outsideColor.hex.replace('#', '0x')));
-          }
-        } else if (name.includes('inside') || materialName.includes('inside')) {
-          if (child.material instanceof THREE.MeshStandardMaterial) {
-            child.material.color.setHex(parseInt(insideColor.hex.replace('#', '0x')));
-          }
-        } else if (name.includes('rubber') || name.includes('seal') || materialName.includes('rubber')) {
-          if (child.material instanceof THREE.MeshStandardMaterial) {
-            child.material.color.setHex(parseInt(rubberColor.hex.replace('#', '0x')));
-          }
-        }
-      }
-    });
-  };
-
-  // Create fallback model if GLTF fails
-  const createFallbackModel = () => {
+  // Create enhanced window model that looks more realistic
+  const createEnhancedWindowModel = () => {
     if (!sceneRef.current) return;
 
-    console.log("Creating fallback window model");
-    setLoadingText('Creating fallback model...');
-
+    console.log("Creating enhanced window model");
     const windowGroup = new THREE.Group();
     
-    // Create window frame
-    const frameGeometry = new THREE.BoxGeometry(2, 2.5, 0.1);
-    const frameMaterial = new THREE.MeshStandardMaterial({ 
-      color: new THREE.Color(baseColorObject.hex) 
+    // Create main window frame (outer frame)
+    const outerFrameGeometry = new THREE.BoxGeometry(2.2, 2.7, 0.15);
+    const outerFrameMaterial = new THREE.MeshStandardMaterial({ 
+      color: new THREE.Color(baseColorObject.hex),
+      roughness: 0.3,
+      metalness: 0.1
     });
-    const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-    
-    // Create glass
-    const glassGeometry = new THREE.PlaneGeometry(1.8, 2.3);
+    const outerFrame = new THREE.Mesh(outerFrameGeometry, outerFrameMaterial);
+    windowGroup.add(outerFrame);
+
+    // Create inner frame (sash)
+    const innerFrameGeometry = new THREE.BoxGeometry(1.9, 2.4, 0.1);
+    const innerFrameMaterial = new THREE.MeshStandardMaterial({ 
+      color: new THREE.Color(insideColorObject.hex),
+      roughness: 0.3,
+      metalness: 0.1
+    });
+    const innerFrame = new THREE.Mesh(innerFrameGeometry, innerFrameMaterial);
+    innerFrame.position.z = 0.05;
+    windowGroup.add(innerFrame);
+
+    // Create glass panels
+    const glassGeometry = new THREE.PlaneGeometry(1.7, 2.2);
     const glassMaterial = new THREE.MeshStandardMaterial({ 
       color: 0x87ceeb, 
       transparent: true, 
-      opacity: 0.3 
+      opacity: 0.3,
+      roughness: 0.0,
+      metalness: 0.0
     });
     const glass = new THREE.Mesh(glassGeometry, glassMaterial);
-    glass.position.z = 0.01;
-    
-    windowGroup.add(frame);
+    glass.position.z = 0.08;
     windowGroup.add(glass);
+
+    // Add window handle
+    const handleGeometry = new THREE.BoxGeometry(0.15, 0.05, 0.03);
+    const handleMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0x444444,
+      roughness: 0.2,
+      metalness: 0.8
+    });
+    const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+    handle.position.set(0.8, 0, 0.12);
+    windowGroup.add(handle);
+
+    // Add rubber seals
+    const sealGeometry = new THREE.BoxGeometry(2.0, 0.05, 0.02);
+    const sealMaterial = new THREE.MeshStandardMaterial({ 
+      color: new THREE.Color(rubberColorObject.hex),
+      roughness: 0.8
+    });
+    
+    // Top seal
+    const topSeal = new THREE.Mesh(sealGeometry, sealMaterial);
+    topSeal.position.set(0, 1.15, 0.02);
+    windowGroup.add(topSeal);
+    
+    // Bottom seal
+    const bottomSeal = new THREE.Mesh(sealGeometry, sealMaterial);
+    bottomSeal.position.set(0, -1.15, 0.02);
+    windowGroup.add(bottomSeal);
+    
+    // Side seals
+    const sideSealGeometry = new THREE.BoxGeometry(0.05, 2.3, 0.02);
+    const leftSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+    leftSeal.position.set(-0.97, 0, 0.02);
+    windowGroup.add(leftSeal);
+    
+    const rightSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+    rightSeal.position.set(0.97, 0, 0.02);
+    windowGroup.add(rightSeal);
+
+    // Add shadows to all components
+    windowGroup.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
     
     sceneRef.current.add(windowGroup);
     modelRef.current = windowGroup;
     setIsLoading(false);
-    console.log("Fallback model created");
+    setError("Using enhanced model - to load your .glb file, please host it in the public folder or use a direct CDN link");
+    console.log("Enhanced window model created successfully");
   };
 
   // Animation loop
@@ -311,7 +286,7 @@ export const Simple3DPreview = ({
         </div>
       )}
       {error && (
-        <div className="absolute top-2 left-2 right-2 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded text-sm">
+        <div className="absolute top-2 left-2 right-2 bg-blue-100 border border-blue-400 text-blue-700 px-3 py-2 rounded text-sm">
           {error}
         </div>
       )}
