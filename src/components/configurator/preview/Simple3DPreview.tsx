@@ -98,7 +98,7 @@ export const Simple3DPreview = ({
   useEffect(() => {
     if (!sceneRef.current) return;
 
-    console.log("Creating enhanced window model");
+    console.log("Creating dual-color window model");
     setLoadingText('Creating window model...');
     setError(null);
 
@@ -108,34 +108,64 @@ export const Simple3DPreview = ({
       modelRef.current = null;
     }
 
-    createEnhancedWindowModel();
+    createDualColorWindowModel();
   }, [selectedWindowType, baseColorObject.id, outsideColorObject.id, insideColorObject.id, rubberColorObject.id]);
 
-  // Create enhanced window model that looks more realistic
-  const createEnhancedWindowModel = () => {
+  // Create enhanced window model with dual-color functionality
+  const createDualColorWindowModel = () => {
     if (!sceneRef.current) return;
 
-    console.log("Creating enhanced window model");
+    console.log("Creating dual-color window model with outside/inside halves");
     const windowGroup = new THREE.Group();
     
-    // Create main window frame (outer frame)
-    const outerFrameGeometry = new THREE.BoxGeometry(2.2, 2.7, 0.15);
-    const outerFrameMaterial = new THREE.MeshStandardMaterial({ 
+    // Create main window frame with dual colors
+    const frameGeometry = new THREE.BoxGeometry(2.2, 2.7, 0.15);
+    
+    // Create materials for different parts
+    const baseMaterial = new THREE.MeshStandardMaterial({ 
       color: new THREE.Color(baseColorObject.hex),
       roughness: 0.3,
       metalness: 0.1
     });
-    const outerFrame = new THREE.Mesh(outerFrameGeometry, outerFrameMaterial);
-    windowGroup.add(outerFrame);
-
-    // Create inner frame (sash)
-    const innerFrameGeometry = new THREE.BoxGeometry(1.9, 2.4, 0.1);
-    const innerFrameMaterial = new THREE.MeshStandardMaterial({ 
+    
+    const outsideMaterial = new THREE.MeshStandardMaterial({ 
+      color: new THREE.Color(outsideColorObject.hex),
+      roughness: 0.3,
+      metalness: 0.1
+    });
+    
+    const insideMaterial = new THREE.MeshStandardMaterial({ 
       color: new THREE.Color(insideColorObject.hex),
       roughness: 0.3,
       metalness: 0.1
     });
-    const innerFrame = new THREE.Mesh(innerFrameGeometry, innerFrameMaterial);
+
+    // Create frame with different materials for each face
+    // Face order: +X, -X, +Y, -Y, +Z (outside), -Z (inside)
+    const frameMaterials = [
+      baseMaterial,    // Right side
+      baseMaterial,    // Left side  
+      baseMaterial,    // Top
+      baseMaterial,    // Bottom
+      outsideMaterial, // Outside face (+Z)
+      insideMaterial   // Inside face (-Z)
+    ];
+    
+    const outerFrame = new THREE.Mesh(frameGeometry, frameMaterials);
+    windowGroup.add(outerFrame);
+
+    // Create inner frame (sash) with dual colors
+    const innerFrameGeometry = new THREE.BoxGeometry(1.9, 2.4, 0.1);
+    const innerFrameMaterials = [
+      baseMaterial,    // Right side
+      baseMaterial,    // Left side
+      baseMaterial,    // Top
+      baseMaterial,    // Bottom  
+      outsideMaterial, // Outside face
+      insideMaterial   // Inside face
+    ];
+    
+    const innerFrame = new THREE.Mesh(innerFrameGeometry, innerFrameMaterials);
     innerFrame.position.z = 0.05;
     windowGroup.add(innerFrame);
 
@@ -152,10 +182,10 @@ export const Simple3DPreview = ({
     glass.position.z = 0.08;
     windowGroup.add(glass);
 
-    // Add window handle
+    // Add window handle with base color
     const handleGeometry = new THREE.BoxGeometry(0.15, 0.05, 0.03);
     const handleMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x444444,
+      color: new THREE.Color(baseColorObject.hex).multiplyScalar(0.7),
       roughness: 0.2,
       metalness: 0.8
     });
@@ -163,32 +193,43 @@ export const Simple3DPreview = ({
     handle.position.set(0.8, 0, 0.12);
     windowGroup.add(handle);
 
-    // Add rubber seals
-    const sealGeometry = new THREE.BoxGeometry(2.0, 0.05, 0.02);
+    // Add rubber seals with rubber color
     const sealMaterial = new THREE.MeshStandardMaterial({ 
       color: new THREE.Color(rubberColorObject.hex),
       roughness: 0.8
     });
     
+    // Create seal geometries
+    const horizontalSealGeometry = new THREE.BoxGeometry(2.0, 0.05, 0.02);
+    const verticalSealGeometry = new THREE.BoxGeometry(0.05, 2.3, 0.02);
+    
     // Top seal
-    const topSeal = new THREE.Mesh(sealGeometry, sealMaterial);
+    const topSeal = new THREE.Mesh(horizontalSealGeometry, sealMaterial);
     topSeal.position.set(0, 1.15, 0.02);
     windowGroup.add(topSeal);
     
     // Bottom seal
-    const bottomSeal = new THREE.Mesh(sealGeometry, sealMaterial);
+    const bottomSeal = new THREE.Mesh(horizontalSealGeometry, sealMaterial);
     bottomSeal.position.set(0, -1.15, 0.02);
     windowGroup.add(bottomSeal);
     
-    // Side seals
-    const sideSealGeometry = new THREE.BoxGeometry(0.05, 2.3, 0.02);
-    const leftSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+    // Left seal
+    const leftSeal = new THREE.Mesh(verticalSealGeometry, sealMaterial);
     leftSeal.position.set(-0.97, 0, 0.02);
     windowGroup.add(leftSeal);
     
-    const rightSeal = new THREE.Mesh(sideSealGeometry, sealMaterial);
+    // Right seal
+    const rightSeal = new THREE.Mesh(verticalSealGeometry, sealMaterial);
     rightSeal.position.set(0.97, 0, 0.02);
     windowGroup.add(rightSeal);
+
+    // Add window divisions for multi-leaf windows
+    if (selectedWindowType === 'double-leaf') {
+      createWindowDivision(windowGroup, 0, baseMaterial, outsideMaterial, insideMaterial);
+    } else if (selectedWindowType === 'triple-leaf') {
+      createWindowDivision(windowGroup, -0.7, baseMaterial, outsideMaterial, insideMaterial);
+      createWindowDivision(windowGroup, 0.7, baseMaterial, outsideMaterial, insideMaterial);
+    }
 
     // Add shadows to all components
     windowGroup.traverse((child) => {
@@ -201,7 +242,30 @@ export const Simple3DPreview = ({
     sceneRef.current.add(windowGroup);
     modelRef.current = windowGroup;
     setIsLoading(false);
-    console.log("Enhanced window model created successfully");
+    console.log("Dual-color window model created successfully");
+  };
+
+  // Helper function to create window divisions
+  const createWindowDivision = (
+    group: THREE.Group, 
+    xPosition: number, 
+    baseMaterial: THREE.Material,
+    outsideMaterial: THREE.Material,
+    insideMaterial: THREE.Material
+  ) => {
+    const divisionGeometry = new THREE.BoxGeometry(0.05, 2.4, 0.1);
+    const divisionMaterials = [
+      baseMaterial,    // Right side
+      baseMaterial,    // Left side
+      baseMaterial,    // Top
+      baseMaterial,    // Bottom
+      outsideMaterial, // Outside face
+      insideMaterial   // Inside face
+    ];
+    
+    const division = new THREE.Mesh(divisionGeometry, divisionMaterials);
+    division.position.set(xPosition, 0, 0.05);
+    group.add(division);
   };
 
   // Animation loop
