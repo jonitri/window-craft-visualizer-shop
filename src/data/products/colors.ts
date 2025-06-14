@@ -51,7 +51,7 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-cream-white',
     name: 'Cream White',
     hex: '#F5F5DC',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/3d8f5561-9f28-4e47-a99a-b2679031a021.png',
     category: 'outside',
     priceModifier: 50
   },
@@ -59,7 +59,7 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-light-gray',
     name: 'Light Gray',
     hex: '#D3D3D3',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/8150f9b2-9b03-4214-ae1c-a99ebb77d561.png',
     category: 'outside',
     priceModifier: 50
   },
@@ -67,7 +67,7 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-silver-gray',
     name: 'Silver Gray',
     hex: '#C0C0C0',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/fb6731e2-5896-4e70-aa41-220c28e76bf2.png',
     category: 'outside',
     priceModifier: 50
   },
@@ -83,7 +83,7 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-green',
     name: 'Green',
     hex: '#0B6623',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/0270dd4a-d926-4dd2-974b-aa4277528e32.png',
     category: 'outside',
     priceModifier: 70
   },
@@ -91,7 +91,7 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-brown',
     name: 'Brown',
     hex: '#964B00',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/21633a56-b35b-4d1a-80ac-ff88d2c69150.png',
     category: 'outside',
     priceModifier: 70
   },
@@ -99,7 +99,7 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-wine-red',
     name: 'Wine Red',
     hex: '#722F37',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/72511bcd-1822-4853-b532-3b5af78176ef.png',
     category: 'outside',
     priceModifier: 70
   },
@@ -107,7 +107,7 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-midnight-blue',
     name: 'Midnight Blue',
     hex: '#191970',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/bc9f8bfd-e1ec-4682-9c53-af9c875a5b72.png',
     category: 'outside',
     priceModifier: 70
   },
@@ -115,7 +115,23 @@ export const outsideColorOptions: ColorOption[] = [
     id: 'col-out-black',
     name: 'Black',
     hex: '#000000',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/1eb26af8-c23e-40bd-ab1e-8ad22c214829.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-sage-green',
+    name: 'Sage Green',
+    hex: '#87A96B',
+    imageUrl: '/lovable-uploads/5f65abf4-50de-47c2-a1c5-cfafcc9c352f.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-charcoal-gray',
+    name: 'Charcoal Gray',
+    hex: '#36454F',
+    imageUrl: '/lovable-uploads/317cba47-7020-4c2c-be63-0c64da25c06b.png',
     category: 'outside',
     priceModifier: 70
   },
@@ -198,7 +214,7 @@ export const rubberColorOptions: ColorOption[] = [
     id: 'col-rubber-black',
     name: 'Black',
     hex: '#000000',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/1eb26af8-c23e-40bd-ab1e-8ad22c214829.png',
     category: 'rubber',
     priceModifier: 0
   },
@@ -206,7 +222,7 @@ export const rubberColorOptions: ColorOption[] = [
     id: 'col-rubber-gray',
     name: 'Gray',
     hex: '#808080',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/317cba47-7020-4c2c-be63-0c64da25c06b.png',
     category: 'rubber',
     priceModifier: 10
   },
@@ -214,7 +230,7 @@ export const rubberColorOptions: ColorOption[] = [
     id: 'col-rubber-brown',
     name: 'Brown',
     hex: '#964B00',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/21633a56-b35b-4d1a-80ac-ff88d2c69150.png',
     category: 'rubber',
     priceModifier: 10
   },
@@ -222,7 +238,7 @@ export const rubberColorOptions: ColorOption[] = [
     id: 'col-rubber-white',
     name: 'White',
     hex: '#FFFFFF',
-    imageUrl: '/placeholder.svg',
+    imageUrl: '/lovable-uploads/3d8f5561-9f28-4e47-a99a-b2679031a021.png',
     category: 'rubber',
     priceModifier: 10
   }
