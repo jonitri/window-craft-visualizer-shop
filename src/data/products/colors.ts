@@ -198,6 +198,87 @@ export const outsideColorOptions: ColorOption[] = [
     imageUrl: '/lovable-uploads/f22cb628-ce7a-44ad-94b5-72781c9be319.png',
     category: 'outside',
     priceModifier: 100
+  },
+  // Third batch additions
+  {
+    id: 'col-out-steel-gray',
+    name: 'Steel Gray',
+    hex: '#71797E',
+    imageUrl: '/lovable-uploads/84ab566b-1acb-4db4-9f24-e9329bb4a864.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-bamboo',
+    name: 'Bamboo',
+    hex: '#E3D2B3',
+    imageUrl: '/lovable-uploads/bc92d03b-abca-4645-bd2e-c632b9936d41.png',
+    category: 'outside',
+    priceModifier: 100
+  },
+  {
+    id: 'col-out-driftwood',
+    name: 'Driftwood',
+    hex: '#B8B5A8',
+    imageUrl: '/lovable-uploads/f96ce50b-35d7-4f24-bdda-819cce24138c.png',
+    category: 'outside',
+    priceModifier: 100
+  },
+  {
+    id: 'col-out-honey-oak',
+    name: 'Honey Oak',
+    hex: '#DAA520',
+    imageUrl: '/lovable-uploads/131fee56-9cb5-4cca-9d9f-844463f978ed.png',
+    category: 'outside',
+    priceModifier: 100
+  },
+  {
+    id: 'col-out-tiger-oak',
+    name: 'Tiger Oak',
+    hex: '#B8860B',
+    imageUrl: '/lovable-uploads/a08f536a-11d3-4593-84f8-9f182125793b.png',
+    category: 'outside',
+    priceModifier: 100
+  },
+  {
+    id: 'col-out-forest-green',
+    name: 'Forest Green',
+    hex: '#355E3B',
+    imageUrl: '/lovable-uploads/aac78fac-c01c-406f-87a3-f2b79ac597ad.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-pearl-white',
+    name: 'Pearl White',
+    hex: '#F8F8F8',
+    imageUrl: '/lovable-uploads/16d1f8a9-2d8e-42da-9c71-b172bd396c33.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-platinum',
+    name: 'Platinum',
+    hex: '#E5E4E2',
+    imageUrl: '/lovable-uploads/0e80c26b-5c14-48f3-8a0d-9176c22be265.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-graphite',
+    name: 'Graphite',
+    hex: '#2F2F2F',
+    imageUrl: '/lovable-uploads/1239e3cc-5804-4364-9aac-7eef09813f74.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-arctic-white',
+    name: 'Arctic White',
+    hex: '#F0F8FF',
+    imageUrl: '/lovable-uploads/2e5caafc-5a19-43fa-ae90-50376187840d.png',
+    category: 'outside',
+    priceModifier: 50
   }
 ];
 
