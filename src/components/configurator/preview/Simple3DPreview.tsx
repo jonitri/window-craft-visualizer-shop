@@ -49,9 +49,9 @@ export const Simple3DPreview = ({
     console.log("Initializing fresh 3D scene");
     setLoadingText('Setting up 3D environment...');
 
-    // Create scene
+    // Create scene with darker background
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f4f8);
+    scene.background = new THREE.Color(0x2a2a2a); // Dark gray background like in the image
     sceneRef.current = scene;
 
     // Create camera
@@ -75,16 +75,27 @@ export const Simple3DPreview = ({
     // Initialize texture loader
     textureLoaderRef.current = new THREE.TextureLoader();
 
-    // Add lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Add enhanced lighting for better visibility against dark background
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Slightly reduced ambient
     scene.add(ambientLight);
     
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(2, 2, 5);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
+    // Main directional light from front-right
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight1.position.set(3, 3, 5);
+    directionalLight1.castShadow = true;
+    scene.add(directionalLight1);
 
-    console.log("3D scene initialized successfully");
+    // Secondary light from left to fill shadows
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
+    directionalLight2.position.set(-2, 2, 3);
+    scene.add(directionalLight2);
+
+    // Back light for rim lighting effect
+    const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.3);
+    directionalLight3.position.set(0, 0, -5);
+    scene.add(directionalLight3);
+
+    console.log("3D scene initialized successfully with dark background");
 
     return () => {
       if (animationFrameRef.current) {
@@ -369,7 +380,7 @@ export const Simple3DPreview = ({
         className="bg-secondary rounded-lg"
         style={{ 
           height: '450px',
-          background: 'linear-gradient(to bottom, #e0e8f0, #c0d0e0)'
+          background: 'linear-gradient(to bottom, #3a3a3a, #2a2a2a)' // Darker gradient to match
         }}
       />
       {isLoading && (
