@@ -94,12 +94,12 @@ export const Simple3DPreview = ({
     };
   }, []);
 
-  // Load 3D model with improved error handling
+  // Load 3D model with multiple URL attempts
   useEffect(() => {
     if (!sceneRef.current) return;
 
-    console.log("Attempting to load 3D model");
-    setLoadingText('Loading 3D model...');
+    console.log("Attempting to load 3D model from OneDrive");
+    setLoadingText('Loading 3D model from OneDrive...');
     setError(null);
 
     // Clear existing model
@@ -108,16 +108,128 @@ export const Simple3DPreview = ({
       modelRef.current = null;
     }
 
-    // For now, we'll create an enhanced fallback model since the OneDrive link doesn't work
-    // The user will need to either:
-    // 1. Host the .glb file in the public folder
-    // 2. Use a proper CDN link
-    // 3. Convert the OneDrive link to a proper direct download URL
+    const loader = new GLTFLoader();
     
-    console.log("Creating enhanced window model (OneDrive links don't work for direct loading)");
-    setLoadingText('Creating detailed window model...');
-    createEnhancedWindowModel();
+    // Try multiple URL formats for OneDrive
+    const urlVariants = [
+      "https://1drv.ms/u/c/55aa21a38a5a57e0/EYRrc3FqCrBLsVxOICJhMaMBnhS8h3WPRHQrRxjA_F3nQg?e=lGOYis&download=1",
+      "https://onedrive.live.com/download?cid=55aa21a38a5a57e0&resid=55AA21A38A5A57E0%21113&authkey=AC1zdkqvAvFbsVw",
+      "https://1drv.ms/u/s!AhVZ6juaUgVicXZKr1sAuysxoxQ?e=lGOYis&download=1"
+    ];
+
+    let currentUrlIndex = 0;
+
+    const tryLoadModel = (urlIndex: number) => {
+      if (urlIndex >= urlVariants.length) {
+        console.error("All URL variants failed, creating fallback model");
+        setError("Could not load .glb file from OneDrive. Using enhanced fallback model.");
+        createEnhancedWindowModel();
+        return;
+      }
+
+      const currentUrl = urlVariants[urlIndex];
+      console.log(`Trying URL variant ${urlIndex + 1}:`, currentUrl);
+      setLoadingText(`Trying to load model (attempt ${urlIndex + 1}/${urlVariants.length})...`);
+
+      loader.load(
+        currentUrl,
+        (gltf) => {
+          console.log("✅ GLTF model loaded successfully!", gltf);
+          setLoadingText('Processing 3D model...');
+          
+          const loadedModel = gltf.scene;
+          loadedModel.name = 'loaded-window-model';
+          
+          // Scale and position the model
+          const box = new THREE.Box3().setFromObject(loadedModel);
+          const size = box.getSize(new THREE.Vector3());
+          const maxDimension = Math.max(size.x, size.y, size.z);
+          
+          if (maxDimension > 0) {
+            const scale = 2.5 / maxDimension;
+            loadedModel.scale.setScalar(scale);
+            
+            const center = box.getCenter(new THREE.Vector3());
+            loadedModel.position.sub(center.multiplyScalar(scale));
+          }
+
+          // Apply colors to the loaded model
+          applyColorsToLoadedModel(loadedModel, baseColorObject, outsideColorObject, insideColorObject, rubberColorObject);
+          
+          // Add shadows
+          loadedModel.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+          
+          sceneRef.current!.add(loadedModel);
+          modelRef.current = loadedModel;
+          setIsLoading(false);
+          setError(null);
+          console.log("🎉 Model successfully added to scene");
+        },
+        (progress) => {
+          const percentComplete = Math.round((progress.loaded / progress.total) * 100);
+          console.log(`Loading progress: ${percentComplete}%`);
+          setLoadingText(`Loading model... ${percentComplete}%`);
+        },
+        (error) => {
+          console.error(`❌ Failed to load URL ${urlIndex + 1}:`, error);
+          console.error("Error details:", {
+            message: error.message,
+            type: error.constructor.name,
+            stack: error.stack
+          });
+          
+          // Try next URL variant
+          setTimeout(() => tryLoadModel(urlIndex + 1), 500);
+        }
+      );
+    };
+
+    // Start loading attempts
+    tryLoadModel(0);
   }, [selectedWindowType, baseColorObject.id, outsideColorObject.id, insideColorObject.id, rubberColorObject.id]);
+
+  // Apply colors to loaded model
+  const applyColorsToLoadedModel = (
+    model: THREE.Group,
+    baseColor: ColorOption,
+    outsideColor: ColorOption,
+    insideColor: ColorOption,
+    rubberColor: ColorOption
+  ) => {
+    console.log("Applying colors to loaded 3D model");
+    
+    model.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        const name = child.name.toLowerCase();
+        console.log("Processing mesh:", name);
+        
+        let targetColor = baseColor.hex;
+        
+        if (name.includes('outside') || name.includes('exterior')) {
+          targetColor = outsideColor.hex;
+        } else if (name.includes('inside') || name.includes('interior')) {
+          targetColor = insideColor.hex;
+        } else if (name.includes('rubber') || name.includes('seal')) {
+          targetColor = rubberColor.hex;
+        }
+        
+        if (Array.isArray(child.material)) {
+          child.material.forEach(mat => {
+            if (mat instanceof THREE.MeshStandardMaterial) {
+              mat.color.setHex(parseInt(targetColor.replace('#', '0x')));
+            }
+          });
+        } else if (child.material instanceof THREE.MeshStandardMaterial) {
+          child.material.color.setHex(parseInt(targetColor.replace('#', '0x')));
+        }
+      }
+    });
+  };
 
   // Create enhanced window model that looks more realistic
   const createEnhancedWindowModel = () => {
@@ -209,7 +321,6 @@ export const Simple3DPreview = ({
     sceneRef.current.add(windowGroup);
     modelRef.current = windowGroup;
     setIsLoading(false);
-    setError("Using enhanced model - to load your .glb file, please host it in the public folder or use a direct CDN link");
     console.log("Enhanced window model created successfully");
   };
 
@@ -286,7 +397,7 @@ export const Simple3DPreview = ({
         </div>
       )}
       {error && (
-        <div className="absolute top-2 left-2 right-2 bg-blue-100 border border-blue-400 text-blue-700 px-3 py-2 rounded text-sm">
+        <div className="absolute top-2 left-2 right-2 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded text-sm">
           {error}
         </div>
       )}
