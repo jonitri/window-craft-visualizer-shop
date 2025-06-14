@@ -1,4 +1,3 @@
-
 import { ColorOption } from './types';
 
 // Base color options (main frame color)
@@ -279,6 +278,87 @@ export const outsideColorOptions: ColorOption[] = [
     imageUrl: '/lovable-uploads/2e5caafc-5a19-43fa-ae90-50376187840d.png',
     category: 'outside',
     priceModifier: 50
+  },
+  // Fourth batch additions
+  {
+    id: 'col-out-brushed-aluminum',
+    name: 'Brushed Aluminum',
+    hex: '#A8A8A8',
+    imageUrl: '/lovable-uploads/f6321221-e6e4-4892-982b-d20cd91b9dd1.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-dark-graphite',
+    name: 'Dark Graphite',
+    hex: '#4A4A4A',
+    imageUrl: '/lovable-uploads/09932382-4dfb-4fb3-882a-fb706a5a0490.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-stone-gray',
+    name: 'Stone Gray',
+    hex: '#D6D6D6',
+    imageUrl: '/lovable-uploads/4f1ed66d-4a09-4e23-9bf3-739f2806b98c.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-slate-gray',
+    name: 'Slate Gray',
+    hex: '#708090',
+    imageUrl: '/lovable-uploads/46873578-77c5-496b-99d3-7edf7bae9bf6.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-pewter',
+    name: 'Pewter',
+    hex: '#8A8A8A',
+    imageUrl: '/lovable-uploads/61219fcf-dbf3-4ecb-8194-79d21997d0d3.png',
+    category: 'outside',
+    priceModifier: 50
+  },
+  {
+    id: 'col-out-gunmetal',
+    name: 'Gunmetal',
+    hex: '#2C3539',
+    imageUrl: '/lovable-uploads/972d0e92-c011-4e2f-9afb-4e36645636a4.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-bronze',
+    name: 'Bronze',
+    hex: '#8C7853',
+    imageUrl: '/lovable-uploads/c47c2736-618b-4da2-a766-f2817b91e340.png',
+    category: 'outside',
+    priceModifier: 70
+  },
+  {
+    id: 'col-out-cedar',
+    name: 'Cedar',
+    hex: '#A67B5B',
+    imageUrl: '/lovable-uploads/8451e074-4b21-4ed1-839a-af0adf7082ad.png',
+    category: 'outside',
+    priceModifier: 100
+  },
+  {
+    id: 'col-out-birch',
+    name: 'Birch',
+    hex: '#D4C5B9',
+    imageUrl: '/lovable-uploads/da2e0f22-11c7-4ce8-af06-a53d530ad1be.png',
+    category: 'outside',
+    priceModifier: 100
+  },
+  {
+    id: 'col-out-oak-gray',
+    name: 'Oak Gray',
+    hex: '#A69B89',
+    imageUrl: '/lovable-uploads/08049544-488e-4d1b-adb0-32ebdbddea29.png',
+    category: 'outside',
+    priceModifier: 100
   }
 ];
 
