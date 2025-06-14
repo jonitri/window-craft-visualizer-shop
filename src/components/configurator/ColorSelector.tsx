@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Palette, Square, Droplet } from 'lucide-react';
+import { Image } from '@/components/ui/image';
 import { 
   baseColorOptions,
   outsideColorOptions,
@@ -80,10 +81,13 @@ export const ColorSelector = ({
                     onChange={() => onBaseColorChange(color.id)}
                     className="sr-only"
                   />
-                  <div 
-                    className="w-12 h-12 rounded-full mb-2 border border-border" 
-                    style={{ backgroundColor: color.hex }}
-                  />
+                  <div className="w-12 h-12 rounded-full mb-2 border border-border overflow-hidden">
+                    <Image 
+                      src={color.imageUrl || '/placeholder.svg'} 
+                      alt={color.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="text-xs font-medium text-center">{color.name}</div>
                   <div className="text-xs text-muted-foreground mt-1 text-center">
                     {color.priceModifier > 0 ? `+$${color.priceModifier}` : 'Included'}
@@ -113,10 +117,13 @@ export const ColorSelector = ({
                     onChange={() => onOutsideColorChange(color.id)}
                     className="sr-only"
                   />
-                  <div 
-                    className="w-12 h-12 rounded-full mb-2 border border-border" 
-                    style={{ backgroundColor: color.hex }}
-                  />
+                  <div className="w-12 h-12 rounded-full mb-2 border border-border overflow-hidden">
+                    <Image 
+                      src={color.imageUrl || '/placeholder.svg'} 
+                      alt={color.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="text-xs font-medium text-center">{color.name}</div>
                   <div className="text-xs text-muted-foreground mt-1 text-center">
                     {color.priceModifier > 0 ? `+$${color.priceModifier}` : 'Included'}
@@ -146,10 +153,13 @@ export const ColorSelector = ({
                     onChange={() => onInsideColorChange(color.id)}
                     className="sr-only"
                   />
-                  <div 
-                    className="w-12 h-12 rounded-full mb-2 border border-border" 
-                    style={{ backgroundColor: color.hex }}
-                  />
+                  <div className="w-12 h-12 rounded-full mb-2 border border-border overflow-hidden">
+                    <Image 
+                      src={color.imageUrl || '/placeholder.svg'} 
+                      alt={color.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="text-xs font-medium text-center">{color.name}</div>
                   <div className="text-xs text-muted-foreground mt-1 text-center">
                     {color.priceModifier > 0 ? `+$${color.priceModifier}` : 'Included'}
@@ -179,10 +189,13 @@ export const ColorSelector = ({
                     onChange={() => onRubberColorChange(color.id)}
                     className="sr-only"
                   />
-                  <div 
-                    className="w-12 h-12 rounded-full mb-2 border border-border" 
-                    style={{ backgroundColor: color.hex }}
-                  />
+                  <div className="w-12 h-12 rounded-full mb-2 border border-border overflow-hidden">
+                    <Image 
+                      src={color.imageUrl || '/placeholder.svg'} 
+                      alt={color.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="text-xs font-medium text-center">{color.name}</div>
                   <div className="text-xs text-muted-foreground mt-1 text-center">
                     {color.priceModifier > 0 ? `+$${color.priceModifier}` : 'Included'}
